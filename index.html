@@ -159,6 +159,103 @@ nav#tabs button[aria-current="page"]{color:var(--accent);font-weight:700}
 
 .mic{width:56px;flex:none;padding:0}
 .mic[aria-pressed="true"]{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+
+/* ===== redesenho: personagens, profundidade e movimento ===== */
+:root{ --shadow:0 1px 2px rgba(20,27,51,.06),0 8px 24px rgba(20,27,51,.08); --hero-a:#2B45D4; --hero-b:#7C5CFF; --coral:#FF6B4A; --teal:#14B8A6; --violet:#8B5CF6; --orange:#F0782F }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.35); --hero-a:#3346CC; --hero-b:#6A49E0 } }
+:root[data-theme="dark"]{ --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.35); --hero-a:#3346CC; --hero-b:#6A49E0 }
+.tutor,.avatar{display:inline-block;flex:none;line-height:0}
+.tutor svg,.avatar svg{width:100%;height:100%;display:block}
+.avatar{border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px var(--surface)}
+.card{border-color:transparent;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.opt{box-shadow:var(--shadow);border-color:transparent;transition:transform .12s ease}
+.opt:active{transform:scale(.98)}
+.opt.ok,.opt.no{box-shadow:none}
+.btn{transition:transform .12s ease,box-shadow .2s ease}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn:not(.sec):not(.link):not(.inv):not(.danger):not(:disabled){box-shadow:0 8px 18px rgba(43,69,212,.28)}
+.steps i.on{background:linear-gradient(90deg,var(--hero-a),var(--hero-b))}
+nav#tabs{box-shadow:0 -6px 20px rgba(20,27,51,.06)}
+nav#tabs button .ic{width:52px;height:30px;border-radius:999px;align-items:center;justify-content:center;transition:background .2s ease}
+nav#tabs button .ic svg{width:22px;height:22px}
+nav#tabs button[aria-current="page"] .ic{background:var(--accent-soft)}
+
+/* início: cartão do professor */
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:20px;color:#FFFFFF;background:linear-gradient(140deg,var(--hero-a),var(--hero-b));display:flex;flex-direction:column;gap:14px;box-shadow:0 14px 32px rgba(60,60,200,.30)}
+.hero::before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-80px;top:-100px;background:rgba(255,255,255,.12)}
+.hero::after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;left:-50px;bottom:-60px;background:rgba(255,216,74,.18)}
+.hero > *{position:relative;z-index:1}
+.hero .eyebrow{color:#FFFFFF;opacity:.85}
+.hero h2{color:#FFFFFF;font-size:23px}
+.hero .chip{background:transparent;color:#FFFFFF;border-color:rgba(255,255,255,.55)}
+.hero .chip[aria-pressed="true"]{background:#FFFFFF;color:#2B45D4;border-color:#FFFFFF}
+.hero .btn{background:#FFFFFF;color:#2B45D4;box-shadow:0 8px 18px rgba(10,10,60,.25)}
+.fala-row{display:flex;align-items:flex-end;gap:8px}
+.balao{flex:1;min-width:0;background:#FFFFFF;color:#141B33;border-radius:18px 18px 4px 18px;padding:10px 13px;box-shadow:0 6px 16px rgba(10,10,60,.15)}
+.balao .alvo{font-size:19px;font-weight:600;line-height:1.25}
+.balao small{display:block;color:#566080;font-size:14px;margin-top:2px}
+.card .balao{box-shadow:none;background:var(--sunk);color:var(--ink)}
+.card .balao small{color:var(--muted)}
+.tutor.toque{cursor:pointer}
+
+/* anéis de habilidade */
+@property --p{syntax:'<number>';inherits:false;initial-value:0}
+.aneis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.anel{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;color:var(--muted);text-align:center}
+.anel i{--p:0;width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--c,var(--accent)) calc(var(--p) * 1%),var(--sunk) 0);display:grid;place-items:center;font-style:normal;transition:--p 1.1s cubic-bezier(.2,.8,.2,1)}
+.anel i::after{content:attr(data-v);width:50px;height:50px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font:700 14px var(--font-ui);color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* boas-vindas e escolha do professor */
+.elenco{display:flex;justify-content:center;padding-top:6px}
+.elenco .tutor{width:64px;height:64px;margin-left:-12px;border-radius:50%;padding:6px;box-shadow:0 0 0 3px var(--bg)}
+.elenco .tutor:first-child{margin-left:0}
+.idiomas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.idioma{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px 12px;border-radius:20px;border:2px solid transparent;background:var(--surface);box-shadow:var(--shadow);text-align:center;color:var(--ink)}
+.idioma .tutor{border-radius:50%;padding:5px;margin-bottom:4px}
+.idioma[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.idioma b{font-size:16px}
+.idioma span{font-size:13px;color:var(--muted)}
+.avatares{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.avatares button{border:3px solid transparent;border-radius:50%;padding:3px;background:none;aspect-ratio:1/1}
+.avatares button[aria-pressed="true"]{border-color:var(--accent)}
+.avatares .avatar{width:100%!important;height:100%!important;box-shadow:none}
+.perfil-top{display:flex;align-items:center;gap:14px}
+
+/* professor que reage nos exercícios */
+.coach{display:flex;align-items:center;gap:10px;min-height:56px}
+.coach-fala{flex:1;min-width:0;background:var(--surface);border-radius:16px 16px 16px 4px;padding:9px 12px;font-size:15px;box-shadow:var(--shadow)}
+.msg{display:flex;align-items:flex-end;gap:8px}
+.msg.me{justify-content:flex-end}
+.msg .bubble{max-width:80%}
+.festa{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.festa .tutor{border-radius:50%;padding:10px}
+.confete{position:fixed;inset:0;pointer-events:none;z-index:50;width:100%;height:100%}
+
+/* movimento */
+@keyframes flutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.flutua{animation:flutua 3.4s ease-in-out infinite}
+@keyframes pop{0%{transform:scale(.55)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes chacoalha{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+.chacoalha{animation:chacoalha .5s ease}
+@keyframes entra{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+#view > *{animation:entra .38s ease both}
+#view > *:nth-child(2){animation-delay:.04s}#view > *:nth-child(3){animation-delay:.08s}#view > *:nth-child(4){animation-delay:.12s}#view > *:nth-child(5){animation-delay:.16s}#view > *:nth-child(n+6){animation-delay:.2s}
+@keyframes chama{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.15) rotate(4deg)}}
+.streak .ic{animation:chama 1.8s ease-in-out infinite;transform-origin:50% 85%}
+@media (prefers-reduced-motion: reduce){ .flutua,.pop,.chacoalha,.streak .ic,#view > *{animation:none!important} .anel i{transition:none} }
+
+/* fundo colorido: degradê suave na cor do professor de cada pessoa */
+:root{ --tint-a:#FF9F7A40; --tint-b:#7C5CFF2E; --tint-c:#FFD84A33 }
+#app{background:
+  radial-gradient(120% 60% at 100% 0%, var(--tint-a) 0%, transparent 60%),
+  radial-gradient(90% 55% at 0% 100%, var(--tint-b) 0%, transparent 62%),
+  radial-gradient(60% 40% at 0% 30%, var(--tint-c) 0%, transparent 70%),
+  var(--bg)}
+nav#tabs{background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.anel i::after{background:var(--surface)}
+.elenco .tutor{box-shadow:0 0 0 3px var(--surface)}
 </style>
 </head>
 <body>
@@ -251,6 +348,115 @@ const weekId = () => { const d = new Date(); const day = (d.getDay()+6)%7; d.set
 const clamp = (x,a,b) => Math.max(a, Math.min(b, x));
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 const str = v => (typeof v === 'string' ? v : (v == null ? '' : String(v))).trim();
+
+/* ============================== personagens e avatares ============================== */
+// Um professor original por idioma, desenhado em SVG, com quatro expressões.
+const TUTORES = {
+  en:{nome:'Theo', art:'o', artB:'a', bicho:'raposa',   tipo:'fox',     cor:'#F0782F', claro:'#FFF1E6', escuro:'#9A4314', fundo:'#FFE2CC', ola:'Hi'},
+  es:{nome:'Luna', art:'a', artB:'a', bicho:'gata',     tipo:'cat',     cor:'#8B5CF6', claro:'#F1EAFF', escuro:'#4C2A9E', fundo:'#E6DBFF', ola:'¡Hola'},
+  fr:{nome:'Rémi', art:'o', artB:'o', bicho:'guaxinim', tipo:'raccoon', cor:'#8391AE', claro:'#F2F4F8', escuro:'#2E3552', fundo:'#DCE3F1', ola:'Salut'},
+  it:{nome:'Gio',  art:'o', artB:'o', bicho:'urso',     tipo:'bear',    cor:'#B8743A', claro:'#F7E2CB', escuro:'#5A3313', fundo:'#F3D9BE', ola:'Ciao'},
+  de:{nome:'Otto', art:'o', artB:'o', bicho:'pinguim',  tipo:'penguin', cor:'#28396A', claro:'#FFFFFF', escuro:'#141D3A', fundo:'#D5DDF3', ola:'Hallo'},
+  pt:{nome:'Iara', art:'a', artB:'a', bicho:'capivara', tipo:'capy',    cor:'#A8754E', claro:'#E9CBA7', escuro:'#4E3220', fundo:'#EBDCC8', ola:'Oi'}
+};
+const tutorDe = lang => TUTORES[lang] || TUTORES.en;
+const INK = '#1B1F2E';
+function tutorSVG(lang, mood){
+  const d = tutorDe(lang), c = d.cor, l = d.claro, k = d.escuro;
+  mood = mood || 'neutral';
+  let back = '', face = '', front = '', dark = false;
+  if (d.tipo === 'fox'){
+    back = `<path d="M20 50 L28 6 L56 30 Z" fill="${c}"/><path d="M100 50 L92 6 L64 30 Z" fill="${c}"/><path d="M28 38 L32 16 L46 30 Z" fill="${k}" opacity=".45"/><path d="M92 38 L88 16 L74 30 Z" fill="${k}" opacity=".45"/>`;
+    face = `<path d="M17 72 Q34 62 60 84 Q86 62 103 72 Q98 109 60 111 Q22 109 17 72 Z" fill="${l}"/><ellipse cx="60" cy="82" rx="6.5" ry="4.8" fill="${INK}"/>`;
+    front = `<g fill="none" stroke="${INK}" stroke-width="3"><circle cx="44" cy="60" r="12"/><circle cx="76" cy="60" r="12"/><path d="M56 60h8"/></g>`;
+  } else if (d.tipo === 'cat'){
+    back = `<path d="M22 48 L26 8 L54 30 Z" fill="${c}"/><path d="M98 48 L94 8 L66 30 Z" fill="${c}"/><path d="M29 38 L30 18 L44 30 Z" fill="#FFB3C7"/><path d="M91 38 L90 18 L76 30 Z" fill="#FFB3C7"/>`;
+    face = `<ellipse cx="60" cy="86" rx="21" ry="15" fill="${l}"/><path d="M54 78h12l-6 6z" fill="#E86A92"/><g stroke="${k}" stroke-width="2.4" stroke-linecap="round"><path d="M34 82H16M34 89l-16 5M86 82h18M86 89l16 5"/></g>`;
+    front = `<path d="M22 100 Q60 118 98 100 L99 111 Q60 129 21 111 Z" fill="#F4B740"/><rect x="70" y="106" width="13" height="16" rx="5" fill="#E09A1F"/>`;
+  } else if (d.tipo === 'raccoon'){
+    back = `<circle cx="27" cy="32" r="14" fill="${c}"/><circle cx="93" cy="32" r="14" fill="${c}"/><circle cx="27" cy="32" r="7" fill="${k}"/><circle cx="93" cy="32" r="7" fill="${k}"/>`;
+    face = `<ellipse cx="60" cy="88" rx="27" ry="18" fill="${l}"/><path d="M18 56 Q38 44 60 58 Q82 44 102 56 Q99 74 78 72 Q60 70 42 72 Q21 74 18 56 Z" fill="${k}"/><ellipse cx="60" cy="80" rx="6.5" ry="4.8" fill="${INK}"/>`;
+    front = `<path d="M16 62 Q16 12 60 12 Q104 12 104 62" fill="none" stroke="#14B8A6" stroke-width="6" stroke-linecap="round"/><rect x="6" y="52" width="15" height="26" rx="7" fill="#14B8A6"/><rect x="99" y="52" width="15" height="26" rx="7" fill="#14B8A6"/>`;
+    dark = true;
+  } else if (d.tipo === 'bear'){
+    back = `<circle cx="25" cy="34" r="15" fill="${c}"/><circle cx="95" cy="34" r="15" fill="${c}"/><circle cx="25" cy="34" r="7.5" fill="${l}"/><circle cx="95" cy="34" r="7.5" fill="${l}"/>`;
+    face = `<ellipse cx="60" cy="86" rx="21" ry="16" fill="${l}"/><ellipse cx="60" cy="79" rx="7.5" ry="5.2" fill="${INK}"/>`;
+    front = `<path d="M22 42 Q24 12 60 11 Q96 12 98 42 Z" fill="#E5484D"/><path d="M82 40 Q110 37 116 47 Q98 51 80 47 Z" fill="#B8323A"/><circle cx="60" cy="12" r="4.5" fill="#B8323A"/>`;
+  } else if (d.tipo === 'penguin'){
+    back = `<ellipse cx="17" cy="80" rx="9" ry="20" fill="${k}" transform="rotate(18 17 80)"/><ellipse cx="103" cy="80" rx="9" ry="20" fill="${k}" transform="rotate(-18 103 80)"/>`;
+    face = `<path d="M60 54 Q50 32 35 41 Q19 51 25 76 Q31 107 60 109 Q89 107 95 76 Q101 51 85 41 Q70 32 60 54 Z" fill="#FFFFFF"/><path d="M51 75 L69 75 L60 86 Z" fill="#F5A524"/>`;
+    front = `<path d="M60 107 L45 99 L45 115 Z M60 107 L75 99 L75 115 Z" fill="#E5484D"/><circle cx="60" cy="107" r="4" fill="#B8323A"/>`;
+  } else { // capivara
+    back = `<ellipse cx="32" cy="30" rx="8" ry="7" fill="${k}"/><ellipse cx="88" cy="30" rx="8" ry="7" fill="${k}"/>`;
+    face = `<rect x="33" y="70" width="54" height="36" rx="17" fill="${l}"/><ellipse cx="51" cy="80" rx="3.2" ry="2.4" fill="${INK}"/><ellipse cx="69" cy="80" rx="3.2" ry="2.4" fill="${INK}"/>`;
+    front = `<path d="M60 27 Q68 9 86 11 Q82 29 62 29 Z" fill="#3DBE6B"/><path d="M62 28 Q73 20 82 14" stroke="#23934C" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  }
+  const eyeInk = dark ? '#FFFFFF' : INK;
+  let eyes;
+  if (mood === 'happy' || mood === 'cheer'){
+    eyes = `<g fill="none" stroke="${eyeInk}" stroke-width="4" stroke-linecap="round"><path d="M37 62 Q44 52 51 62"/><path d="M69 62 Q76 52 83 62"/></g>`;
+  } else {
+    const dx = mood === 'think' ? -2.2 : 0, dy = mood === 'think' ? -2.6 : 0.8;
+    eyes = [44, 76].map(x => `<circle cx="${x}" cy="60" r="8.6" fill="#FFFFFF"/><circle cx="${x + dx}" cy="${60 + dy}" r="5" fill="${INK}"/><circle cx="${x + dx + 1.7}" cy="${60 + dy - 1.8}" r="1.7" fill="#FFFFFF"/>`).join('');
+    if (mood === 'think') eyes += `<path d="M36 46 Q44 42 51 46" stroke="${eyeInk}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  }
+  const my = d.tipo === 'capy' ? 96 : d.tipo === 'penguin' ? 95 : 94;
+  let mouth;
+  if (mood === 'happy') mouth = `<path d="M50 ${my - 3} Q60 ${my + 11} 70 ${my - 3} Z" fill="${INK}"/><path d="M55 ${my + 3} Q60 ${my + 8} 65 ${my + 3} Q60 ${my} 55 ${my + 3} Z" fill="#F07895"/>`;
+  else if (mood === 'cheer') mouth = `<path d="M46 ${my - 4} Q60 ${my + 16} 74 ${my - 4} Z" fill="${INK}"/><path d="M53 ${my + 5} Q60 ${my + 11} 67 ${my + 5} Q60 ${my + 1} 53 ${my + 5} Z" fill="#F07895"/>`;
+  else if (mood === 'think') mouth = `<ellipse cx="65" cy="${my}" rx="3.6" ry="3" fill="${INK}"/>`;
+  else mouth = `<path d="M53 ${my - 1} Q60 ${my + 5} 67 ${my - 1}" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  const cheeks = (mood === 'happy' || mood === 'cheer') ? `<circle cx="30" cy="77" r="6" fill="#FF8FA3" opacity=".6"/><circle cx="90" cy="77" r="6" fill="#FF8FA3" opacity=".6"/>` : '';
+  const spark = mood === 'cheer' ? `<g fill="#FFD84A"><path d="M10 18l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M108 10l2.4 5.6 5.6 2.4-5.6 2.4-2.4 5.6-2.4-5.6-5.6-2.4 5.6-2.4z"/><path d="M112 92l2 4.6 4.6 2-4.6 2-2 4.6-2-4.6-4.6-2 4.6-2z"/></g>` : '';
+  const body = d.tipo === 'penguin' ? `<ellipse cx="60" cy="70" rx="42" ry="44" fill="${c}"/>` : `<ellipse cx="60" cy="68" rx="44" ry="42" fill="${c}"/>`;
+  return `<svg viewBox="0 0 120 124" role="img" aria-label="${d.nome}, ${d.artB} ${d.bicho}">${back}${body}${face}${cheeks}${eyes}${mouth}${front}${spark}</svg>`;
+}
+function tutorEl(lang, mood, size, cls){
+  const s = document.createElement('span');
+  s.className = 'tutor ' + (cls || '');
+  s.style.width = s.style.height = size + 'px';
+  s.innerHTML = tutorSVG(lang, mood);
+  return s;
+}
+
+// Avatares das pessoas: combinações de fundo, pele, cabelo, roupa e acessório.
+const AV = {
+  bg:['#FFD84A','#8C9CFF','#5BD3A4','#FF9F7A','#F48FB1','#7DD3FC','#C4B5FD','#FDBA74','#A3E635'],
+  pele:['#FDDCC4','#F1C27D','#E0AC69','#C68642','#8D5524','#5C3A21'],
+  cabelo:['#1F1A17','#4A2C1A','#8B5A2B','#D9A441','#B5482E','#9AA0A6','#5B3FA0'],
+  roupa:['#2B45D4','#E5484D','#0F7A57','#141B33','#F0782F','#8B5CF6','#0EA5E9']
+};
+function avatarSVG(a){
+  a = a || {};
+  const bg = AV.bg[a.bg % AV.bg.length], pele = AV.pele[a.pele % AV.pele.length], hc = AV.cabelo[a.hc % AV.cabelo.length], roupa = AV.roupa[a.roupa % AV.roupa.length];
+  const estilo = a.cabelo % 6, extra = a.extra % 4;
+  let atras = '', cabelo = '';
+  if (estilo === 0) cabelo = `<path d="M29 43 Q28 21 50 21 Q72 21 71 43 Q63 31 50 31 Q37 31 29 43Z" fill="${hc}"/>`;
+  else if (estilo === 1){ atras = `<path d="M27 46 Q25 19 50 19 Q75 19 73 46 L76 80 Q64 74 60 62 L40 62 Q36 74 24 80Z" fill="${hc}"/>`; cabelo = `<path d="M29 41 Q33 23 50 22 Q67 23 71 41 Q58 30 43 34 Q35 36 29 41Z" fill="${hc}"/>`; }
+  else if (estilo === 2) cabelo = `<circle cx="50" cy="16" r="8.5" fill="${hc}"/><path d="M29 43 Q28 21 50 21 Q72 21 71 43 Q63 31 50 31 Q37 31 29 43Z" fill="${hc}"/>`;
+  else if (estilo === 3) cabelo = `<g fill="${hc}"><circle cx="31" cy="39" r="8"/><circle cx="37" cy="28" r="9"/><circle cx="50" cy="23" r="10"/><circle cx="63" cy="28" r="9"/><circle cx="69" cy="39" r="8"/></g>`;
+  else if (estilo === 4) cabelo = `<path d="M28 39 Q29 17 50 17 Q71 17 72 39Z" fill="${roupa}"/><path d="M50 36 L82 36 Q85 42 76 42 L50 41Z" fill="${INK}" opacity=".85"/>`;
+  else cabelo = `<path d="M29 45 Q27 21 52 20 Q73 21 71 40 Q58 26 42 32 Q34 36 29 45Z" fill="${hc}"/>`;
+  let acc = '';
+  if (extra === 1) acc = `<g fill="none" stroke="${INK}" stroke-width="2"><circle cx="43" cy="48" r="6"/><circle cx="57" cy="48" r="6"/><path d="M49 48h2"/></g>`;
+  else if (extra === 2) acc = `<circle cx="30" cy="56" r="2.4" fill="#FFD84A"/><circle cx="70" cy="56" r="2.4" fill="#FFD84A"/>`;
+  else if (extra === 3) acc = `<path d="M27 50 Q27 20 50 20 Q73 20 73 50" fill="none" stroke="${INK}" stroke-width="3"/><rect x="23" y="45" width="7" height="12" rx="3" fill="${INK}"/><path d="M27 56 Q30 66 40 64" fill="none" stroke="${INK}" stroke-width="2"/>`;
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="Avatar"><rect width="100" height="100" fill="${bg}"/>${atras}<path d="M12 104 Q16 74 50 72 Q84 74 88 104Z" fill="${roupa}"/><rect x="43" y="60" width="14" height="16" rx="5" fill="${pele}"/><circle cx="30" cy="49" r="4.5" fill="${pele}"/><circle cx="70" cy="49" r="4.5" fill="${pele}"/><ellipse cx="50" cy="47" rx="20" ry="22" fill="${pele}"/>${cabelo}<circle cx="43" cy="48" r="2.5" fill="${INK}"/><circle cx="57" cy="48" r="2.5" fill="${INK}"/><path d="M44 57 Q50 62 56 57" stroke="${INK}" stroke-width="2.3" fill="none" stroke-linecap="round"/>${acc}</svg>`;
+}
+function avatarDeSemente(seed){
+  let x = 0; const s = String(seed || 'idioma');
+  for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0;
+  const r = () => { x = (x * 1103515245 + 12345) >>> 0; return x >>> 8; };
+  return { bg:r(), pele:r(), cabelo:r(), hc:r(), roupa:r(), extra:r() % 7 < 4 ? 0 : r() };
+}
+const avatarAleatorio = () => avatarDeSemente(Math.random().toString(36));
+function avatarEl(a, size){
+  const s = document.createElement('span');
+  s.className = 'avatar';
+  s.style.width = s.style.height = size + 'px';
+  s.innerHTML = avatarSVG(a);
+  return s;
+}
 
 /* ============================== servidor, estado e gravação ============================== */
 const lsGet = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
@@ -352,7 +558,11 @@ function micBtn(ta, status){
   return b;
 }
 
-const REGRAS = 'Você é um professor particular de idiomas paciente, natural e encorajador, para adultos que trabalham e têm pouco tempo. Nunca infantilize. Nada de explicações gramaticais longas nem linguagem acadêmica. Todo conteúdo no idioma estudado deve respeitar o nível CEFR do aluno. Explicações e traduções vão no idioma nativo do aluno. Use situações reais da vida e do trabalho do aluno.';
+const REGRAS_BASE = 'Você é um professor particular de idiomas paciente, natural e encorajador, para adultos que trabalham e têm pouco tempo. Nunca infantilize. Nada de explicações gramaticais longas nem linguagem acadêmica. Todo conteúdo no idioma estudado deve respeitar o nível CEFR do aluno. Explicações e traduções vão no idioma nativo do aluno. Use situações reais da vida e do trabalho do aluno.';
+function regras(){
+  const t = S.profile ? tutorDe(S.profile.target) : null;
+  return (t ? 'Seu nome é ' + t.nome + '. No app Idioma IA você aparece como ' + (t.artB === 'a' ? 'uma ' : 'um ') + t.bicho + ' e é ' + (t.art === 'a' ? 'a professora' : 'o professor') + ' do aluno. Tenha um jeito simpático e bem-humorado, sem exagero. ' : '') + REGRAS_BASE;
+}
 const lv = () => LEVELS.indexOf(S.level);
 function ctx(){
   const p = S.profile, L = LANGS[p.target];
@@ -375,13 +585,13 @@ function promptMissao(plan, tema, min){
   if (plan.leitura) parts.push('"leitura": {"texto": texto de ' + (lv() < 3 ? '2 a 3' : '4 a 5') + ' frases no idioma estudado, "texto_t": tradução do texto, "perguntas": lista com 2 itens {"p": pergunta no idioma estudado, "opcoes": [3 respostas curtas no idioma estudado], "certa": índice da correta}}');
   if (plan.escrita) parts.push('"escrita": {"tarefa": instrução no idioma nativo para o aluno escrever 1 ou 2 frases no idioma estudado numa situação real, como avisar o chefe de um atraso}');
   if (plan.desafio) parts.push('"desafio": {"tarefa": instrução no idioma nativo de algo curto que o aluno deve dizer no idioma estudado, ligado ao tema}');
-  return 'TAREFA: missao\n' + REGRAS + '\n\n' + ctx() + '\n\nTema da missão de hoje: ' + tema + '. Tempo disponível: ' + min + ' minutos.\n\nResponda SOMENTE com um objeto JSON com estas chaves:\n"titulo": objetivo da missão em até 8 palavras, no idioma nativo, começando com verbo (exemplo: "Pedir comida em um restaurante"),\n"proximo": objetivo sugerido para a próxima missão, no mesmo formato, sobre outra situação,\n' + parts.join(',\n') + '\n\nVarie a posição da resposta correta. Sem markdown.';
+  return 'TAREFA: missao\n' + regras() + '\n\n' + ctx() + '\n\nTema da missão de hoje: ' + tema + '. Tempo disponível: ' + min + ' minutos.\n\nResponda SOMENTE com um objeto JSON com estas chaves:\n"titulo": objetivo da missão em até 8 palavras, no idioma nativo, começando com verbo (exemplo: "Pedir comida em um restaurante"),\n"proximo": objetivo sugerido para a próxima missão, no mesmo formato, sobre outra situação,\n' + parts.join(',\n') + '\n\nVarie a posição da resposta correta. Sem markdown.';
 }
 function regrasConversa(cenario){
-  return 'TAREFA: conversa\n' + REGRAS + '\n\n' + ctx() + '\n\nSituação da conversa: ' + cenario + '\n\nVocê conversa com o aluno no idioma estudado, como uma pessoa real. A cada mensagem do aluno, responda SOMENTE com um objeto JSON:\n{"reply": sua fala no idioma estudado, com no máximo 2 frases curtas adequadas ao nível, terminando com uma pergunta que mantenha a conversa, "pt": tradução da sua fala para o idioma nativo do aluno, "fix": null OU {"better": forma correta e natural do que o aluno quis dizer, no idioma estudado, "why": explicação de 1 frase no idioma nativo, em tom gentil, "pattern": nome curto do padrão de erro no idioma nativo, como "idade com have"}}\n\nCorrija só erros importantes, que mudam o sentido ou se repetem; pequenos deslizes passam. Nunca diga que está errado: em "why" use um tom como "Quase! O mais natural é...". Se o aluno escrever no idioma nativo, ajude: em "fix.better" mostre como dizer aquilo no idioma estudado e siga a conversa. Não dê nota. Sem markdown.';
+  return 'TAREFA: conversa\n' + regras() + '\n\n' + ctx() + '\n\nSituação da conversa: ' + cenario + '\n\nVocê conversa com o aluno no idioma estudado, como uma pessoa real. A cada mensagem do aluno, responda SOMENTE com um objeto JSON:\n{"reply": sua fala no idioma estudado, com no máximo 2 frases curtas adequadas ao nível, terminando com uma pergunta que mantenha a conversa, "pt": tradução da sua fala para o idioma nativo do aluno, "fix": null OU {"better": forma correta e natural do que o aluno quis dizer, no idioma estudado, "why": explicação de 1 frase no idioma nativo, em tom gentil, "pattern": nome curto do padrão de erro no idioma nativo, como "idade com have"}}\n\nCorrija só erros importantes, que mudam o sentido ou se repetem; pequenos deslizes passam. Nunca diga que está errado: em "why" use um tom como "Quase! O mais natural é...". Se o aluno escrever no idioma nativo, ajude: em "fix.better" mostre como dizer aquilo no idioma estudado e siga a conversa. Não dê nota. Sem markdown.';
 }
 function promptAvaliar(tarefa, resp){
-  return 'TAREFA: avaliar\n' + REGRAS + '\n\n' + ctx() + '\n\nO aluno recebeu esta tarefa: "' + tarefa + '"\nResposta do aluno: "' + resp + '"\n\nResponda SOMENTE com um objeto JSON: {"nota": inteiro de 0 a 100 (comunicou o que precisava e está correto e natural para o nível?), "melhor": versão correta e natural no idioma estudado, "explica": 1 ou 2 frases no idioma nativo, gentis e específicas, começando pelo que funcionou, "pattern": nome curto do principal padrão de erro no idioma nativo, ou null se não houver}. Sem markdown.';
+  return 'TAREFA: avaliar\n' + regras() + '\n\n' + ctx() + '\n\nO aluno recebeu esta tarefa: "' + tarefa + '"\nResposta do aluno: "' + resp + '"\n\nResponda SOMENTE com um objeto JSON: {"nota": inteiro de 0 a 100 (comunicou o que precisava e está correto e natural para o nível?), "melhor": versão correta e natural no idioma estudado, "explica": 1 ou 2 frases no idioma nativo, gentis e específicas, começando pelo que funcionou, "pattern": nome curto do principal padrão de erro no idioma nativo, ou null se não houver}. Sem markdown.';
 }
 function promptNivelamento(p){
   const L = LANGS[p.target].n.replace(/ \(.*/,'');
@@ -461,7 +671,8 @@ const ouvirBtn = texto => podeFalar() ? h('button',{class:'btn link',type:'butto
 const ui = { screen:'welcome', tab:'inicio', min:null };
 const view = $('#view'), tabs = $('#tabs');
 const TABS = [['inicio','Início','home'],['aprender','Aprender','book'],['conversar','Conversar','chat'],['progresso','Progresso','chart'],['perfil','Perfil','user']];
-function show(screen, ...kids){ ui.screen = screen; tabs.hidden = screen !== 'main'; view.replaceChildren(...kids.flat(Infinity).filter(Boolean)); view.scrollTop = 0; }
+function pintarFundo(){ const t = S.profile ? tutorDe(S.profile.target) : null, r = document.documentElement.style; r.setProperty('--tint-a', t ? t.cor + '55' : '#FF9F7A55'); r.setProperty('--tint-b', '#7C5CFF40'); r.setProperty('--tint-c', t ? t.fundo + '99' : '#FFD84A44'); }
+function show(screen, ...kids){ pintarFundo(); ui.screen = screen; tabs.hidden = screen !== 'main'; view.replaceChildren(...kids.flat(Infinity).filter(Boolean)); view.scrollTop = 0; }
 function drawTabs(){
   tabs.replaceChildren(...TABS.map(([k,label,ic]) => h('button',{type:'button','aria-current': ui.tab === k ? 'page' : null, onclick:() => goTab(k)}, icon(ic), label)));
 }
@@ -471,12 +682,14 @@ function boot(){ if (!TOKEN || !USER) return telaBoasVindas(); if (S.profile && 
 /* ============================== boas-vindas e cadastro ============================== */
 function telaBoasVindas(){
   const ligado = /^https?:\/\//.test(API);
-  show('welcome',
+  const elenco = h('div',{class:'elenco','aria-hidden':'true'}, Object.keys(TUTORES).map((k,i) => {
+    const e = tutorEl(k, i % 2 ? 'happy' : 'neutral', 64, 'flutua'); e.style.background = TUTORES[k].fundo; e.style.animationDelay = (i * .4) + 's'; return e; }));
+  show('welcome', elenco,
     h('span',{class:'badge',style:'align-self:flex-start'},'IDIOMA IA'),
     h('h1',null,'Você não precisa estudar horas para aprender um idioma.'),
     h('p',{class:'muted',style:'font-size:18px'},'Nós vamos adaptar o idioma à sua vida.'),
     h('div',{class:'hero-sample'},
-      h('span',{class:'eyebrow'},'Uma aula cabe em 3 minutos'),
+      h('div',{class:'row'}, tutorEl('en','happy',40), h('span',{class:'eyebrow'},'Theo: uma aula cabe em 3 minutos')),
       h('p',{class:'alvo',style:'font-size:22px'},'What’s your ', h('mark',null,'schedule'), ' today?'),
       h('p',{class:'muted small'},'schedule = agenda, programação')),
     ligado ? null : h('div',{class:'note soft'},'O app ainda não está ligado ao servidor. Abra o arquivo config.js e cole o endereço do seu App da Web do Apps Script.'),
@@ -538,10 +751,16 @@ function telaCadastro(step){
     const inp = h('input',{type:'text',id:'cad-nome',autocomplete:'given-name',value:draft.name,placeholder:'Seu primeiro nome',maxlength:'40'});
     const sync = () => { draft.name = inp.value.trim(); go.disabled = !draft.name; };
     inp.addEventListener('input', sync); sync();
-    body = [h('h2',null,'Como podemos te chamar?'), h('div',{class:'field'}, h('label',{for:'cad-nome'},'Nome'), inp)];
+    if (!draft.avatar) draft.avatar = avatarDeSemente((USER && USER.id) || draft.name || 'eu');
+    body = [h('h2',null,'Como podemos te chamar?'), h('div',{class:'field'}, h('label',{for:'cad-nome'},'Nome'), inp),
+      h('h3',null,'Escolha seu avatar'), avatarPicker(draft.avatar, a => draft.avatar = a)];
   } else if (step === 1){
-    body = [h('h2',null,'Qual idioma você quer aprender?'),
-      chipSet(Object.keys(LANGS).map(k => [k, LANGS[k].n]), draft.target, false, v => draft.target = v),
+    const cards = h('div',{class:'idiomas'});
+    const drawC = () => cards.replaceChildren(...Object.keys(LANGS).map(k => { const t = tutorDe(k), on = draft.target === k;
+      const pic = tutorEl(k, on ? 'happy' : 'neutral', 66, on ? 'pop' : ''); pic.style.background = t.fundo;
+      return h('button',{class:'idioma',type:'button','aria-pressed':String(on),onclick:() => { draft.target = k; drawC(); }}, pic, h('b',null,nomeIdioma(k)), h('span',null,'com ' + t.nome + ', ' + t.artB + ' ' + t.bicho)); }));
+    drawC();
+    body = [h('h2',null,'Qual idioma você quer aprender?'), h('p',{class:'muted'},'Cada idioma tem um professor diferente.'), cards,
       h('h3',null,'Seu idioma nativo'),
       chipSet(NATIVOS, draft.native, false, v => draft.native = v)];
   } else if (step === 2){
@@ -575,7 +794,7 @@ function telaExperiencia(){
 const PL = ['A1','A2','B1','B2'];
 function telaTeste(startIdx){
   const box = h('div',{class:'stack'});
-  show('test', h('span',{class:'eyebrow'},'Teste de nível'), box);
+  show('test', h('span',{class:'eyebrow'},'Teste de nível'), coachEl('neutral', 'Sou ' + tutorDe(S.profile.target).art + ' ' + tutorDe(S.profile.target).nome + '. Se não souber, chute: o teste se ajusta a você.'), box);
   runAI(box, 'Preparando seu teste. Leva alguns segundos.', () => ai(promptNivelamento(S.profile)), raw => {
     const pool = {}; let total = 0;
     PL.forEach(k => { pool[k] = (Array.isArray(raw && raw[k]) ? raw[k] : []).map(normQ).filter(q => q && q.p); total += pool[k].length; });
@@ -633,9 +852,60 @@ function mcq(q, onAnswer){
   const btns = q.opcoes.map((o,i) => h('button',{class:'opt alvo',type:'button',onclick:() => {
     if (done) return; done = true;
     btns.forEach((b,j) => { b.disabled = true; if (j === q.certa) b.classList.add('ok'); else if (j === i) b.classList.add('no'); });
-    const ok = i === q.certa; fb.textContent = ok ? 'Isso mesmo.' : 'Quase. A resposta certa está em verde.';
+    const ok = i === q.certa; if (COACH && COACH.isConnected) reagir(ok); else fb.textContent = ok ? 'Isso mesmo.' : 'Quase. A resposta certa está em verde.';
     onAnswer(ok); }}, o));
   return h('div',{class:'stack'}, btns, fb);
+}
+
+const meuAvatar = () => (S.profile && S.profile.avatar) || avatarDeSemente(USER ? USER.id : 'eu');
+const nomeIdioma = k => LANGS[k].n.replace(/ \(.*/,'');
+let COACH = null;
+const FALAS_OK = ['Isso mesmo!','Mandou bem!','Perfeito.','Exatamente!','É isso aí!'];
+const FALAS_ERRO = ['Quase! A certa está em verde.','Faz parte. Essa volta na revisão.','Boa tentativa. Olha a certa em verde.'];
+const sorteia = l => l[Math.floor(Math.random() * l.length)];
+// O professor ao lado do exercício: muda de expressão e de fala conforme a resposta.
+function coachEl(mood, fala){
+  const lang = S.profile ? S.profile.target : 'en';
+  const pic = h('span'), bal = h('div',{class:'coach-fala',role:'status'});
+  const box = h('div',{class:'coach'}, pic, bal);
+  box.set = (m, t) => { pic.replaceChildren(tutorEl(lang, m, 52, m === 'happy' || m === 'cheer' ? 'pop' : m === 'think' ? 'chacoalha' : '')); bal.textContent = t || ''; bal.hidden = !t; };
+  box.set(mood, fala); COACH = box; return box;
+}
+function reagir(ok){ if (COACH && COACH.isConnected) COACH.set(ok ? 'happy' : 'think', sorteia(ok ? FALAS_OK : FALAS_ERRO)); }
+function avatarPicker(atual, onPick){
+  let opcoes = [atual].concat(Array.from({length:7}, avatarAleatorio)), sel = 0;
+  const grid = h('div',{class:'avatares',role:'group','aria-label':'Escolha seu avatar'});
+  const draw = () => grid.replaceChildren(...opcoes.map((a,i) => h('button',{type:'button','aria-pressed':String(i === sel),'aria-label':'Avatar ' + (i + 1),onclick:() => { sel = i; onPick(opcoes[i]); draw(); }}, avatarEl(a, 64))));
+  draw();
+  return h('div',{class:'stack tight'}, grid, h('button',{class:'btn link',type:'button',style:'align-self:flex-start;padding:0',onclick:() => { opcoes = [opcoes[sel]].concat(Array.from({length:7}, avatarAleatorio)); sel = 0; draw(); }},'Ver outros avatares'));
+}
+function confete(){
+  try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch(e){}
+  const cv = h('canvas',{class:'confete','aria-hidden':'true'}); document.body.append(cv);
+  const dpr = Math.min(2, window.devicePixelRatio || 1), W = innerWidth, H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr; const c = cv.getContext('2d'); if (!c){ cv.remove(); return; } c.scale(dpr, dpr);
+  const cores = ['#2B45D4','#FFD84A','#FF6B4A','#14B8A6','#8B5CF6','#F48FB1'];
+  const ps = Array.from({length:120}, () => ({x:W/2 + (Math.random() - .5) * 80, y:H * .32, vx:(Math.random() - .5) * 10, vy:-Math.random() * 12 - 4, r:Math.random() * 6, vr:(Math.random() - .5) * .35, w:6 + Math.random() * 6, h:4 + Math.random() * 4, cor:sorteia(cores)}));
+  const t0 = performance.now();
+  const quadro = t => { const dt = t - t0; c.clearRect(0, 0, W, H);
+    ps.forEach(p => { p.vy += .3; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; c.save(); c.translate(p.x, p.y); c.rotate(p.r); c.globalAlpha = Math.max(0, 1 - dt / 2300); c.fillStyle = p.cor; c.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); c.restore(); });
+    if (dt < 2300) requestAnimationFrame(quadro); else cv.remove(); };
+  requestAnimationFrame(quadro);
+}
+function contar(el, alvo, ms, pre){
+  let reduz = false; try { reduz = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+  if (reduz || !alvo){ el.textContent = (pre || '') + alvo; return; }
+  const t0 = performance.now();
+  const passo = t => { const k = Math.min(1, (t - t0) / ms), v = Math.round(alvo * (1 - Math.pow(1 - k, 3))); el.textContent = (pre || '') + v; if (k < 1) requestAnimationFrame(passo); };
+  requestAnimationFrame(passo);
+}
+function aneis(){
+  const cores = {conversa:'var(--accent)', leitura:'var(--teal)', escrita:'var(--orange)', vocabulario:'var(--violet)'};
+  return h('div',{class:'aneis'}, ['conversa','leitura','escrita','vocabulario'].map(k => {
+    const v = S.skills[k], i = h('i',{'data-v': v == null ? '--' : v + '%', style:'--c:' + cores[k]});
+    requestAnimationFrame(() => requestAnimationFrame(() => i.style.setProperty('--p', v || 0)));
+    return h('div',{class:'anel'}, i, SKILLS[k]);
+  }));
 }
 
 /* ============================== plano ============================== */
@@ -644,6 +914,8 @@ function telaPlano(){
   const linha = (k,v) => h('div',null, h('span',{class:'muted grow'},k), h('b',null,v));
   show('plan', h('span',{class:'eyebrow'},'Meu plano'),
     h('h1',null, S.level === 'A0' ? 'Você começa do zero. Ótimo ponto de partida.' : 'Seu nível atual estimado é ' + S.level + (S.level === 'B2' ? ' ou acima.' : '.')),
+    (() => { const t = tutorDe(p.target), pic = tutorEl(p.target,'cheer',84,'pop'); pic.style.background = t.fundo; pic.style.borderRadius = '50%';
+      return h('div',{class:'card fala-row'}, h('div',{class:'balao'}, h('div',{class:'alvo'}, t.ola + ', ' + p.name + '!'), h('small',null,'Sou ' + t.art + ' ' + t.nome + ', ' + t.artB + ' ' + t.bicho + ' que vai te acompanhar no ' + nomeIdioma(p.target) + '.')), pic); })(),
     pl.fortes || pl.fracos ? h('div',{class:'card stack tight'}, pl.fortes ? h('p',null,pl.fortes) : null, pl.fracos ? h('p',{class:'muted'},pl.fracos) : null) : null,
     h('div',{class:'card list'},
       linha('Idioma', LANGS[p.target].n.replace(/ \(.*/,'')), linha('Nível', S.level), linha('Objetivo', p.goals.slice(0,2).join(' + ') || 'Conversação'),
@@ -657,25 +929,33 @@ function telaPlano(){
 function saudacao(){ const hr = new Date().getHours(); return hr < 5 ? 'Boa noite' : hr < 12 ? 'Bom dia' : hr < 18 ? 'Boa tarde' : 'Boa noite'; }
 function barraSkill(k){ const v = S.skills[k]; return h('div',{class:'skill'}, h('span',null,SKILLS[k]), h('div',{class:'bar'}, h('i',{style:'width:' + (v || 0) + '%'})), h('b',null, v == null ? '--' : v + '%')); }
 function telaInicio(){
-  const p = S.profile, g = gap(), feito = S.doneToday === today();
+  const p = S.profile, g = gap(), feito = S.doneToday === today(), t = tutorDe(p.target);
   if (ui.min == null) ui.min = g >= 3 ? 5 : TEMPOS_HOJE.reduce((a,b) => Math.abs(b - p.minutes) < Math.abs(a - p.minutes) ? b : a, 10);
-  const seq = S.streak.cur && g <= 1 ? S.streak.cur + (S.streak.cur === 1 ? ' dia de sequência' : ' dias de sequência') : 'Sua sequência começa hoje';
+  const seq = S.streak.cur && g <= 1 ? S.streak.cur + (S.streak.cur === 1 ? ' dia' : ' dias') : 'Comece hoje';
   const palavra = S.vocab.length ? (dueWords(1)[0] || S.vocab[S.daysStudied % S.vocab.length]) : null;
   const sig = h('div');
+  const frases = ['Bora estudar hoje?','Três minutos já contam.','Separei uma palavra nova para você.','Que tal uma conversa rápida?','Lembra daquele erro? Vamos treinar ele hoje.','Toque em mim para mais uma dica.'];
+  let fi = S.daysStudied % frases.length;
+  const fala = h('small',null, feito ? 'Missão cumprida hoje. Quer mais uma?' : g >= 3 ? 'Que bom te ver! Vamos voltar com 5 minutos.' : frases[fi]);
+  const pic = tutorEl(p.target, feito ? 'cheer' : 'happy', 96, 'flutua toque');
+  pic.setAttribute('role','button'); pic.setAttribute('tabindex','0'); pic.setAttribute('aria-label','Falar com ' + t.nome);
+  const toca = () => { fi = (fi + 1) % frases.length; fala.textContent = frases[fi]; pic.innerHTML = tutorSVG(p.target, sorteia(['happy','cheer','think'])); pic.classList.remove('chacoalha'); void pic.offsetWidth; pic.classList.add('chacoalha'); };
+  pic.addEventListener('click', toca); pic.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); toca(); } });
   show('main',
-    h('div',{class:'row between'}, h('span',{class:'badge'}, LANGS[p.target].n.replace(/ \(.*/,'').toUpperCase() + ' · ' + S.level), h('span',{class:'streak small'}, icon('flame'), seq)),
-    h('h1',null, saudacao() + ', ' + p.name + '!'),
-    g >= 3 ? h('div',{class:'note'}, 'Você ficou alguns dias fora. Sem problema. Vamos voltar com uma missão de 5 minutos.') : null,
-    h('section',{class:'mission'},
-      h('span',{class:'eyebrow'}, feito ? 'Missão de hoje concluída' : 'Sua missão de hoje'),
-      h('h2',null, feito ? 'Quer fazer mais uma? ' + temaDoDia() : temaDoDia()),
-      h('p',{class:'small',style:'opacity:.85'},'Quanto tempo você tem hoje?'),
+    h('div',{class:'row between'},
+      h('div',{class:'row'}, avatarEl(meuAvatar(), 46), h('div',null, h('div',{class:'muted small'}, saudacao() + ','), h('b',{style:'font-size:19px'}, p.name))),
+      h('span',{class:'streak small',title:'Sequência de dias estudados'}, icon('flame'), seq)),
+    h('section',{class:'hero'},
+      h('div',{class:'fala-row'}, h('div',{class:'balao'}, h('div',{class:'alvo'}, t.ola + ', ' + p.name + '!'), fala), pic),
+      h('div',null, h('span',{class:'eyebrow'}, (feito ? 'Missão de hoje concluída' : 'Sua missão de hoje') + ' · ' + nomeIdioma(p.target) + ' ' + S.level), h('h2',{style:'margin-top:6px'}, temaDoDia())),
+      h('p',{class:'small',style:'opacity:.9'},'Quanto tempo você tem hoje?'),
       chipSet(TEMPOS_HOJE.map(m => [m, m === 20 ? '20+ min' : m + ' min']), ui.min, false, v => ui.min = v),
-      h('button',{class:'btn inv',type:'button',onclick:() => iniciarMissao(ui.min, PLANOS[ui.min])}, feito ? 'Fazer outra missão' : 'Começar missão')),
-    h('section',{class:'stack'}, h('h3',null,'Seu progresso'), ['conversa','leitura','escrita','vocabulario'].map(barraSkill)),
+      h('button',{class:'btn',type:'button',onclick:() => iniciarMissao(ui.min, PLANOS[ui.min])}, feito ? 'Fazer outra missão' : 'Começar missão')),
+    h('section',{class:'card stack'}, h('h3',null,'Seu progresso'), aneis()),
     palavra ? h('section',{class:'card stack tight'}, h('span',{class:'eyebrow'},'Palavra de hoje'),
-      h('p',{class:'alvo',style:'font-size:24px;font-weight:600'}, h('mark',null,palavra.w)), sig,
-      h('button',{class:'btn link',style:'align-self:flex-start',type:'button',onclick:() => sig.replaceChildren(h('p',null,palavra.t), palavra.ex ? h('p',{class:'alvo muted'},palavra.ex) : null)},'Ver significado')) : null);
+      h('div',{class:'row between'}, h('p',{class:'alvo',style:'font-size:26px;font-weight:600'}, h('mark',null,palavra.w)), ouvirBtn(palavra.w)), sig,
+      h('button',{class:'btn link',style:'align-self:flex-start;padding:0',type:'button',onclick:() => sig.replaceChildren(h('p',{class:'pop'},palavra.t), palavra.ex ? h('p',{class:'alvo muted'},palavra.ex) : null)},'Ver significado'))
+      : h('section',{class:'card row'}, tutorEl(p.target,'think',56), h('p',{class:'muted small'},'Suas palavras novas aparecem aqui depois da primeira missão.')));
 }
 
 /* ============================== missão ============================== */
@@ -708,7 +988,8 @@ function passo(){
   const s = M.steps[M.i], n = M.steps.length - 1;
   const head = h('div',{class:'stack tight'},
     h('div',{class:'row between'}, h('span',{class:'eyebrow'}, str(M.data.titulo) || 'Missão'), s.t !== 'fim' ? h('button',{class:'btn link',type:'button',onclick:() => goTab(ui.tab)},'Sair') : null),
-    h('div',{class:'steps'}, Array.from({length:Math.max(1,n)},(_,i) => h('i',{class:i < M.i || s.t === 'fim' ? 'on' : ''}))));
+    h('div',{class:'steps'}, Array.from({length:Math.max(1,n)},(_,i) => h('i',{class:i < M.i || s.t === 'fim' ? 'on' : ''}))),
+    s.t !== 'fim' ? coachEl(...({palavra:['neutral','Palavra nova. Leia o exemplo em voz alta.'], quiz:['think','Agora use a palavra na frase.'], revisao:['think','Lembra dessas? Seja sincero.'], conversa:['happy','Bora conversar. Pode errar à vontade.'], leitura:['neutral','Leia com calma e responda.'], produzir:['happy','Escreva do seu jeito. Eu mostro a forma natural.']}[s.t] || ['neutral',''])) : null);
   const seguir = (label) => h('button',{class:'btn',type:'button',onclick:() => { M.i += 1; passo(); }}, label || 'Continuar');
   const foot = h('div',{class:'stack'});
   let body;
@@ -727,7 +1008,7 @@ function passo(){
     const draw = () => {
       if (k >= s.words.length){ area.replaceChildren(h('div',{class:'note'},'Revisão feita.')); foot.replaceChildren(seguir()); return; }
       const w = s.words[k], ans = h('div',{class:'stack'});
-      const grade = ok => { gradeWord(w, ok); skill('vocabulario', ok ? 100 : 30); M.notas.push(ok ? 100 : 40); M.xp += addXP(3); save(); k += 1; draw(); };
+      const grade = ok => { reagir(ok); gradeWord(w, ok); skill('vocabulario', ok ? 100 : 30); M.notas.push(ok ? 100 : 40); M.xp += addXP(3); save(); k += 1; draw(); };
       area.replaceChildren(h('p',{class:'muted small'}, (k + 1) + ' de ' + s.words.length), h('p',{class:'alvo big'}, w.w), ans,
         h('button',{class:'btn sec',type:'button',onclick:ev => { ev.currentTarget.hidden = true;
           ans.replaceChildren(h('p',{style:'font-size:20px'},w.t), w.ex ? h('p',{class:'alvo muted'},w.ex) : null,
@@ -749,6 +1030,7 @@ function passo(){
     const enviar = h('button',{class:'btn',type:'button',onclick:() => { const t = ta.value.trim(); if (!t) return; enviar.hidden = true; ta.readOnly = true;
       runAI(out, 'O professor está lendo.', () => ai(promptAvaliar(s.tarefa, t)), r => {
         r = r && typeof r === 'object' ? r : {}; const nota = clamp(Math.round(Number(r.nota) || 0), 0, 100);
+        if (COACH && COACH.isConnected) COACH.set(nota >= 85 ? 'cheer' : nota >= 60 ? 'happy' : 'think', nota >= 85 ? 'Ficou ótimo!' : nota >= 60 ? 'Bom! Veja como fica ainda mais natural.' : 'Quase lá. Compare com a forma natural.');
         skill('escrita', nota); M.notas.push(nota); M.xp += addXP(s.tipo === 'escrita' ? 15 : 10); if (r.pattern) addError(r.pattern, t, r.melhor); save();
         out.replaceChildren(h('div',{class:'note stack tight' + (nota < 60 ? ' soft' : '')},
           h('span',{class:'eyebrow'}, nota >= 85 ? 'Muito bom' : nota >= 60 ? 'Bom caminho' : 'Quase lá'),
@@ -772,11 +1054,16 @@ function fimMissao(head){
   save();
   const x = xpInfo();
   const subiu = Object.keys(SKILLS).filter(k => S.skills[k] != null).sort((a,b) => (S.skills[b] - (antes[b] || 0)) - (S.skills[a] - (antes[a] || 0)))[0];
+  const t = tutorDe(S.profile.target), festa = tutorEl(S.profile.target,'cheer',132,'pop'); festa.style.background = t.fundo;
+  const xpEl = h('b',null,'+0');
+  setTimeout(confete, 150); contar(xpEl, M.xp, 1000, '+');
   show('mission', head,
-    h('h1',null, M.min <= 3 ? 'Pronto. Você acabou de estudar hoje.' : 'Missão concluída.'),
+    h('div',{class:'festa'}, festa,
+      h('h1',null, M.min <= 3 ? 'Pronto. Você acabou de estudar hoje.' : 'Missão concluída!'),
+      h('p',{class:'muted'}, t.nome + ': ' + sorteia(['Mandou muito bem hoje.','Mais um dia no caminho certo.','Gostei de ver. Amanhã tem mais.','Cada missão conta. Essa contou.']))),
     bonus ? h('div',{class:'note'},'Que bom ter você de volta. Bônus de retorno: +' + bonus + ' XP.') : null,
     h('div',{class:'stat'},
-      h('div',null, h('b',null,'+' + M.xp), h('span',null,'XP ganho')),
+      h('div',null, xpEl, h('span',null,'XP ganho')),
       h('div',null, h('b',null,M.novas.length), h('span',null, M.novas.length === 1 ? 'palavra nova' : 'palavras novas')),
       h('div',null, h('b',null,S.streak.cur), h('span',null, S.streak.cur === 1 ? 'dia de sequência' : 'dias de sequência')),
       h('div',null, h('b',null,'Nível ' + x.n), h('span',null,x.nome))),
@@ -798,17 +1085,18 @@ function chatUI(o){
   const composer = h('div',{class:'composer'}, ta, micBtn(ta, micMsg), sendBtn);
   const status = h('p',{class:'muted small'});
   ta.addEventListener('keydown', ev => { if (ev.key === 'Enter' && !ev.shiftKey){ ev.preventDefault(); send(); } });
-  const tutor = (reply, pt) => {
+  const tutor = (reply, pt, mood) => {
     const tr = h('div');
     const b = h('div',{class:'bubble tutor'}, h('div',{class:'alvo'}, reply), tr,
       h('div',{class:'acts'}, podeFalar() ? h('button',{type:'button',onclick:() => falar(reply)},'Ouvir') : null,
         pt ? h('button',{type:'button',onclick:() => tr.replaceChildren(h('div',{class:'tr'},pt))},'Traduzir') : null));
-    log.append(b); b.scrollIntoView({block:'end'});
+    const row = h('div',{class:'msg tutor'}, tutorEl(S.profile.target, mood || 'neutral', 36, mood === 'happy' ? 'pop' : ''), b);
+    log.append(row); row.scrollIntoView({block:'end'});
   };
   const setStatus = () => { status.textContent = o.alvo ? (turns >= o.alvo ? 'Conversa concluída.' : 'Troca ' + Math.min(turns + 1, o.alvo) + ' de ' + o.alvo) : (turns ? turns + (turns === 1 ? ' troca' : ' trocas') + ' nesta conversa' : ''); };
   async function call(){
     busy = true; sendBtn.disabled = true;
-    const wait = h('div',{class:'typing'}, h('span',{class:'dots'},h('i'),h('i'),h('i')), ' professor digitando'); log.append(wait); wait.scrollIntoView({block:'end'});
+    const wait = h('div',{class:'typing'}, h('span',{class:'dots'},h('i'),h('i'),h('i')), ' ' + tutorDe(S.profile.target).nome + ' está digitando'); log.append(wait); wait.scrollIntoView({block:'end'});
     try {
       const r = await ai([{role:'user',content:rules}].concat(hist.slice(-12).map(m => ({role:m.role, content:m.content}))));
       wait.remove();
@@ -825,7 +1113,7 @@ function chatUI(o){
         const bonus = touchDay(); if (bonus) addXP(bonus);
         save(); if (o.onTurn) o.onTurn(!!fix);
       }
-      tutor(reply, str(r.pt)); setStatus();
+      tutor(reply, str(r.pt), fix ? 'think' : 'happy'); setStatus();
       if (o.alvo && turns >= o.alvo && !ended){ ended = true; composer.hidden = true; if (o.onDone) o.onDone(); }
     } catch(e){
       wait.remove();
@@ -836,7 +1124,7 @@ function chatUI(o){
   }
   function send(){
     const t = ta.value.trim(); if (!t || busy || ended) return;
-    ta.value = ''; log.append(h('div',{class:'bubble me alvo'}, t));
+    ta.value = ''; log.append(h('div',{class:'msg me'}, h('div',{class:'bubble me alvo'}, t), avatarEl(meuAvatar(), 30)));
     hist.push({role:'user', content:t, real:true}); call();
   }
   if (o.abertura){ hist.push({role:'assistant', content: JSON.stringify({reply:o.abertura, pt:o.abertura_t || '', fix:null})}); tutor(o.abertura, o.abertura_t); }
@@ -876,6 +1164,7 @@ function telaProgresso(){
   const w = S.convo.week === weekId() ? S.convo.weekTurns : 0;
   const erros = S.errors.slice().sort((a,b) => b.n - a.n).slice(0,5);
   show('main', h('h1',null,'Progresso'),
+    h('section',{class:'card perfil-top'}, avatarEl(meuAvatar(), 64), h('div',{class:'grow'}, h('h2',null,p.name), h('div',{class:'muted small'}, 'Nível ' + x.n + ' · ' + x.nome + ' · ' + S.xp + ' XP')), tutorEl(p.target,'happy',58,'flutua')),
     h('section',{class:'card stack'}, h('div',{class:'row between'}, h('span',{class:'eyebrow'}, LANGS[p.target].n.replace(/ \(.*/,'')), h('span',{class:'badge'},'Nível ' + S.level)),
       h('div',{class:'line'}, LEVELS.map((L,k) => h('div',{class:'stop' + (k < i ? ' done' : k === i ? ' here' : '')}, h('i'), L === 'A0' ? 'Zero' : L))),
       e ? h('p',{class:'muted small'},'Até ' + e.prox + ' com ' + p.minutes + ' min por dia: cerca de ' + e.texto + '.') : null),
@@ -905,7 +1194,14 @@ function telaPerfil(){
       h('button',{class:'btn danger',type:'button',onclick:() => { S = fresh(); save(); flush(); ui.tab = 'inicio'; ui.min = null; draft.name = USER ? USER.name : ''; boot(); }},'Apagar tudo'))));
   const botaoApagar = () => h('button',{class:'btn link',type:'button',style:'color:var(--warn)',onclick:pedirApagar},'Apagar meus dados');
   apagar.append(botaoApagar());
-  show('main', h('h1',null,'Perfil'),
+  const t = tutorDe(p.target), avBox = h('div'); let aberto = false;
+  const avTop = h('section',{class:'card perfil-top'}, avatarEl(meuAvatar(), 72),
+    h('div',{class:'grow stack tight'}, h('b',{style:'font-size:19px'}, p.name),
+      h('button',{class:'btn link',type:'button',style:'align-self:flex-start;padding:0;min-height:36px',onclick:() => { aberto = !aberto;
+        avBox.replaceChildren(...(aberto ? [avatarPicker(meuAvatar(), a => { S.profile.avatar = a; d.avatar = a; save(); avTop.firstChild.replaceWith(avatarEl(a, 72)); })] : [])); }},'Trocar avatar')));
+  const profPic = tutorEl(p.target,'happy',60); profPic.style.background = t.fundo; profPic.style.borderRadius = '50%';
+  show('main', h('h1',null,'Perfil'), avTop, avBox,
+    h('section',{class:'card perfil-top'}, profPic, h('div',null, h('b',null,'Seu professor: ' + t.nome), h('div',{class:'muted small'}, (t.artB === 'a' ? 'A ' : 'O ') + t.bicho + ' que ensina ' + nomeIdioma(p.target) + '.'))),
     h('div',{class:'field'}, h('label',{for:'pf-nome'},'Nome'), nome),
     h('div',{class:'stack tight'}, h('h3',null,'Tempo por dia'), chipSet(MINUTOS.map(m => [m, m === 60 ? '60+' : m + ' min']), d.minutes, false, v => d.minutes = v)),
     h('div',{class:'stack tight'}, h('h3',null,'Objetivos'), chipSet(OBJETIVOS, d.goals, true, () => {})),
@@ -930,7 +1226,7 @@ drawTabs(); boot();
 if (TOKEN && USER) sincronizar().then(mudou => { if (mudou && ui.screen !== 'mission' && ui.screen !== 'chat' && ui.screen !== 'test') boot(); }, () => {});
 window.addEventListener('online', flush);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !/\/novo\//.test(location.pathname)) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 </script>
 </body>
