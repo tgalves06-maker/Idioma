@@ -21,6 +21,7 @@ const ABAS = {
 };
 const PADRAO = {
   modelo: 'gemini-3.5-flash-lite', // modelo do Gemini usado pelo professor
+  modelo_voz: 'gemini-3.8-flash-tts', // modelo do Gemini que lê em voz alta
   limite_diario: 300,              // chamadas de IA por pessoa, por dia
   max_pessoas: 12,                 // quantas contas podem existir
   dias_sessao: 60                  // dias até pedir login de novo
@@ -39,6 +40,7 @@ function instalar() {
   if (!cfg.modelo) sh.appendRow(['modelo', PADRAO.modelo, 'Modelo do Gemini usado pelo professor.']);
   if (!cfg.limite_diario) sh.appendRow(['limite_diario', PADRAO.limite_diario, 'Chamadas de IA por pessoa, por dia.']);
   if (!cfg.max_pessoas) sh.appendRow(['max_pessoas', PADRAO.max_pessoas, 'Quantas contas podem existir.']);
+  if (!cfg.modelo_voz) sh.appendRow(['modelo_voz', PADRAO.modelo_voz, 'Modelo do Gemini que lê as frases em voz alta.']);
   const temChave = !!prop_('GEMINI_API_KEY');
   Logger.log('Abas prontas. Código de convite: ' + config_().convite);
   Logger.log(temChave ? 'Chave do Gemini encontrada.' : 'FALTA a chave: Configurações do projeto > Propriedades do script > GEMINI_API_KEY.');
@@ -74,6 +76,7 @@ function doPost(e) {
     if (a === 'getState') return saida_(ok_(lerEstado_(user)));
     if (a === 'saveState') return saida_(ok_(gravarEstado_(user, req)));
     if (a === 'ai') return saida_(ok_(ia_(user, req)));
+    if (a === 'tts') return saida_(ok_(voz_(user, req)));
     return saida_(falha_('bad_request', 'Ação desconhecida.'));
   } catch (err) {
     if (err && err.code) return saida_(falha_(err.code, err.message));
@@ -249,62 +252,86 @@ function ia_(user, req) {
   if (!contents.length || contents[contents.length - 1].role !== 'user') throw erro_('invalid', 'O pedido precisa terminar com a fala do aluno.');
   if (total > MAX_PROMPT) throw erro_('invalid', 'Pedido grande demais.');
 
-  const cfg = config_();
+  checarLimite_(user);
+  const r = gemini_(contents, String(config_().modelo || PADRAO.modelo));
+  contarUso_(user, r.tokensIn, r.tokensOut);
+  return r;
+}
+function checarLimite_(user) {
   const dia = hoje_();
-  const limite = numCfg_(cfg, 'limite_diario');
+  const limite = numCfg_(config_(), 'limite_diario');
   const usado = linhas_('USAGE').filter(function (r) { return Number(r[0]) === dia && String(r[1]) === user.id; })[0];
   if (usado && Number(usado[2]) >= limite) throw erro_('limit', 'Você chegou ao limite de hoje com o professor. Amanhã tem mais.');
-
-  const r = gemini_(contents, String(cfg.modelo || PADRAO.modelo));
-
+}
+function contarUso_(user, tokensIn, tokensOut) {
+  const dia = hoje_();
   comTrava_(function () {
     const sh = aba_('USAGE');
     const v = linhas_('USAGE');
     for (let i = v.length - 1; i >= 0; i--) if (Number(v[i][0]) === dia && String(v[i][1]) === user.id) {
-      sh.getRange(i + 2, 3, 1, 3).setValues([[Number(v[i][2]) + 1, Number(v[i][3]) + r.tokensIn, Number(v[i][4]) + r.tokensOut]]);
+      sh.getRange(i + 2, 3, 1, 3).setValues([[Number(v[i][2]) + 1, Number(v[i][3]) + tokensIn, Number(v[i][4]) + tokensOut]]);
       return;
     }
-    sh.appendRow([dia, user.id, 1, r.tokensIn, r.tokensOut]);
+    sh.appendRow([dia, user.id, 1, tokensIn, tokensOut]);
   });
-  return r;
 }
-function gemini_(contents, modelo) {
+/** Lê uma frase em voz alta com uma voz do Gemini. Devolve o áudio em base64 (WAV ou PCM). */
+function voz_(user, req) {
+  const texto = String(req.text || '').trim().slice(0, 400);
+  if (!texto) throw erro_('invalid', 'Nada para falar.');
+  const voz = /^[A-Za-z]{2,24}$/.test(String(req.voice || '')) ? String(req.voice) : 'Kore';
+  checarLimite_(user);
+  const modelo = String(config_().modelo_voz || PADRAO.modelo_voz);
+  const estilo = req.slow ? 'speaking slowly and clearly, like a patient language teacher' : 'speaking clearly, like a friendly language teacher';
+  // Primeiro o formato atual da documentação; se o modelo recusar, o formato anterior.
+  const j = postGemini_(modelo, [
+    { contents: [{ role: 'user', parts: [{ text: texto, speech_metadata: { style: estilo } }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { voice: voz } } } },
+    { contents: [{ role: 'user', parts: [{ text: texto }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voz } } } } }
+  ], 'modelo_voz');
+  const partes = (j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || [];
+  const p = partes.filter(function (x) { return x && x.inlineData && x.inlineData.data; })[0];
+  if (!p) throw erro_('refused', 'O Gemini não devolveu o áudio.');
+  const um = j.usageMetadata || {};
+  contarUso_(user, Number(um.promptTokenCount) || 0, Number(um.candidatesTokenCount) || 0);
+  return { audio: p.inlineData.data, mime: String(p.inlineData.mimeType || 'audio/wav') };
+}
+/** Envia ao Gemini, tentando cada corpo em ordem enquanto o modelo recusar o formato (erro 400). */
+function postGemini_(modelo, corpos, linhaConfig) {
   const chave = prop_('GEMINI_API_KEY');
   if (!chave) throw erro_('config', 'Falta a chave do Gemini no servidor (Propriedades do script > GEMINI_API_KEY).');
-  modelo = modelo || String(config_().modelo || PADRAO.modelo);
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(modelo) + ':generateContent';
-  // Tenta a configuração completa; se o modelo recusar algum campo, tenta de novo com menos.
-  const tentativas = [
-    { temperature: 0.8, responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } },
-    { temperature: 0.8, responseMimeType: 'application/json' },
-    null
-  ];
   let ultimo = '';
-  for (let i = 0; i < tentativas.length; i++) {
-    const corpo = { contents: contents };
-    if (tentativas[i]) corpo.generationConfig = tentativas[i];
+  for (let i = 0; i < corpos.length; i++) {
     const res = UrlFetchApp.fetch(url, {
       method: 'post', contentType: 'application/json', headers: { 'x-goog-api-key': chave },
-      payload: JSON.stringify(corpo), muteHttpExceptions: true
+      payload: JSON.stringify(corpos[i]), muteHttpExceptions: true
     });
     const status = res.getResponseCode();
     const txt = res.getContentText();
     if (status === 200) {
-      let j;
-      try { j = JSON.parse(txt); } catch (err) { throw erro_('upstream_error', 'Resposta ilegível do Gemini.'); }
-      const cand = j.candidates && j.candidates[0];
-      const partes = (cand && cand.content && cand.content.parts) || [];
-      const texto = partes.filter(function (p) { return p && !p.thought && typeof p.text === 'string'; }).map(function (p) { return p.text; }).join('');
-      if (!texto.trim()) throw erro_('refused', 'O professor não respondeu a esse pedido.');
-      const um = j.usageMetadata || {};
-      return { text: texto, tokensIn: Number(um.promptTokenCount) || 0, tokensOut: (Number(um.candidatesTokenCount) || 0) + (Number(um.thoughtsTokenCount) || 0) };
+      try { return JSON.parse(txt); } catch (err) { throw erro_('upstream_error', 'Resposta ilegível do Gemini.'); }
     }
     ultimo = status + ' ' + txt.slice(0, 300);
     if (status === 429) throw erro_('rate_limited', 'O Gemini está no limite de uso agora. Tente de novo em instantes.');
     if (status === 401 || status === 403 || /API key/i.test(txt)) throw erro_('config', 'O Gemini recusou a chave do servidor. Confira GEMINI_API_KEY.');
-    if (status === 404) throw erro_('config', 'O modelo "' + modelo + '" não foi encontrado. Confira a linha "modelo" na aba CONFIG.');
+    if (status === 404) throw erro_('config', 'O modelo "' + modelo + '" não foi encontrado. Confira a linha "' + linhaConfig + '" na aba CONFIG.');
     if (status !== 400) throw erro_('upstream_error', 'O Gemini falhou (' + status + '). Tente de novo.');
   }
   console.error('Gemini 400: ' + ultimo);
   throw erro_('upstream_error', 'O Gemini recusou o pedido. Veja o registro de execuções do Apps Script.');
+}
+function gemini_(contents, modelo) {
+  modelo = modelo || String(config_().modelo || PADRAO.modelo);
+  // Tenta a configuração completa; se o modelo recusar algum campo, tenta de novo com menos.
+  const j = postGemini_(modelo, [
+    { contents: contents, generationConfig: { temperature: 0.8, responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } } },
+    { contents: contents, generationConfig: { temperature: 0.8, responseMimeType: 'application/json' } },
+    { contents: contents }
+  ], 'modelo');
+  const cand = j.candidates && j.candidates[0];
+  const partes = (cand && cand.content && cand.content.parts) || [];
+  const texto = partes.filter(function (p) { return p && !p.thought && typeof p.text === 'string'; }).map(function (p) { return p.text; }).join('');
+  if (!texto.trim()) throw erro_('refused', 'O professor não respondeu a esse pedido.');
+  const um = j.usageMetadata || {};
+  return { text: texto, tokensIn: Number(um.promptTokenCount) || 0, tokensOut: (Number(um.candidatesTokenCount) || 0) + (Number(um.thoughtsTokenCount) || 0) };
 }

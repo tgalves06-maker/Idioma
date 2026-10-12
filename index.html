@@ -661,11 +661,76 @@ function temaDoDia(){
   if (g.includes('Entrevista de emprego')) return 'Falar sobre sua experiência numa entrevista';
   return 'Apresentar-se e conhecer uma pessoa nova';
 }
-function falar(texto){
-  try { if (!('speechSynthesis' in window)) return; const u = new SpeechSynthesisUtterance(texto); u.lang = LANGS[S.profile.target].tts; u.rate = lv() < 3 ? 0.85 : 1; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch(e){}
+/* ============================== voz ============================== */
+// Duas fontes de voz: a voz natural do Gemini (pelo servidor) ou uma voz do próprio aparelho,
+// sempre escolhida no idioma estudado, para não ler inglês com sotaque de outra língua.
+const VOZES_GEMINI = [
+  ['Puck','animada'],['Kore','firme'],['Charon','informativa'],['Aoede','leve'],['Leda','jovem'],
+  ['Orus','segura'],['Zephyr','clara'],['Achird','amigável'],['Sulafat','calorosa'],['Iapetus','nítida']];
+const VOZ_PADRAO = {en:'Puck', es:'Aoede', fr:'Charon', it:'Orus', de:'Iapetus', pt:'Leda'};
+const EXEMPLO_VOZ = {en:"Hi! What's your schedule today?", es:'¡Hola! ¿Qué tienes en tu agenda hoy?', fr:"Salut ! Qu'est-ce que tu as au programme aujourd'hui ?", it:'Ciao! Che programmi hai per oggi?', de:'Hallo! Was steht heute auf deinem Plan?', pt:'Oi! Qual é a sua agenda hoje?'};
+const VELOCIDADES = [[0.75,'Devagar'],[0.9,'Calma'],[1,'Normal']];
+let GEMINI_VOZ_OK = true; // vira false se o servidor ainda não tiver a voz
+const audioCache = new Map();
+let PLAYER = null;
+function prefVoz(){
+  const p = (S.profile && S.profile.voz) || {};
+  const lang = S.profile ? S.profile.target : 'en';
+  return { motor: p.motor || 'gemini', gemini: p.gemini || VOZ_PADRAO[lang] || 'Kore', aparelho: p.aparelho || '', velocidade: p.velocidade || (lv() >= 0 && lv() < 3 ? 0.9 : 1) };
 }
-const podeFalar = () => { try { return 'speechSynthesis' in window; } catch(e){ return false; } };
-const ouvirBtn = texto => podeFalar() ? h('button',{class:'btn link',type:'button','aria-label':'Ouvir',onclick:() => falar(texto)}, icon('sound'), 'Ouvir') : null;
+// Um WAV silencioso curto destrava o áudio no iPhone dentro do toque do usuário.
+const SILENCIO = (() => { const n = 240, b = new DataView(new ArrayBuffer(44 + n * 2)); const w = (o, t) => { for (let i = 0; i < t.length; i++) b.setUint8(o + i, t.charCodeAt(i)); };
+  w(0,'RIFF'); b.setUint32(4, 36 + n * 2, true); w(8,'WAVE'); w(12,'fmt '); b.setUint32(16,16,true); b.setUint16(20,1,true); b.setUint16(22,1,true); b.setUint32(24,24000,true); b.setUint32(28,48000,true); b.setUint16(32,2,true); b.setUint16(34,16,true); w(36,'data'); b.setUint32(40, n * 2, true);
+  let bin = ''; const u = new Uint8Array(b.buffer); for (let i = 0; i < u.length; i++) bin += String.fromCharCode(u[i]); return 'data:audio/wav;base64,' + btoa(bin); })();
+function wavBlob(b64, mime){
+  const bin = atob(b64), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const riff = bytes.length > 4 && bytes[0] === 82 && bytes[1] === 73 && bytes[2] === 70 && bytes[3] === 70;
+  if (riff || /wav/i.test(mime || '')) return new Blob([bytes], {type:'audio/wav'});
+  // PCM puro (16 bits, mono): acrescenta o cabeçalho WAV
+  const rate = Number((/rate=(\d+)/.exec(mime || '') || [])[1]) || 24000, head = new DataView(new ArrayBuffer(44));
+  const w = (o, t) => { for (let i = 0; i < t.length; i++) head.setUint8(o + i, t.charCodeAt(i)); };
+  w(0,'RIFF'); head.setUint32(4, 36 + bytes.length, true); w(8,'WAVE'); w(12,'fmt '); head.setUint32(16,16,true); head.setUint16(20,1,true); head.setUint16(22,1,true);
+  head.setUint32(24, rate, true); head.setUint32(28, rate * 2, true); head.setUint16(32,2,true); head.setUint16(34,16,true); w(36,'data'); head.setUint32(40, bytes.length, true);
+  return new Blob([head.buffer, bytes], {type:'audio/wav'});
+}
+function vozesAparelho(lang){
+  let todas = []; try { todas = speechSynthesis.getVoices() || []; } catch(e){}
+  const code = LANGS[lang].tts.toLowerCase(), base = code.slice(0, 2);
+  const nota = v => (v.lang.replace('_','-').toLowerCase() === code ? 4 : 0) + (/natural|neural|premium|enhanced|google|siri/i.test(v.name) ? 3 : 0) + (v.localService ? 1 : 0);
+  return todas.filter(v => v.lang && v.lang.replace('_','-').toLowerCase().indexOf(base) === 0).sort((a,b) => nota(b) - nota(a));
+}
+function esperarVozes(){
+  return new Promise(res => { try { if (speechSynthesis.getVoices().length) return res(); speechSynthesis.addEventListener('voiceschanged', () => res(), {once:true}); } catch(e){ return res(); } setTimeout(res, 1200); });
+}
+function falarAparelho(texto, pref){
+  try {
+    if (!('speechSynthesis' in window)) return false;
+    const lang = S.profile.target, lista = vozesAparelho(lang);
+    const voz = lista.find(v => v.voiceURI === pref.aparelho) || lista[0];
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = voz ? voz.lang : LANGS[lang].tts; if (voz) u.voice = voz; u.rate = pref.velocidade;
+    speechSynthesis.cancel(); speechSynthesis.speak(u); return true;
+  } catch(e){ return false; }
+}
+// Fala o texto. Chamada direto do toque do usuário, para o celular permitir o som.
+function falar(texto, prefExtra){
+  const pref = Object.assign(prefVoz(), prefExtra || {});
+  if (pref.motor !== 'gemini' || !GEMINI_VOZ_OK) return Promise.resolve(falarAparelho(texto, pref));
+  if (!PLAYER) PLAYER = new Audio();
+  try { speechSynthesis.cancel(); } catch(e){}
+  PLAYER.pause(); PLAYER.src = SILENCIO; const destrava = PLAYER.play(); if (destrava) destrava.catch(() => {});
+  const chave = pref.gemini + '|' + texto;
+  const pronto = audioCache.has(chave) ? Promise.resolve(audioCache.get(chave))
+    : api('tts', {text:texto, voice:pref.gemini, slow: pref.velocidade < 0.95}).then(d => { const url = URL.createObjectURL(wavBlob(d.audio, d.mime)); audioCache.set(chave, url); return url; });
+  return pronto.then(url => { PLAYER.pause(); PLAYER.src = url; PLAYER.playbackRate = pref.velocidade < 0.8 ? 0.85 : 1; return PLAYER.play().then(() => true); })
+    .catch(e => {
+      if (e && (e.code === 'bad_request' || e.code === 'config')) GEMINI_VOZ_OK = false; // servidor sem a voz: usa a do aparelho
+      return falarAparelho(texto, pref);
+    });
+}
+const podeFalar = () => true;
+const ouvirBtn = texto => h('button',{class:'btn link',type:'button','aria-label':'Ouvir',onclick:ev => { const b = ev.currentTarget; b.disabled = true; falar(texto).finally(() => { b.disabled = false; }); }}, icon('sound'), 'Ouvir');
 
 /* ============================== navegação ============================== */
 const ui = { screen:'welcome', tab:'inicio', min:null };
@@ -1210,12 +1275,46 @@ function telaPerfil(){
     h('button',{class:'btn',type:'button',onclick:() => { d.name = nome.value.trim() || p.name; d.work = trab.value.trim(); S.profile = d; ui.min = null; save(); msg.textContent = 'Salvo. As próximas missões já usam essas escolhas.'; }},'Salvar'), msg,
     h('div',{class:'card stack tight'}, h('div',{class:'row between'}, h('span',null,'Idioma'), h('b',null,LANGS[p.target].n.replace(/ \(.*/,''))), h('div',{class:'row between'}, h('span',null,'Nível atual'), h('b',null,S.level)),
       h('button',{class:'btn sec',type:'button',onclick:telaExperiencia},'Refazer o teste de nível')),
+    cartaoVoz(),
     h('div',{class:'card stack tight'}, h('h3',null,'Instalar no celular'),
       h('p',{class:'muted small'},'No Android (Chrome): menu de três pontos, depois "Instalar app" ou "Adicionar à tela inicial". No iPhone (Safari): botão Compartilhar, depois "Adicionar à Tela de Início".'),
       instalarEvt ? h('button',{class:'btn sec',type:'button',onclick:() => { instalarEvt.prompt(); instalarEvt = null; }},'Instalar agora') : null),
     h('div',{class:'card stack tight'}, h('div',{class:'row between'}, h('span',null,'Conta'), h('b',{class:'small',style:'overflow-wrap:anywhere;text-align:right'}, USER ? USER.email : '')),
       h('button',{class:'btn sec',type:'button',onclick:sair},'Sair da conta')),
     apagar);
+}
+
+function cartaoVoz(){
+  const box = h('section',{class:'card stack'});
+  const lang = S.profile.target, t = tutorDe(lang);
+  const guarda = mud => { S.profile.voz = Object.assign(prefVoz(), mud); save(); };
+  const draw = async () => {
+    const pref = prefVoz(), msg = h('p',{class:'small muted',role:'status'});
+    const testar = h('button',{class:'btn sec',type:'button',onclick:() => { msg.textContent = 'Carregando a voz...'; testar.disabled = true;
+      falar(EXEMPLO_VOZ[lang]).then(ok => { msg.textContent = !GEMINI_VOZ_OK && pref.motor === 'gemini' ? 'A voz natural ainda não está ligada no servidor. Toquei com a voz do celular.' : ok ? '' : 'Não consegui tocar o som. Confira o volume e o modo silencioso.'; })
+        .finally(() => { testar.disabled = false; }); }}, icon('sound'), 'Ouvir um exemplo');
+    let opcoes;
+    if (pref.motor === 'gemini'){
+      opcoes = h('div',{class:'stack tight'}, h('span',{class:'small muted'},'Escolha a voz de ' + t.nome + ':'),
+        chipSet(VOZES_GEMINI.map(([n,d]) => [n, n + ' · ' + d]), pref.gemini, false, v => { guarda({gemini:v}); }));
+    } else {
+      await esperarVozes();
+      const lista = vozesAparelho(lang);
+      opcoes = lista.length
+        ? h('div',{class:'field'}, h('label',{for:'pf-voz'},'Voz do celular em ' + nomeIdioma(lang)),
+            (() => { const sel = h('select',{id:'pf-voz',style:'min-height:48px;border-radius:12px;padding:0 10px;font:inherit;background:var(--surface);color:var(--ink);border:1.5px solid var(--line)',onchange:ev => guarda({aparelho:ev.target.value})},
+              lista.map(v => h('option',{value:v.voiceURI, selected: v.voiceURI === (pref.aparelho || lista[0].voiceURI)}, v.name + ' (' + v.lang + ')'))); return sel; })())
+        : h('p',{class:'note soft small'},'Este celular não tem voz instalada para ' + nomeIdioma(lang) + '. Use a voz natural ou instale uma voz nas configurações do celular.');
+    }
+    box.replaceChildren(
+      h('div',{class:'row'}, tutorEl(lang,'happy',44), h('div',null, h('h3',null,'Voz do professor'), h('div',{class:'small muted'},'Para ouvir a pronúncia certa das palavras e frases.'))),
+      chipSet([['gemini','Voz natural (Gemini)'],['aparelho','Voz do celular']], pref.motor, false, v => { guarda({motor:v}); draw(); }),
+      opcoes,
+      h('div',{class:'stack tight'}, h('span',{class:'small muted'},'Velocidade'), chipSet(VELOCIDADES, pref.velocidade, false, v => guarda({velocidade:v}))),
+      testar, msg);
+  };
+  draw();
+  return box;
 }
 
 /* ============================== partida ============================== */
