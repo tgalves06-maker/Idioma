@@ -730,6 +730,7 @@ function falar(texto, prefExtra){
     });
 }
 const podeFalar = () => true;
+function destravarAudio(){ try { if (!PLAYER) PLAYER = new Audio(); PLAYER.src = SILENCIO; const p = PLAYER.play(); if (p) p.catch(() => {}); } catch(e){} }
 const ouvirBtn = texto => h('button',{class:'btn link',type:'button','aria-label':'Ouvir',onclick:ev => { const b = ev.currentTarget; b.disabled = true; falar(texto).finally(() => { b.disabled = false; }); }}, icon('sound'), 'Ouvir');
 
 /* ============================== navegação ============================== */
@@ -1141,7 +1142,8 @@ function fimMissao(head){
 /* ============================== conversa com o professor ============================== */
 // Componente usado na missão (com número de trocas) e na aba Conversar (livre).
 function chatUI(o){
-  const rules = regrasConversa(o.cenario);
+  const rules = o.regras || regrasConversa(o.cenario);
+  const vozExtra = o.voz ? {gemini:o.voz} : null;
   const hist = []; let turns = 0, busy = false, ended = false;
   const log = h('div',{class:'chat'});
   const ta = h('textarea',{id:'chat-msg',rows:'1',placeholder:'Sua resposta',maxlength:'400','aria-label':'Sua mensagem'});
@@ -1153,15 +1155,15 @@ function chatUI(o){
   const tutor = (reply, pt, mood) => {
     const tr = h('div');
     const b = h('div',{class:'bubble tutor'}, h('div',{class:'alvo'}, reply), tr,
-      h('div',{class:'acts'}, podeFalar() ? h('button',{type:'button',onclick:() => falar(reply)},'Ouvir') : null,
+      h('div',{class:'acts'}, podeFalar() ? h('button',{type:'button',onclick:() => falar(reply, vozExtra)},'Ouvir') : null,
         pt ? h('button',{type:'button',onclick:() => tr.replaceChildren(h('div',{class:'tr'},pt))},'Traduzir') : null));
-    const row = h('div',{class:'msg tutor'}, tutorEl(S.profile.target, mood || 'neutral', 36, mood === 'happy' ? 'pop' : ''), b);
+    const row = h('div',{class:'msg tutor'}, o.rosto ? o.rosto() : tutorEl(S.profile.target, mood || 'neutral', 36, mood === 'happy' ? 'pop' : ''), b);
     log.append(row); row.scrollIntoView({block:'end'});
   };
   const setStatus = () => { status.textContent = o.alvo ? (turns >= o.alvo ? 'Conversa concluída.' : 'Troca ' + Math.min(turns + 1, o.alvo) + ' de ' + o.alvo) : (turns ? turns + (turns === 1 ? ' troca' : ' trocas') + ' nesta conversa' : ''); };
   async function call(){
     busy = true; sendBtn.disabled = true;
-    const wait = h('div',{class:'typing'}, h('span',{class:'dots'},h('i'),h('i'),h('i')), ' ' + tutorDe(S.profile.target).nome + ' está digitando'); log.append(wait); wait.scrollIntoView({block:'end'});
+    const wait = h('div',{class:'typing'}, h('span',{class:'dots'},h('i'),h('i'),h('i')), ' ' + (o.nome || tutorDe(S.profile.target).nome) + ' está digitando'); log.append(wait); wait.scrollIntoView({block:'end'});
     try {
       const r = await ai([{role:'user',content:rules}].concat(hist.slice(-12).map(m => ({role:m.role, content:m.content}))));
       wait.remove();
@@ -1174,11 +1176,12 @@ function chatUI(o){
         addError(fix.pattern, last.content, fix.better);
       }
       if (last && last.real){
-        turns += 1; convoTurn(); addXP(4); skill('conversa', fix ? 60 : 100); skill('gramatica', fix ? 45 : 100);
+        turns += 1; convoTurn(); addXP(4); if (!o.nativo){ skill('conversa', fix ? 60 : 100); skill('gramatica', fix ? 45 : 100); }
         const bonus = touchDay(); if (bonus) addXP(bonus);
         save(); if (o.onTurn) o.onTurn(!!fix);
       }
       tutor(reply, str(r.pt), fix ? 'think' : 'happy'); setStatus();
+      if (o.autoFalar && o.autoFalar()) falar(reply, vozExtra);
       if (o.alvo && turns >= o.alvo && !ended){ ended = true; composer.hidden = true; if (o.onDone) o.onDone(); }
     } catch(e){
       wait.remove();
@@ -1189,14 +1192,95 @@ function chatUI(o){
   }
   function send(){
     const t = ta.value.trim(); if (!t || busy || ended) return;
+    if (o.autoFalar && o.autoFalar()) destravarAudio(); // o toque em Enviar libera o som da resposta
     ta.value = ''; log.append(h('div',{class:'msg me'}, h('div',{class:'bubble me alvo'}, t), avatarEl(meuAvatar(), 30)));
     hist.push({role:'user', content:t, real:true}); call();
   }
   if (o.abertura){ hist.push({role:'assistant', content: JSON.stringify({reply:o.abertura, pt:o.abertura_t || '', fix:null})}); tutor(o.abertura, o.abertura_t); }
   else { hist.push({role:'user', content:'(início) Comece você a conversa agora, com a sua primeira fala.'}); call(); }
   setStatus();
-  return h('div',{class:'stack'}, h('div',{class:'card flat small'}, o.cenario), log, status, composer, micMsg,
+  const wrap = h('div',{class:'stack'}, h('div',{class:'card flat small'}, o.cenarioVisivel || o.cenario), log, status, composer, micMsg,
     h('p',{class:'muted small'}, SR ? 'Pode errar à vontade: aqui ninguém julga. Toque no microfone para responder falando.' : 'Pode errar à vontade: aqui ninguém julga. Para falar em vez de digitar, use o microfone do teclado.'));
+  wrap.conversa = () => hist.filter(m => m.real || m.role === 'assistant').map(m => { if (m.role === 'user') return {quem:'aluno', texto:m.content}; let r = ''; try { r = JSON.parse(m.content).reply; } catch(e){} return {quem:'nativo', texto:r}; }).filter(x => x.texto);
+  wrap.trocas = () => turns;
+  return wrap;
+}
+
+/* ============================== conversa com nativos ============================== */
+// Pessoas fictícias de cidades reais: falam no ritmo natural, não corrigem, e no fim o professor avalia.
+const NATIVOS_P = {
+  en:[{nome:'Emma', papel:'barista', cidade:'Londres', voz:'Aoede', av:{bg:6,pele:0,cabelo:1,hc:3,roupa:3,extra:2}, cena:'Você entra numa cafeteria em Londres para pedir um café, e a Emma puxa conversa.'},
+      {nome:'Jake', papel:'colega de trabalho', cidade:'Chicago', voz:'Puck', av:{bg:1,pele:3,cabelo:0,hc:0,roupa:0,extra:0}, cena:'Primeiro dia num projeto com uma equipe de Chicago. No intervalo, o Jake quer saber de você e do seu trabalho.'}],
+  es:[{nome:'Carmen', papel:'vizinha', cidade:'Madri', voz:'Kore', av:{bg:3,pele:1,cabelo:2,hc:1,roupa:1,extra:2}, cena:'Você acabou de se mudar para Madri e encontra a vizinha Carmen no elevador.'},
+      {nome:'Diego', papel:'motorista de aplicativo', cidade:'Cidade do México', voz:'Orus', av:{bg:8,pele:3,cabelo:5,hc:0,roupa:2,extra:0}, cena:'Você pega um carro de aplicativo do aeroporto até o hotel, e o Diego é de falar bastante.'}],
+  fr:[{nome:'Camille', papel:'dona de uma livraria', cidade:'Paris', voz:'Leda', av:{bg:4,pele:0,cabelo:1,hc:4,roupa:5,extra:1}, cena:'Você procura um presente numa livraria pequena de Paris e pede ajuda à Camille.'},
+      {nome:'Julien', papel:'colega de trabalho', cidade:'Lyon', voz:'Charon', av:{bg:5,pele:1,cabelo:0,hc:1,roupa:3,extra:1}, cena:'Reunião rápida com o Julien, de Lyon, para combinar uma entrega da semana.'}],
+  it:[{nome:'Giulia', papel:'garçonete', cidade:'Roma', voz:'Zephyr', av:{bg:0,pele:1,cabelo:2,hc:0,roupa:1,extra:2}, cena:'Almoço numa trattoria em Roma. Você pede sugestões à Giulia.'},
+      {nome:'Marco', papel:'guia de turismo', cidade:'Milão', voz:'Fenrir', av:{bg:2,pele:2,cabelo:5,hc:1,roupa:0,extra:0}, cena:'Você está perdido em Milão e pergunta ao Marco como chegar e o que vale visitar.'}],
+  de:[{nome:'Lena', papel:'colega de apartamento', cidade:'Berlim', voz:'Kore', av:{bg:7,pele:0,cabelo:3,hc:3,roupa:6,extra:1}, cena:'Você divide apartamento com a Lena em Berlim, e vocês combinam as tarefas da casa.'},
+      {nome:'Jonas', papel:'recepcionista de hotel', cidade:'Munique', voz:'Iapetus', av:{bg:1,pele:0,cabelo:0,hc:2,roupa:3,extra:3}, cena:'Check-in num hotel em Munique, com um probleminha na sua reserva.'}],
+  pt:[{nome:'Ana', papel:'colega de trabalho', cidade:'São Paulo', voz:'Sulafat', av:{bg:2,pele:4,cabelo:3,hc:0,roupa:4,extra:2}, cena:'Café da manhã no escritório em São Paulo. A Ana quer saber como foi seu fim de semana.'},
+      {nome:'João', papel:'dono de um café', cidade:'Lisboa', voz:'Iapetus', av:{bg:5,pele:1,cabelo:5,hc:5,roupa:2,extra:1}, cena:'Você pede um café e um pastel de nata em Lisboa, e o João, que fala português de Portugal, puxa conversa.'}]
+};
+function regrasNativo(n){
+  const L = nomeIdioma(S.profile.target), i = lv();
+  const ritmo = i <= 1 ? 'O aluno é iniciante: use palavras muito comuns e frases de até 8 palavras, sem gírias.'
+    : i === 2 ? 'Use vocabulário do dia a dia e frases simples, com uma ou outra expressão comum.'
+    : i === 3 ? 'Fale no ritmo natural, com algumas expressões idiomáticas e o jeito local.'
+    : 'Fale exatamente como um nativo: ritmo, vocabulário, expressões e gírias leves da cidade.';
+  return 'TAREFA: nativo\nVocê é ' + n.nome + ', ' + n.papel + ' em ' + n.cidade + '. Você é uma pessoa real, nativa dessa cidade, conversando com um adulto estrangeiro que está aprendendo ' + L + ' (nível ' + S.level + ').\nSituação: ' + n.cena + '\n\n' + ritmo + ' Reaja ao que ele diz, conte coisas suas, faça perguntas e mantenha a conversa andando como numa conversa de verdade. Não corrija, não ensine e não diga que é uma IA ou professor. Se ele não entender, repita de outro jeito, mais simples, como um nativo paciente faria.\n\nSobre o aluno (use só para escolher assuntos; não comente): ' + ctx().split('\n').slice(0, 2).join(' ') + '\n\nA cada mensagem do aluno, responda SOMENTE com um objeto JSON: {"reply": sua fala em ' + L + ', de 1 a 3 frases curtas, "pt": tradução da sua fala para ' + S.profile.native + '}. Sem markdown.';
+}
+function promptAvaliarConversa(n, conversa){
+  const L = nomeIdioma(S.profile.target);
+  return 'TAREFA: avaliar_conversa\n' + REGRAS_BASE + '\n\n' + ctx() + '\n\nO aluno conversou em ' + L + ' com ' + n.nome + ', ' + n.papel + ' nativo(a) de ' + n.cidade + '. Situação: ' + n.cena + '\nConversa:\n' + conversa.map(m => (m.quem === 'aluno' ? 'Aluno: ' : n.nome + ': ') + m.texto).join('\n') +
+    '\n\nAvalie só as falas do aluno, considerando o nível dele (' + S.level + '). Responda SOMENTE com um objeto JSON: {"notas": {"fluencia": 0 a 100, "vocabulario": 0 a 100, "gramatica": 0 a 100, "naturalidade": 0 a 100}, "resumo": 2 frases em ' + S.profile.native + ', gentis e específicas, começando pelo que foi bem, "frases": até 5 itens {"voce": frase do aluno que poderia soar mais natural, "nativo": como um nativo de ' + n.cidade + ' diria, "porque": explicação curta em ' + S.profile.native + ', "padrao": nome curto do padrão de erro em ' + S.profile.native + ' ou null}, "treinar": até 3 itens curtos em ' + S.profile.native + ' do que treinar a seguir, "palavras": até 3 itens {"w": palavra ou expressão útil em ' + L + ' que apareceu ou faria falta, "t": tradução, "ex": frase curta de exemplo}}. Sem markdown.';
+}
+function telaNativo(n){
+  let auto = true; try { auto = lsGet('idioma-ia:autofala') !== '0'; } catch(e){}
+  const rosto = () => avatarEl(n.av, 36);
+  const chat = chatUI({nativo:true, regras:regrasNativo(n), cenario:n.cena, cenarioVisivel:n.cena, alvo:0, nome:n.nome, voz:n.voz, rosto, autoFalar:() => auto});
+  const avaliar = h('button',{class:'btn',type:'button',onclick:() => {
+    if (chat.trocas() < 3){ aviso.textContent = 'Converse pelo menos 3 trocas para eu conseguir avaliar.'; return; }
+    telaAvaliacao(n, chat.conversa());
+  }}, 'Encerrar e ver minha avaliação');
+  const aviso = h('p',{class:'small muted',role:'status'});
+  show('chat',
+    h('div',{class:'row between'}, h('div',{class:'row'}, avatarEl(n.av, 48), h('div',null, h('b',{style:'font-size:18px'}, n.nome), h('div',{class:'small muted'}, n.papel + ' · ' + n.cidade))),
+      h('button',{class:'btn link',type:'button',onclick:() => goTab('conversar')},'Sair')),
+    chipSet([[1,'Ouvir as falas'],[0,'Só texto']], auto ? 1 : 0, false, v => { auto = !!v; lsSet('idioma-ia:autofala', v ? '1' : '0'); }),
+    chat, aviso, avaliar);
+}
+function telaAvaliacao(n, conversa){
+  const box = h('div',{class:'stack'});
+  const t = tutorDe(S.profile.target);
+  show('chat', h('div',{class:'row'}, avatarEl(n.av, 44), h('div',null, h('span',{class:'eyebrow'},'Avaliação da conversa'), h('b',{style:'display:block'}, 'com ' + n.nome + ', de ' + n.cidade))), box);
+  runAI(box, t.nome + ' está analisando a sua conversa.', () => ai(promptAvaliarConversa(n, conversa.slice(-30))), r => {
+    r = r && typeof r === 'object' ? r : {};
+    const nt = r.notas || {}, nota = k => clamp(Math.round(Number(nt[k]) || 0), 0, 100);
+    const N4 = [['fluencia','Fluência','var(--accent)'],['vocabulario','Vocabulário','var(--violet)'],['gramatica','Gramática','var(--orange)'],['naturalidade','Naturalidade','var(--teal)']];
+    const media = Math.round(N4.reduce((a,[k]) => a + nota(k), 0) / 4);
+    // o resultado alimenta o progresso e a memória do aluno
+    skill('conversa', Math.round((nota('fluencia') + nota('naturalidade')) / 2)); skill('gramatica', nota('gramatica')); skill('vocabulario', nota('vocabulario'));
+    const frases = (Array.isArray(r.frases) ? r.frases : []).filter(f => f && str(f.voce) && str(f.nativo)).slice(0, 5);
+    frases.forEach(f => { if (str(f.padrao)) addError(f.padrao, f.voce, f.nativo); });
+    const palavras = (Array.isArray(r.palavras) ? r.palavras : []).filter(w => w && str(w.w) && str(w.t)).slice(0, 3);
+    palavras.forEach(w => addWord(w));
+    const ganho = addXP(15); const bonus = touchDay(); if (bonus) addXP(bonus);
+    save(); if (media >= 75) setTimeout(confete, 200);
+    const pic = tutorEl(S.profile.target, media >= 75 ? 'cheer' : media >= 50 ? 'happy' : 'think', 72, 'pop'); pic.style.background = t.fundo; pic.style.borderRadius = '50%';
+    const aneisN = h('div',{class:'aneis'}, N4.map(([k,label,cor]) => { const i = h('i',{'data-v': nota(k), style:'--c:' + cor}); requestAnimationFrame(() => requestAnimationFrame(() => i.style.setProperty('--p', nota(k)))); return h('div',{class:'anel'}, i, label); }));
+    box.replaceChildren(
+      h('section',{class:'card fala-row'}, h('div',{class:'balao'}, h('div',{class:'alvo'}, media >= 75 ? 'Muito bem!' : media >= 50 ? 'Bom caminho!' : 'Valeu o treino!'), h('small',null, str(r.resumo))), pic),
+      h('section',{class:'card stack'}, h('h3',null,'Suas notas'), aneisN, h('p',{class:'small muted'}, '+' + ganho + ' XP pela conversa avaliada.')),
+      frases.length ? h('section',{class:'card stack'}, h('h3',null,'Como um nativo diria'), frases.map(f => h('div',{class:'stack tight',style:'padding-bottom:10px;border-bottom:1px solid var(--line)'},
+        h('div',{class:'small muted'},'Você disse'), h('p',{class:'alvo',style:'text-decoration:line-through;text-decoration-color:var(--warn);opacity:.8'}, str(f.voce)),
+        h('div',{class:'small muted'}, n.nome + ' diria'), h('div',{class:'row between'}, h('p',{class:'alvo',style:'font-weight:600'}, str(f.nativo)), ouvirBtn(str(f.nativo))),
+        str(f.porque) ? h('p',{class:'small'}, str(f.porque)) : null))) : h('div',{class:'note'},'Nenhuma frase precisou de ajuste. Você falou com naturalidade.'),
+      Array.isArray(r.treinar) && r.treinar.length ? h('section',{class:'card stack tight'}, h('h3',null,'Para treinar a seguir'), r.treinar.slice(0,3).map(x => h('p',null,'• ' + str(x)))) : null,
+      palavras.length ? h('section',{class:'card stack tight'}, h('h3',null,'Palavras guardadas para revisão'), palavras.map(w => h('div',{class:'row between'}, h('span',null, h('mark',{class:'alvo'}, str(w.w)), ' ', h('span',{class:'muted small'}, str(w.t))), ouvirBtn(str(w.w))))) : null,
+      h('button',{class:'btn',type:'button',onclick:() => telaNativo(n)},'Conversar de novo com ' + n.nome),
+      h('button',{class:'btn sec',type:'button',onclick:() => goTab('conversar')},'Voltar'));
+  });
 }
 function telaConversar(){
   const livre = { k:'Tema livre', d:'Fale do que quiser.' };
@@ -1204,7 +1288,14 @@ function telaConversar(){
     const cen = s.k === 'Tema livre' ? 'Conversa livre e casual sobre o dia do aluno e os interesses dele.' : s.k + ': ' + s.d + (S.profile.work && s.k === 'Trabalho' ? ' O aluno trabalha com ' + S.profile.work + '.' : '');
     show('chat', h('div',{class:'row between'}, h('h2',null,s.k), h('button',{class:'btn link',type:'button',onclick:() => goTab('conversar')},'Encerrar')), chatUI({cenario:cen, alvo:0}));
   };
-  show('main', h('h1',null,'Conversar'), h('p',{class:'muted'},'Escolha uma situação. O professor responde no idioma que você está aprendendo e corrige com calma, sem interromper.'),
+  const nativos = NATIVOS_P[S.profile.target] || [];
+  show('main', h('h1',null,'Conversar'),
+    nativos.length ? h('section',{class:'stack'}, h('h3',null,'Conversa com nativos'),
+      h('p',{class:'muted small'},'Pessoas daquele lugar, no ritmo de verdade. Sem correção no meio; no fim você recebe uma avaliação.'),
+      nativos.map(n => h('button',{class:'opt',type:'button',style:'display:flex;align-items:center;gap:12px',onclick:() => telaNativo(n)}, avatarEl(n.av, 52),
+        h('div',{class:'grow'}, h('b',null, n.nome + ' · ' + n.cidade), h('div',{class:'muted small'}, n.papel.charAt(0).toUpperCase() + n.papel.slice(1) + '. ' + n.cena))))) : null,
+    h('h3',null,'Treinar com ' + tutorDe(S.profile.target).nome),
+    h('p',{class:'muted'},'Escolha uma situação. O professor responde no idioma que você está aprendendo e corrige com calma, sem interromper.'),
     h('div',{class:'sit'}, SITUACOES.map(s => h('button',{type:'button',onclick:() => abrir(s)}, h('b',null,s.k), h('span',null,s.d)))),
     h('button',{class:'btn',type:'button',onclick:() => abrir(livre)},'Conversar sobre o que eu quiser'));
 }
