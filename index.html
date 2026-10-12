@@ -256,6 +256,57 @@ nav#tabs button[aria-current="page"] .ic{background:var(--accent-soft)}
 nav#tabs{background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .anel i::after{background:var(--surface)}
 .elenco .tutor{box-shadow:0 0 0 3px var(--surface)}
+
+/* ===== modo aventura ===== */
+:root{ --tm1:#6D28D9; --tm2:#DB2777 }
+.av-topo{position:relative;border-radius:24px;overflow:hidden;color:#FFFFFF;background:linear-gradient(150deg,var(--tm1),var(--tm2));box-shadow:0 14px 30px rgba(40,20,90,.3)}
+.av-topo .cena{display:block;width:100%;height:auto}
+.av-info{position:absolute;left:14px;right:14px;bottom:12px;display:flex;align-items:flex-end;gap:10px;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.av-canto{position:absolute;top:12px;right:12px}
+.moedas{display:inline-flex;align-items:center;gap:5px;background:rgba(10,10,30,.55);color:#FFD84A;border-radius:999px;padding:4px 11px 4px 7px;font-weight:700;font-variant-numeric:tabular-nums}
+.moedas .ic{width:18px;height:18px}
+.mapa{display:flex;flex-direction:column;gap:14px}
+.regiao{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.trilha{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));row-gap:8px;position:relative;padding:4px 0}
+.trilha::before{content:"";position:absolute;left:50%;top:16px;bottom:16px;width:4px;margin-left:-2px;border-radius:2px;background:repeating-linear-gradient(var(--line) 0 8px,transparent 8px 16px)}
+.no{grid-column:var(--col);justify-self:center;display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;color:var(--ink);font:700 13px var(--font-ui);position:relative;z-index:1}
+.no i{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--surface);color:var(--muted);box-shadow:var(--shadow),inset 0 -5px 0 rgba(0,0,0,.10);font-style:normal}
+.no i .ic{width:28px;height:28px}
+.no.chefe i{width:78px;height:78px;background:linear-gradient(150deg,#FBBF24,#F97316);color:#FFFFFF}
+.no.feito i{background:var(--good);color:#FFFFFF}
+.no.atual i{background:linear-gradient(150deg,var(--tm1),var(--tm2));color:#FFFFFF;animation:pulsa 1.8s infinite}
+.no.trancado{opacity:.45}
+.no.trancado.chefe i{background:var(--surface);color:var(--muted)}
+@keyframes pulsa{0%{box-shadow:0 0 0 0 rgba(124,92,255,.55)}70%{box-shadow:0 0 0 16px rgba(124,92,255,0)}100%{box-shadow:0 0 0 0 rgba(124,92,255,0)}}
+.vidas{display:inline-flex;gap:2px;color:#E5484D}
+.vidas .ic{width:22px;height:22px}
+.vidas .ic.vazio{color:var(--line)}
+.arena{position:relative;border-radius:22px;padding:14px 16px 16px;color:#FFFFFF;background:linear-gradient(160deg,var(--tm1),var(--tm2));display:flex;flex-direction:column;align-items:center;gap:8px;overflow:hidden}
+.arena .inimigo{width:120px;height:120px;display:block}
+.arena .inimigo svg{width:100%;height:100%}
+.arena .heroi{position:absolute;left:12px;bottom:12px}
+.arena{padding-bottom:70px}
+.av-info{text-shadow:0 1px 6px rgba(0,0,0,.55)}
+.hp{width:70%;height:12px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden}
+.hp i{display:block;height:100%;background:#FFD84A;transition:width .45s ease}
+.tempo{width:100%;height:7px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.tempo i{display:block;height:100%;background:linear-gradient(90deg,#F97316,#FACC15);transition:width .2s linear}
+.dano{position:absolute;top:28%;left:58%;font:800 30px var(--font-display);color:#FFD84A;animation:sobe .9s ease forwards;pointer-events:none;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+@keyframes sobe{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-44px)}}
+.narra{border-radius:18px;padding:14px 16px;background:linear-gradient(140deg,var(--tm1),var(--tm2));color:#FFFFFF;font-size:16px}
+.temas{display:grid;grid-template-columns:1fr;gap:12px}
+.tema{border:0;border-radius:20px;overflow:hidden;padding:0;text-align:left;background:var(--surface);box-shadow:var(--shadow);color:var(--ink)}
+.tema-arte{display:block;line-height:0}
+.tema-arte svg{width:100%;height:auto}
+.tema > div:last-child{padding:12px 14px}
+.item{display:flex;align-items:center;gap:12px}
+.convite-jogo{display:flex;align-items:stretch;gap:0;border:0;padding:0;border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow);text-align:left;color:var(--ink)}
+.convite-arte{width:42%;flex:none;background:linear-gradient(150deg,#6D28D9,#DB2777);line-height:0;display:flex;align-items:center}
+.convite-arte svg{width:100%;height:auto}
+.convite-txt{display:flex;flex-direction:column;gap:3px;padding:12px 14px;min-width:0}
+.convite-txt span{font-size:13px;color:var(--muted)}
+.convite-txt .convite-cta{color:var(--accent);font-weight:700;font-size:14px;margin-top:2px}
+@media (prefers-reduced-motion: reduce){ .no.atual i,.dano{animation:none} }
 </style>
 </head>
 <body>
@@ -336,6 +387,14 @@ const ICONS = {
   sound:'<path d="M4 9.500h3.500L12 5.500v13L7.500 14.500H4z"/><path d="M15.500 9c1.300 1.700 1.300 4.300 0 6"/><path d="M18 6.500c2.600 3.200 2.600 7.800 0 11"/>',
   send:'<path d="M4 12 20 4l-5 16-3.500-6.500z"/><path d="m11.500 13.500 4-4.500"/>',
   check:'<path d="m5 12.500 4.500 4.500L19 7.500"/>',
+  heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" fill="currentColor"/>',
+  coin:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 10h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/>',
+  chest:'<rect x="3" y="9" width="18" height="11" rx="2"/><path d="M3 13h18M5 9a7 5 0 0 1 14 0M11 12h2v3h-2z"/>',
+  flag:'<path d="M6 21V4"/><path d="M6 4h11l-2 4 2 4H6"/>',
+  swords:'<path d="M4 4l10 10M4 4h4M4 4v4M20 4L10 14M20 4h-4M20 4v4M7 17l-3 3M17 17l3 3M8 13l3 3M16 13l-3 3"/>',
+  crown:'<path d="M4 18h16l1.5-10-5.5 4L12 5l-4 7-5.5-4z"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  map:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',
   mic:'<rect x="9" y="3.500" width="6" height="11" rx="3"/><path d="M5.500 11.500a6.500 6.500 0 0 0 13 0"/><path d="M12 18v3"/>'
 };
 function icon(name){ const s = document.createElement('span'); s.className = 'ic'; s.setAttribute('aria-hidden','true'); s.innerHTML = '<svg viewBox="0 0 24 24">'+ICONS[name]+'</svg>'; return s; }
@@ -441,7 +500,18 @@ function avatarSVG(a){
   if (extra === 1) acc = `<g fill="none" stroke="${INK}" stroke-width="2"><circle cx="43" cy="48" r="6"/><circle cx="57" cy="48" r="6"/><path d="M49 48h2"/></g>`;
   else if (extra === 2) acc = `<circle cx="30" cy="56" r="2.4" fill="#FFD84A"/><circle cx="70" cy="56" r="2.4" fill="#FFD84A"/>`;
   else if (extra === 3) acc = `<path d="M27 50 Q27 20 50 20 Q73 20 73 50" fill="none" stroke="${INK}" stroke-width="3"/><rect x="23" y="45" width="7" height="12" rx="3" fill="${INK}"/><path d="M27 56 Q30 66 40 64" fill="none" stroke="${INK}" stroke-width="2"/>`;
-  return `<svg viewBox="0 0 100 100" role="img" aria-label="Avatar"><rect width="100" height="100" fill="${bg}"/>${atras}<path d="M12 104 Q16 74 50 72 Q84 74 88 104Z" fill="${roupa}"/><rect x="43" y="60" width="14" height="16" rx="5" fill="${pele}"/><circle cx="30" cy="49" r="4.5" fill="${pele}"/><circle cx="70" cy="49" r="4.5" fill="${pele}"/><ellipse cx="50" cy="47" rx="20" ry="22" fill="${pele}"/>${cabelo}<circle cx="43" cy="48" r="2.5" fill="${INK}"/><circle cx="57" cy="48" r="2.5" fill="${INK}"/><path d="M44 57 Q50 62 56 57" stroke="${INK}" stroke-width="2.3" fill="none" stroke-linecap="round"/>${acc}</svg>`;
+  const it = a.item || '';
+  const capa = it === 'capa' ? `<path d="M14 104 Q16 70 32 64 L68 64 Q84 70 86 104Z" fill="#B8323A"/><path d="M36 66 L50 76 L64 66" fill="#FFD84A"/>` : '';
+  const ITEM_SVG = {
+    mago:`<path d="M26 34 L50 0 L74 34 Z" fill="#5B3FA0"/><path d="M18 34 Q50 42 82 34 L82 39 Q50 47 18 39Z" fill="#3F2A78"/><circle cx="50" cy="15" r="3" fill="#FFD84A"/><circle cx="40" cy="26" r="2" fill="#FFD84A"/>`,
+    coroa:`<path d="M30 30 L33 13 L42 23 L50 8 L58 23 L67 13 L70 30Z" fill="#FFD84A" stroke="#C99A06" stroke-width="1.5"/><circle cx="50" cy="21" r="2.6" fill="#E5484D"/>`,
+    capacete:`<circle cx="50" cy="47" r="30" fill="#BFE6FF" fill-opacity=".28" stroke="#E6EEF7" stroke-width="4"/><path d="M50 17V7" stroke="#E6EEF7" stroke-width="3"/><circle cx="50" cy="6" r="3.2" fill="#E5484D"/>`,
+    detetive:`<path d="M28 31 Q30 15 50 15 Q70 15 72 31Z" fill="#6B4F3A"/><path d="M16 32 Q50 24 84 32 Q50 40 16 32Z" fill="#4A3628"/><rect x="29" y="26" width="42" height="4" fill="#2A1E16"/>`,
+    viajante:`<path d="M28 32 Q29 16 50 16 Q71 16 72 32Z" fill="#F0782F"/><path d="M20 32 Q50 41 80 32 L78 37 Q50 45 22 37Z" fill="#C85A1A"/>`,
+    oculos:`<path d="M35 43h12v6a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4zM53 43h12v6a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4z" fill="#141B33"/><path d="M47 45h6" stroke="#141B33" stroke-width="2"/>`,
+    medalha:`<path d="M58 74 l4 8 l4 -8" fill="#E5484D"/><circle cx="62" cy="86" r="6" fill="#FFD84A" stroke="#C99A06" stroke-width="1.5"/>`
+  };
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="Avatar"><rect width="100" height="100" fill="${bg}"/>${atras}${capa}<path d="M12 104 Q16 74 50 72 Q84 74 88 104Z" fill="${roupa}"/><rect x="43" y="60" width="14" height="16" rx="5" fill="${pele}"/><circle cx="30" cy="49" r="4.5" fill="${pele}"/><circle cx="70" cy="49" r="4.5" fill="${pele}"/><ellipse cx="50" cy="47" rx="20" ry="22" fill="${pele}"/>${cabelo}<circle cx="43" cy="48" r="2.5" fill="${INK}"/><circle cx="57" cy="48" r="2.5" fill="${INK}"/><path d="M44 57 Q50 62 56 57" stroke="${INK}" stroke-width="2.3" fill="none" stroke-linecap="round"/>${acc}${ITEM_SVG[it] || ''}</svg>`;
 }
 function avatarDeSemente(seed){
   let x = 0; const s = String(seed || 'idioma');
@@ -740,9 +810,10 @@ const TABS = [['inicio','Início','home'],['aprender','Aprender','book'],['conve
 function pintarFundo(){ const t = S.profile ? tutorDe(S.profile.target) : null, r = document.documentElement.style; r.setProperty('--tint-a', t ? t.cor + '55' : '#FF9F7A55'); r.setProperty('--tint-b', '#7C5CFF40'); r.setProperty('--tint-c', t ? t.fundo + '99' : '#FFD84A44'); }
 function show(screen, ...kids){ pintarFundo(); ui.screen = screen; tabs.hidden = screen !== 'main'; view.replaceChildren(...kids.flat(Infinity).filter(Boolean)); view.scrollTop = 0; }
 function drawTabs(){
-  tabs.replaceChildren(...TABS.map(([k,label,ic]) => h('button',{type:'button','aria-current': ui.tab === k ? 'page' : null, onclick:() => goTab(k)}, icon(ic), label)));
+  const lista = TABS.map(([k,label,ic]) => k === 'inicio' && modoAventura() ? [k,'Aventura','map'] : [k,label,ic]);
+  tabs.replaceChildren(...lista.map(([k,label,ic]) => h('button',{type:'button','aria-current': ui.tab === k ? 'page' : null, onclick:() => goTab(k)}, icon(ic), label)));
 }
-function goTab(k){ ui.tab = k; drawTabs(); ({inicio:telaInicio, aprender:telaAprender, conversar:telaConversar, progresso:telaProgresso, perfil:telaPerfil})[k](); }
+function goTab(k){ ui.tab = k; drawTabs(); ({inicio:() => modoAventura() ? telaAventura() : telaInicio(), aprender:telaAprender, conversar:telaConversar, progresso:telaProgresso, perfil:telaPerfil})[k](); }
 function boot(){ if (!TOKEN || !USER) return telaBoasVindas(); if (S.profile && S.level) goTab(ui.tab); else if (S.profile) telaExperiencia(); else { if (!draft.name) draft.name = USER.name || ''; telaCadastro(0); } }
 
 /* ============================== boas-vindas e cadastro ============================== */
@@ -1017,6 +1088,9 @@ function telaInicio(){
       h('p',{class:'small',style:'opacity:.9'},'Quanto tempo você tem hoje?'),
       chipSet(TEMPOS_HOJE.map(m => [m, m === 20 ? '20+ min' : m + ' min']), ui.min, false, v => ui.min = v),
       h('button',{class:'btn',type:'button',onclick:() => iniciarMissao(ui.min, PLANOS[ui.min])}, feito ? 'Fazer outra missão' : 'Começar missão')),
+    h('button',{class:'convite-jogo',type:'button',onclick:() => { S.profile.modo = 'aventura'; save(); drawTabs(); goTab('inicio'); }},
+      (() => { const a = h('span',{class:'convite-arte'}); a.innerHTML = cenaSVG((S.jogo && S.jogo.tema) || 'fantasia'); return a; })(),
+      h('span',{class:'convite-txt'}, h('b',null,'Modo Aventura'), h('span',null,'Aprenda jogando um RPG: missões, batalhas e chefes.'), h('span',{class:'convite-cta'}, 'Jogar agora'))),
     h('section',{class:'card stack'}, h('h3',null,'Seu progresso'), aneis()),
     palavra ? h('section',{class:'card stack tight'}, h('span',{class:'eyebrow'},'Palavra de hoje'),
       h('div',{class:'row between'}, h('p',{class:'alvo',style:'font-size:26px;font-weight:600'}, h('mark',null,palavra.w)), ouvirBtn(palavra.w)), sig,
@@ -1366,6 +1440,10 @@ function telaPerfil(){
     h('button',{class:'btn',type:'button',onclick:() => { d.name = nome.value.trim() || p.name; d.work = trab.value.trim(); S.profile = d; ui.min = null; save(); msg.textContent = 'Salvo. As próximas missões já usam essas escolhas.'; }},'Salvar'), msg,
     h('div',{class:'card stack tight'}, h('div',{class:'row between'}, h('span',null,'Idioma'), h('b',null,LANGS[p.target].n.replace(/ \(.*/,''))), h('div',{class:'row between'}, h('span',null,'Nível atual'), h('b',null,S.level)),
       h('button',{class:'btn sec',type:'button',onclick:telaExperiencia},'Refazer o teste de nível')),
+    h('section',{class:'card stack tight'}, h('h3',null,'Modo do app'), h('p',{class:'small muted'},'No modo aventura, a tela de início vira um RPG com mapa, missões e batalhas.'),
+      chipSet([['normal','Normal'],['aventura','Aventura']], modoAventura() ? 'aventura' : 'normal', false, v => { S.profile.modo = v; d.modo = v; save(); drawTabs(); }),
+      modoAventura() || (S.jogo && S.jogo.tema) ? h('div',{class:'stack tight'}, h('span',{class:'small muted'},'Tema da aventura'),
+        chipSet(Object.keys(TEMAS).map(k => [k, TEMAS[k].nome]), (S.jogo && S.jogo.tema) || '', false, v => { J().tema = v; save(); })) : null),
     cartaoVoz(),
     h('div',{class:'card stack tight'}, h('h3',null,'Instalar no celular'),
       h('p',{class:'muted small'},'No Android (Chrome): menu de três pontos, depois "Instalar app" ou "Adicionar à tela inicial". No iPhone (Safari): botão Compartilhar, depois "Adicionar à Tela de Início".'),
@@ -1406,6 +1484,326 @@ function cartaoVoz(){
   };
   draw();
   return box;
+}
+
+
+/* ============================== modo aventura (RPG) ============================== */
+// Um RPG por turnos: mapa com regiões, missões com personagens, batalhas de palavras e
+// chefes feitos dos erros que o aluno mais repete. Todo o conteúdo vem do Gemini, no nível do aluno.
+const TEMAS = {
+  viagem:  {nome:'Viagem pelo mundo', sub:'Você chega ao país e precisa se virar.', cor1:'#0284C7', cor2:'#16A34A',
+            regioes:['Aeroporto','Bairro novo','Centro da cidade','Distrito dos negócios'],
+            estilo:'aventura realista de viagem: aeroporto, hotel, bairro, transporte e trabalho', inimigo:'Mal-entendido', moeda:'milhas', item:'viajante'},
+  fantasia:{nome:'Reino das Palavras', sub:'As palavras viraram feitiços. Recupere-as.', cor1:'#6D28D9', cor2:'#DB2777',
+            regioes:['Vila do Começo','Floresta dos Sussurros','Cidade das Torres','Castelo do Silêncio'],
+            estilo:'fantasia medieval leve: tavernas, mercados, guardas e magos, com situações do dia a dia vestidas de fantasia (pedir comida na taverna, negociar no mercado)', inimigo:'Sombra do Silêncio', moeda:'moedas de ouro', item:'mago'},
+  misterio:{nome:'Detetive Internacional', sub:'Resolva casos interrogando testemunhas.', cor1:'#0F766E', cor2:'#1E293B',
+            regioes:['Delegacia','Bairro antigo','Porto','Mansão do caso'],
+            estilo:'mistério e investigação: interrogar testemunhas, descrever pessoas, lugares e horários, ler pistas', inimigo:'Suspeito', moeda:'pistas', item:'detetive'},
+  espaco:  {nome:'Missão Estelar', sub:'Comunique-se com as estações para salvar a nave.', cor1:'#1E3A8A', cor2:'#7E22CE',
+            regioes:['Base de lançamento','Estação orbital','Lua mineradora','Planeta capital'],
+            estilo:'ficção científica leve: tripulação, estações espaciais, reparos e comércio entre planetas, com situações do dia a dia em cenário espacial', inimigo:'Interferência', moeda:'créditos', item:'capacete'}
+};
+const NOS = ['missao','batalha','missao','chefe'];
+const NIVEL_REGIAO = ['A1','A2','B1','B2'];
+const ITENS = {
+  viajante:{nome:'Chapéu de viagem', preco:120}, mago:{nome:'Chapéu de mago', preco:120}, detetive:{nome:'Chapéu de detetive', preco:120},
+  capacete:{nome:'Capacete espacial', preco:120}, oculos:{nome:'Óculos escuros', preco:80}, medalha:{nome:'Medalha de honra', preco:60},
+  capa:{nome:'Capa de herói', preco:150}, coroa:{nome:'Coroa', preco:300}
+};
+function J(){ if (!S.jogo) S.jogo = {tema:null, feitos:{}, moedas:0, itens:[], bau:'', vencidos:[]}; return S.jogo; }
+const noId = (r, i) => r + '-' + i;
+const noFeito = (r, i) => !!J().feitos[noId(r, i)];
+function noLiberado(r, i){ if (r === 0 && i === 0) return true; return i > 0 ? noFeito(r, i - 1) : noFeito(r - 1, NOS.length - 1); }
+function pintarTema(){ const tm = TEMAS[J().tema] || TEMAS.viagem, st = document.documentElement.style; st.setProperty('--tm1', tm.cor1); st.setProperty('--tm2', tm.cor2); }
+function modoAventura(){ return !!(S.profile && S.profile.modo === 'aventura'); }
+
+// Cenários desenhados (fundo transparente sobre o degradê do tema)
+function cenaSVG(k){
+  const estrelas = n => Array.from({length:n}, (_, i) => `<circle cx="${(i * 73) % 360}" cy="${(i * 37) % 80 + 6}" r="${i % 3 ? 1.2 : 1.8}" fill="#FFFFFF" opacity=".8"/>`).join('');
+  let a = '';
+  if (k === 'viagem') a = `<circle cx="300" cy="34" r="20" fill="#FDE68A"/><g fill="#FFFFFF" opacity=".85"><ellipse cx="70" cy="34" rx="26" ry="9"/><ellipse cx="92" cy="28" rx="18" ry="9"/><ellipse cx="220" cy="48" rx="22" ry="7"/></g><path d="M140 60 l60 -14 l6 4 l-22 10 l26 4 l6 -4 l5 2 l-6 8 l-48 -2 l-14 8 l-6 -1 l8 -10 z" fill="#FFFFFF"/><g fill="#0B3B5C" opacity=".55"><rect x="0" y="100" width="30" height="50"/><rect x="34" y="84" width="26" height="66"/><rect x="64" y="108" width="22" height="42"/><rect x="90" y="76" width="30" height="74"/><rect x="124" y="96" width="24" height="54"/><rect x="230" y="90" width="26" height="60"/><rect x="260" y="70" width="34" height="80"/><rect x="298" y="98" width="24" height="52"/><rect x="326" y="86" width="34" height="64"/></g><rect x="0" y="138" width="360" height="12" fill="#0B3B5C" opacity=".7"/>`;
+  else if (k === 'fantasia') a = estrelas(24) + `<circle cx="296" cy="32" r="16" fill="#FDF4C7"/><circle cx="303" cy="27" r="14" fill="#6D28D9" opacity=".55"/><path d="M0 150 Q80 104 170 128 T360 112 V150Z" fill="#2E1065" opacity=".75"/><g fill="#1E0B4B"><rect x="150" y="70" width="70" height="72"/><rect x="138" y="50" width="22" height="92"/><rect x="210" y="50" width="22" height="92"/><path d="M134 50 L149 26 L164 50Z M206 50 L221 26 L236 50Z"/><path d="M174 70 v-12 h22 v12" /></g><rect x="179" y="112" width="12" height="30" rx="6" fill="#FDE68A"/><rect x="144" y="66" width="8" height="10" fill="#FDE68A"/><rect x="216" y="66" width="8" height="10" fill="#FDE68A"/>`;
+  else if (k === 'misterio') a = `<circle cx="70" cy="30" r="14" fill="#E2E8F0" opacity=".9"/>` + estrelas(10) + `<g fill="#0B1220" opacity=".75"><rect x="0" y="80" width="40" height="70"/><path d="M44 150 V70 L66 56 L88 70 V150Z"/><rect x="92" y="92" width="34" height="58"/><rect x="230" y="74" width="40" height="76"/><path d="M274 150 V88 L300 72 L326 88 V150Z"/><rect x="330" y="96" width="30" height="54"/></g><g fill="#FDE68A" opacity=".85"><rect x="52" y="82" width="6" height="8"/><rect x="72" y="96" width="6" height="8"/><rect x="242" y="90" width="6" height="8"/><rect x="290" y="104" width="6" height="8"/></g><path d="M176 150 V62" stroke="#0B1220" stroke-width="5"/><path d="M164 64 h24 l-4 10 h-16z" fill="#0B1220"/><ellipse cx="176" cy="80" rx="34" ry="16" fill="#FDE68A" opacity=".25"/><circle cx="176" cy="72" r="5" fill="#FDE68A"/><rect x="0" y="140" width="360" height="10" fill="#0B1220" opacity=".8"/>`;
+  else a = estrelas(32) + `<circle cx="270" cy="62" r="34" fill="#F472B6"/><ellipse cx="270" cy="62" rx="58" ry="12" fill="none" stroke="#FDE68A" stroke-width="5" transform="rotate(-14 270 62)"/><circle cx="62" cy="40" r="10" fill="#CBD5E1"/><g transform="translate(110 70) rotate(35)"><path d="M0 -26 Q12 -10 10 16 H-10 Q-12 -10 0 -26Z" fill="#F1F5F9"/><circle cx="0" cy="-4" r="5" fill="#38BDF8"/><path d="M-10 10 L-18 22 L-10 18Z M10 10 L18 22 L10 18Z" fill="#E5484D"/><path d="M-6 16 Q0 34 6 16Z" fill="#FBBF24"/></g><path d="M0 150 Q120 128 240 140 T360 132 V150Z" fill="#0B1036" opacity=".8"/>`;
+  return `<svg class="cena" viewBox="0 0 360 150" aria-hidden="true">${a}</svg>`;
+}
+// Inimigos: um por tema; o chefe ganha coroa e fica maior
+function inimigoSVG(k, chefe){
+  let b = '';
+  if (k === 'viagem') b = `<g fill="#94A3B8"><circle cx="42" cy="58" r="22"/><circle cx="64" cy="46" r="26"/><circle cx="86" cy="60" r="20"/><rect x="30" y="58" width="70" height="24" rx="12"/></g><path d="M58 82 L48 104 L62 96 L56 116 L76 88 L62 94 L70 82Z" fill="#FACC15"/><path d="M46 52 l14 6 M90 52 l-14 6" stroke="#1E293B" stroke-width="4" stroke-linecap="round"/><circle cx="54" cy="64" r="5" fill="#1E293B"/><circle cx="76" cy="64" r="5" fill="#1E293B"/><path d="M56 76 q9 -6 18 0" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  else if (k === 'fantasia') b = `<path d="M30 112 Q24 70 34 50 Q46 26 60 26 Q74 26 86 50 Q96 70 90 112 L80 102 L70 114 L60 102 L50 114 L40 102Z" fill="#2E1065"/><path d="M38 44 L30 18 L50 36Z M82 44 L90 18 L70 36Z" fill="#4C1D95"/><ellipse cx="48" cy="62" rx="7" ry="5" fill="#FDE047"/><ellipse cx="72" cy="62" rx="7" ry="5" fill="#FDE047"/><path d="M50 80 q10 6 20 0" stroke="#A78BFA" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  else if (k === 'misterio') b = `<path d="M28 118 Q30 74 60 70 Q90 74 92 118Z" fill="#1F2937"/><ellipse cx="60" cy="56" rx="20" ry="22" fill="#111827"/><path d="M34 40 Q36 22 60 22 Q84 22 86 40Z" fill="#0B0F19"/><path d="M24 42 Q60 32 96 42 Q60 50 24 42Z" fill="#0B0F19"/><path d="M48 58 h8 M64 58 h8" stroke="#F8FAFC" stroke-width="3" stroke-linecap="round"/><path d="M42 84 L60 96 L78 84" stroke="#374151" stroke-width="3" fill="none"/>`;
+  else b = `<rect x="34" y="34" width="52" height="46" rx="12" fill="#CBD5E1"/><path d="M60 34 V18" stroke="#94A3B8" stroke-width="4"/><circle cx="60" cy="15" r="5" fill="#E5484D"/><rect x="40" y="46" width="40" height="14" rx="7" fill="#0F172A"/><circle cx="50" cy="53" r="4" fill="#F43F5E"/><circle cx="70" cy="53" r="4" fill="#F43F5E"/><g fill="#64748B"><rect x="46" y="66" width="5" height="8"/><rect x="55" y="66" width="5" height="8"/><rect x="64" y="66" width="5" height="8"/></g><rect x="40" y="82" width="40" height="30" rx="8" fill="#94A3B8"/><rect x="24" y="86" width="12" height="22" rx="6" fill="#94A3B8"/><rect x="84" y="86" width="12" height="22" rx="6" fill="#94A3B8"/>`;
+  const coroa = chefe ? `<path d="M40 22 L44 6 L52 16 L60 2 L68 16 L76 6 L80 22Z" fill="#FBBF24" stroke="#B45309" stroke-width="1.5"/>` : '';
+  return `<svg viewBox="0 0 120 120" role="img" aria-label="Inimigo">${b}${coroa}</svg>`;
+}
+function vidasEl(n, max){ return h('span',{class:'vidas','aria-label': n + ' de ' + max + ' vidas'}, Array.from({length:max}, (_, i) => { const e = icon('heart'); if (i >= n) e.classList.add('vazio'); return e; })); }
+function moedasEl(){ return h('span',{class:'moedas'}, icon('coin'), String(J().moedas)); }
+
+/* ---------- prompts ---------- */
+function baseAventura(tm, r){
+  return regras() + '\n\n' + ctx() + '\n\nO aluno está jogando um RPG para aprender ' + nomeIdioma(S.profile.target) + '. Tema: ' + tm.nome + ' (' + tm.estilo + '). Região atual: ' + tm.regioes[r] + '. ' +
+    'Por trás da fantasia, cada desafio deve treinar ' + nomeIdioma(S.profile.target) + ' útil na vida real do aluno, no nível ' + S.level + '. Narração e instruções em ' + S.profile.native + '; falas e respostas em ' + nomeIdioma(S.profile.target) + '.';
+}
+function promptMissaoJogo(tm, r){
+  const L = nomeIdioma(S.profile.target);
+  return 'TAREFA: aventura_missao\n' + baseAventura(tm, r) + '\n\nCrie uma missão curta com 3 cenas encadeadas. Responda SOMENTE com um objeto JSON: {"titulo": nome da missão em até 6 palavras, "intro": 1 ou 2 frases de narração que situam a missão, "cenas": lista com 3 itens {"narra": 1 frase de narração, "npc": nome de um personagem da cena, "fala": fala do personagem em ' + L + ' adequada ao nível, "fala_t": tradução, "opcoes": [3 respostas possíveis em ' + L + '], "certa": índice da resposta adequada e correta (0 a 2), "boa": 1 frase do que acontece de bom quando o aluno responde bem, "ruim": 1 frase gentil explicando por que a resposta escolhida não serve}, "desafio": {"tarefa": instrução de uma frase que o aluno deve escrever em ' + L + ' para concluir a missão}, "recompensa": nome curto de um objeto da história}. Só uma opção correta por cena; varie a posição. Sem markdown.';
+}
+function promptBatalha(tm, r){
+  const L = nomeIdioma(S.profile.target), hard = S.vocab.filter(v => v.box <= 1).slice(-6).map(v => v.w);
+  return 'TAREFA: aventura_batalha\n' + baseAventura(tm, r) + '\n\nCrie uma batalha de palavras contra um inimigo do tema (inspirado em "' + tm.inimigo + '"). Responda SOMENTE com um objeto JSON: {"inimigo": nome do inimigo, "fala": frase curta de desafio que ele diz, "rodadas": lista com 5 itens {"ataque": frase ou pergunta curta em ' + L + ' que o inimigo lança (pode ter ___ para completar), "ataque_t": tradução, "opcoes": [3 respostas em ' + L + '], "certa": índice da correta, "dica": explicação de 1 frase de por que é a correta}}.' + (hard.length ? ' Use nas rodadas algumas destas palavras que o aluno está aprendendo: ' + hard.join(', ') + '.' : '') + ' Misture vocabulário, gramática e respostas a perguntas. Varie a posição da correta. Sem markdown.';
+}
+function promptChefe(tm, r, erro){
+  const L = nomeIdioma(S.profile.target);
+  const foco = erro ? 'o erro que o aluno mais repete: "' + erro.p + '"' + (erro.ex ? ' (ele escreveu "' + erro.ex + '"' + (erro.better ? ', o certo é "' + erro.better + '"' : '') + ')' : '') : 'a estrutura gramatical mais importante do nível ' + S.level;
+  return 'TAREFA: aventura_chefe\n' + baseAventura(tm, r) + '\n\nCrie a batalha contra o chefe da região. O chefe representa ' + foco + ', e todas as rodadas treinam exatamente isso. Responda SOMENTE com um objeto JSON: {"chefe": nome do chefe ligado ao erro, "fala": frase de ameaça curta, "rodadas": lista com 5 itens {"ataque": frase em ' + L + ' com ___ ou pergunta, "ataque_t": tradução, "opcoes": [3 em ' + L + '], "certa": índice, "dica": 1 frase}}, "golpe_final": {"tarefa": instrução para o aluno escrever uma frase em ' + L + ' usando corretamente essa estrutura}}. Varie a posição da correta. Sem markdown.';
+}
+
+/* ---------- escolha de tema ---------- */
+function telaTemas(){
+  show('jogo', h('span',{class:'eyebrow'},'Modo Aventura'), h('h1',null,'Escolha a sua aventura'),
+    h('p',{class:'muted'},'O tema muda a história e o visual. O que você aprende é o mesmo: ' + nomeIdioma(S.profile.target) + ' de verdade, no seu nível.'),
+    h('div',{class:'temas'}, Object.keys(TEMAS).map(k => { const tm = TEMAS[k];
+      const art = h('div',{class:'tema-arte',style:'background:linear-gradient(140deg,' + tm.cor1 + ',' + tm.cor2 + ')'}); art.innerHTML = cenaSVG(k);
+      return h('button',{class:'tema',type:'button',onclick:() => { J().tema = k; save(); telaAventura(); }}, art, h('div',null, h('b',null,tm.nome), h('div',{class:'small muted'}, tm.sub))); })),
+    h('button',{class:'btn link',type:'button',onclick:() => { S.profile.modo = 'normal'; save(); drawTabs(); goTab('inicio'); }},'Voltar ao modo normal'));
+}
+
+/* ---------- mapa ---------- */
+function telaAventura(){
+  const j = J(); if (!j.tema) return telaTemas();
+  pintarTema();
+  const tm = TEMAS[j.tema], x = xpInfo(), t = tutorDe(S.profile.target);
+  const topo = h('section',{class:'av-topo'}); topo.innerHTML = cenaSVG(j.tema);
+  topo.append(h('div',{class:'av-info'}, avatarEl(meuAvatar(), 58),
+    h('div',{class:'grow'}, h('b',{style:'font-size:18px;display:block'}, S.profile.name), h('span',{class:'small',style:'opacity:.9'}, 'Herói nível ' + x.n + ' · ' + x.nome)),
+    tutorEl(S.profile.target, 'happy', 52, 'flutua')),
+    h('div',{class:'av-canto'}, moedasEl()));
+  const bau = j.bau !== today() ? h('section',{class:'card fala-row'},
+    h('div',{class:'grow'}, h('b',null,'Baú do dia'), h('div',{class:'small muted'}, 'Abra uma vez por dia. Pode vir ' + tm.moeda + ' ou um item.')),
+    h('button',{class:'btn',type:'button',style:'width:auto',onclick:() => abrirBau()}, icon('chest'), 'Abrir')) : null;
+  let atual = null;
+  const regioes = tm.regioes.map((nome, r) => {
+    const liberada = noLiberado(r, 0);
+    const nos = NOS.map((tipo, i) => {
+      const feito = noFeito(r, i), lib = noLiberado(r, i), ehAtual = lib && !feito && !atual;
+      if (ehAtual) atual = [r, i];
+      const col = [1, 2, 3, 2][i];
+      const rot = tipo === 'missao' ? 'Missão' : tipo === 'batalha' ? 'Batalha' : 'Chefe';
+      const ic = !lib ? 'lock' : feito ? 'check' : tipo === 'missao' ? 'flag' : tipo === 'batalha' ? 'swords' : 'crown';
+      return h('button',{class:'no' + (tipo === 'chefe' ? ' chefe' : '') + (feito ? ' feito' : ehAtual ? ' atual' : !lib ? ' trancado' : ''), type:'button', style:'--col:' + col,
+        disabled: !lib, 'aria-label': rot + (feito ? ', concluída' : !lib ? ', bloqueada' : ''), onclick:() => jogar(r, i)}, h('i',null, icon(ic)), rot);
+    });
+    return h('div',{class:'stack tight'},
+      h('div',{class:'regiao'}, h('span',{class:'badge'}, NIVEL_REGIAO[r]), h('b',null, (r + 1) + '. ' + nome), liberada ? null : h('span',{class:'small muted'},'(vença o chefe anterior)')),
+      h('div',{class:'trilha'}, nos));
+  });
+  show('main', topo, bau,
+    atual ? h('button',{class:'btn',type:'button',onclick:() => jogar(atual[0], atual[1])}, 'Continuar a jornada') : h('div',{class:'note'},'Você venceu todas as regiões. Lenda! Troque de tema para uma nova jornada.'),
+    h('section',{class:'mapa'}, regioes),
+    h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:telaLoja}, icon('coin'), 'Loja'), h('button',{class:'btn sec',type:'button',onclick:telaTemas}, icon('map'), 'Trocar tema')),
+    h('button',{class:'btn link',type:'button',onclick:() => { S.profile.modo = 'normal'; save(); drawTabs(); goTab('inicio'); }},'Voltar ao modo normal'));
+}
+function abrirBau(){
+  const j = J(); if (j.bau === today()) return;
+  j.bau = today();
+  const faltam = Object.keys(ITENS).filter(k => !j.itens.includes(k) && ITENS[k].preco <= 120);
+  let premio;
+  if (faltam.length && Math.random() < .25){ const k = sorteia(faltam); j.itens.push(k); premio = 'Você ganhou: ' + ITENS[k].nome + '! Equipe na Loja.'; }
+  else { const m = 20 + Math.floor(Math.random() * 31); j.moedas += m; premio = '+' + m + ' ' + TEMAS[j.tema].moeda + '.'; }
+  save(); confete();
+  telaAventura();
+  view.prepend(h('div',{class:'note pop',role:'status'}, 'Baú aberto. ' + premio));
+}
+function jogar(r, i){ const tipo = NOS[i]; if (!noLiberado(r, i)) return; if (tipo === 'missao') jogarMissao(r, i); else jogarBatalha(r, i, tipo === 'chefe'); }
+function topoJogo(titulo, vidas, max){
+  return h('div',{class:'row between'}, h('button',{class:'btn link',type:'button',style:'padding:0',onclick:() => { goTab('inicio'); }},'Mapa'),
+    h('b',{class:'small',style:'text-align:center;flex:1'}, titulo || ''), vidas != null ? vidasEl(vidas, max) : moedasEl());
+}
+
+/* ---------- missão com personagens ---------- */
+function jogarMissao(r, i, dados){
+  pintarTema();
+  const tm = TEMAS[J().tema], box = h('div',{class:'stack'});
+  show('jogo', topoJogo(tm.regioes[r]), box);
+  const rodar = d => {
+    const cenas = (Array.isArray(d && d.cenas) ? d.cenas : []).map(c => ({c, q: normQ({p:'', opcoes:c && c.opcoes, certa:c && c.certa})})).filter(x => x.c && str(x.c.fala) && x.q);
+    if (cenas.length < 2){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A missão veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:() => jogarMissao(r, i)},'Gerar de novo'))); return; }
+    let vidas = 3, k = 0, acertos = 0;
+    const cena = () => {
+      if (k >= cenas.length) return desafio();
+      const {c, q} = cenas[k], fb = h('div'), tr = h('div');
+      let tentou = false;
+      const npc = avatarEl(avatarDeSemente(str(c.npc) || 'npc'), 46);
+      const btns = q.opcoes.map((o, oi) => h('button',{class:'opt alvo',type:'button',onclick:ev => {
+        const ok = oi === q.certa, b = ev.currentTarget;
+        if (ok){ btns.forEach(x => x.disabled = true); b.classList.add('ok'); if (!tentou) acertos++; skill('conversa', tentou ? 60 : 100); reagir(true);
+          fb.replaceChildren(h('div',{class:'note pop'}, str(c.boa) || 'Funcionou!'), h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:() => { k++; cena(); }}, k + 1 < cenas.length ? 'Seguir' : 'Ir para o desafio final')); }
+        else { tentou = true; b.disabled = true; b.classList.add('no'); vidas--; reagir(false); skill('conversa', 40);
+          if (vidas <= 0) return derrota(() => jogarMissao(r, i, d));
+          fb.replaceChildren(h('div',{class:'note soft'}, str(c.ruim) || 'Essa não serviu. Tente outra.'));
+          box.firstChild.replaceWith(vidasBarra()); }
+        save(); }}, o));
+      const vidasBarra = () => h('div',{class:'row between'}, h('span',{class:'eyebrow'}, 'Cena ' + (k + 1) + ' de ' + cenas.length), vidasEl(vidas, 3));
+      box.replaceChildren(vidasBarra(),
+        k === 0 && str(d.intro) ? h('div',{class:'narra'}, h('b',{style:'display:block;margin-bottom:4px'}, str(d.titulo) || 'Missão'), str(d.intro)) : null,
+        h('div',{class:'narra'}, str(c.narra)),
+        coachEl('neutral', 'O que você responde?'),
+        h('div',{class:'msg tutor'}, npc, h('div',{class:'bubble tutor'}, h('div',{class:'small muted',style:'margin-bottom:2px'}, str(c.npc)), h('div',{class:'alvo'}, str(c.fala)), tr,
+          h('div',{class:'acts'}, h('button',{type:'button',onclick:() => falar(str(c.fala))},'Ouvir'), str(c.fala_t) ? h('button',{type:'button',onclick:() => tr.replaceChildren(h('div',{class:'tr'}, str(c.fala_t)))},'Traduzir') : null))),
+        h('div',{class:'stack'}, btns), fb);
+      view.scrollTop = 0;
+    };
+    const desafio = () => {
+      const tarefa = str(d.desafio && d.desafio.tarefa) || 'Escreva uma frase para concluir a missão.';
+      const ta = h('textarea',{id:'jogo-resp',placeholder:'Escreva no idioma que você está aprendendo',maxlength:'400'}), out = h('div'), mm = h('p',{class:'muted small grow',role:'status'});
+      const enviar = h('button',{class:'btn',type:'button',onclick:() => { const tx = ta.value.trim(); if (!tx) return; enviar.hidden = true;
+        runAI(out, 'Conferindo a sua resposta.', () => ai(promptAvaliar(tarefa, tx)), a => {
+          a = a && typeof a === 'object' ? a : {}; const nota = clamp(Math.round(Number(a.nota) || 0), 0, 100);
+          skill('escrita', nota); if (a.pattern) addError(a.pattern, tx, a.melhor); save();
+          out.replaceChildren(h('div',{class:'note stack tight' + (nota < 60 ? ' soft' : '')}, h('span',{class:'eyebrow'}, nota >= 60 ? 'Missão cumprida' : 'Quase lá'),
+            str(a.melhor) ? h('p',{class:'alvo',style:'font-weight:600'}, str(a.melhor)) : null, h('p',null,str(a.explica))),
+            nota >= 50 ? h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:() => vitoria(r, i, 'missao', {recompensa:str(d.recompensa), acertos, total:cenas.length})},'Pegar a recompensa')
+              : h('button',{class:'btn sec',type:'button',style:'margin-top:10px',onclick:() => desafio()},'Tentar escrever de novo')); }); }},'Enviar');
+      box.replaceChildren(h('div',{class:'narra'}, h('b',{style:'display:block;margin-bottom:4px'},'Desafio final'), tarefa), coachEl('happy','Escreva do seu jeito. Eu mostro a forma natural.'),
+        ta, h('div',{class:'row'}, micBtn(ta, mm), mm), out, enviar);
+    };
+    cena();
+  };
+  if (dados) rodar(dados); else runAI(box, tutorDe(S.profile.target).nome + ' está preparando a missão...', () => ai(promptMissaoJogo(tm, r)), rodar);
+}
+
+/* ---------- batalha de palavras (e chefe) ---------- */
+function jogarBatalha(r, i, chefe, dados){
+  pintarTema();
+  const j = J(), tm = TEMAS[j.tema], box = h('div',{class:'stack'});
+  const erro = chefe ? S.errors.filter(e => !j.vencidos.includes(e.p)).sort((a,b) => b.n - a.n)[0] : null;
+  show('jogo', topoJogo(chefe ? 'Chefe da região' : 'Batalha'), box);
+  const rodar = d => {
+    const rodadas = (Array.isArray(d && d.rodadas) ? d.rodadas : []).map(x => ({x, q: normQ({p:'', opcoes:x && x.opcoes, certa:x && x.certa})})).filter(y => y.x && str(y.x.ataque) && y.q);
+    if (rodadas.length < 3){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A batalha veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:() => jogarBatalha(r, i, chefe)},'Gerar de novo'))); return; }
+    const nomeIni = str(chefe ? d.chefe : d.inimigo) || tm.inimigo, MAXV = 3, SEG = chefe ? 25 : 20;
+    let vidas = MAXV, k = 0, acertos = 0, timer = 0;
+    const ini = h('span',{class:'inimigo'}); ini.innerHTML = inimigoSVG(j.tema, chefe);
+    const hp = h('i',{style:'width:100%'});
+    const arena = h('section',{class:'arena'}, h('b',null, nomeIni), ini, h('div',{class:'hp','aria-label':'Vida do inimigo'}, hp),
+      str(d.fala) ? h('p',{class:'small',style:'opacity:.9;text-align:center'}, '"' + str(d.fala) + '"') : null,
+      h('div',{class:'heroi'}, avatarEl(meuAvatar(), 46)));
+    const golpe = (txt, alvo) => { const e = h('span',{class:'dano'}, txt); alvo.append(e); setTimeout(() => e.remove(), 900); };
+    const fim = () => {
+      clearInterval(timer);
+      const passou = vidas > 0 && acertos >= Math.ceil(rodadas.length * .6);
+      if (!passou) return derrota(() => jogarBatalha(r, i, chefe, d));
+      if (chefe) return golpeFinal();
+      vitoria(r, i, 'batalha', {acertos, total:rodadas.length, inimigo:nomeIni});
+    };
+    const rodada = () => {
+      if (vidas <= 0 || k >= rodadas.length) return fim();
+      const {x, q} = rodadas[k], tr = h('div'), fb = h('div'), barra = h('i',{style:'width:100%'});
+      let respondeu = false; const t0 = Date.now();
+      const responder = (oi, b) => {
+        if (respondeu) return; respondeu = true; clearInterval(timer);
+        const ok = oi === q.certa;
+        btns.forEach((bb, bi) => { bb.disabled = true; if (bi === q.certa) bb.classList.add('ok'); });
+        if (ok){ acertos++; hp.style.width = Math.max(0, 100 - acertos / rodadas.length * 100) + '%'; ini.classList.remove('chacoalha'); void ini.offsetWidth; ini.classList.add('chacoalha'); golpe('-1', arena); reagir(true); skill('vocabulario', 100); skill('gramatica', 100); }
+        else { if (b) b.classList.add('no'); vidas--; arena.querySelector('.heroi').classList.add('chacoalha'); reagir(false); skill('gramatica', 35);
+          fb.replaceChildren(h('div',{class:'note soft'}, (b ? '' : 'O tempo acabou. ') + (str(x.dica) || 'Olhe a resposta certa em verde.'))); }
+        save();
+        cab.replaceChildren(h('span',{class:'eyebrow'}, 'Golpe ' + (k + 1) + ' de ' + rodadas.length), vidasEl(vidas, MAXV));
+        fb.append(h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:() => { k++; rodada(); }}, vidas <= 0 || k + 1 >= rodadas.length ? 'Ver resultado' : 'Próximo golpe'));
+      };
+      const btns = q.opcoes.map((o, oi) => h('button',{class:'opt alvo',type:'button',onclick:ev => responder(oi, ev.currentTarget)}, o));
+      const cab = h('div',{class:'row between'}, h('span',{class:'eyebrow'}, 'Golpe ' + (k + 1) + ' de ' + rodadas.length), vidasEl(vidas, MAXV));
+      box.replaceChildren(cab, arena,
+        h('div',{class:'card stack tight'}, h('span',{class:'small muted'}, nomeIni + ' ataca:'), h('p',{class:'alvo',style:'font-size:21px;font-weight:600'}, str(x.ataque)), tr,
+          h('div',{class:'row'}, h('button',{class:'btn link',type:'button',style:'padding:0',onclick:() => falar(str(x.ataque).replace(/_{2,}/g, '...'))}, icon('sound'), 'Ouvir'),
+            str(x.ataque_t) ? h('button',{class:'btn link',type:'button',onclick:() => tr.replaceChildren(h('div',{class:'small muted'}, str(x.ataque_t)))},'Traduzir') : null),
+          h('div',{class:'tempo','aria-hidden':'true'}, barra)),
+        coachEl('think','Escolha a resposta certa antes do tempo acabar.'),
+        h('div',{class:'stack'}, btns), fb);
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (!barra.isConnected){ clearInterval(timer); return; }
+        const resto = 1 - (Date.now() - t0) / (SEG * 1000);
+        barra.style.width = Math.max(0, resto * 100) + '%';
+        if (resto <= 0) responder(-1, null);
+      }, 200);
+    };
+    const golpeFinal = () => {
+      const tarefa = str(d.golpe_final && d.golpe_final.tarefa) || 'Escreva uma frase usando a estrutura certa.';
+      const ta = h('textarea',{id:'jogo-resp',placeholder:'Escreva no idioma que você está aprendendo',maxlength:'400'}), out = h('div'), mm = h('p',{class:'muted small grow',role:'status'});
+      const enviar = h('button',{class:'btn',type:'button',onclick:() => { const tx = ta.value.trim(); if (!tx) return; enviar.hidden = true;
+        runAI(out, 'O chefe está sentindo o golpe...', () => ai(promptAvaliar(tarefa, tx)), a => {
+          a = a && typeof a === 'object' ? a : {}; const nota = clamp(Math.round(Number(a.nota) || 0), 0, 100);
+          skill('escrita', nota); save();
+          if (nota >= 60){
+            if (erro){ j.vencidos.push(erro.p); const e = S.errors.find(z => z.p === erro.p); if (e){ e.n = Math.max(0, e.n - 2); e.vencido = today(); } }
+            vitoria(r, i, 'chefe', {acertos, total:rodadas.length, inimigo:nomeIni, erro:erro && erro.p, melhor:str(a.melhor)});
+          } else {
+            out.replaceChildren(h('div',{class:'note soft stack tight'}, h('span',{class:'eyebrow'},'O chefe resistiu'), str(a.melhor) ? h('p',{class:'alvo',style:'font-weight:600'}, str(a.melhor)) : null, h('p',null,str(a.explica))),
+              h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:golpeFinal},'Tentar o golpe de novo'));
+          } }); }},'Desferir o golpe');
+      box.replaceChildren(arena, h('div',{class:'narra'}, h('b',{style:'display:block;margin-bottom:4px'},'Golpe final'), tarefa),
+        coachEl('happy', erro ? 'Esse chefe é o seu erro "' + erro.p + '". Hora de vencer ele de vez.' : 'Capriche: esse golpe decide a batalha.'),
+        ta, h('div',{class:'row'}, micBtn(ta, mm), mm), out, enviar);
+      view.scrollTop = 0;
+    };
+    rodada();
+  };
+  if (dados) rodar(dados);
+  else runAI(box, (chefe ? 'O chefe' : 'Um inimigo') + ' está chegando...', () => ai(chefe ? promptChefe(tm, r, erro) : promptBatalha(tm, r)), rodar);
+}
+
+/* ---------- resultado ---------- */
+function vitoria(r, i, tipo, info){
+  const j = J(), tm = TEMAS[j.tema];
+  const ganho = {missao:[30,20], batalha:[40,25], chefe:[100,60]}[tipo];
+  const primeira = !noFeito(r, i);
+  j.moedas += ganho[0]; const xp = addXP(ganho[1]); const bonus = touchDay(); if (bonus) addXP(bonus);
+  j.feitos[noId(r, i)] = true;
+  let item = null;
+  if (tipo === 'chefe'){ const k = !j.itens.includes(tm.item) ? tm.item : Object.keys(ITENS).find(z => !j.itens.includes(z)); if (k){ j.itens.push(k); item = k; } }
+  save(); setTimeout(confete, 150);
+  const moedasEl2 = h('b',null,'+0'); contar(moedasEl2, ganho[0], 900, '+');
+  const t = tutorDe(S.profile.target), festa = tutorEl(S.profile.target,'cheer',120,'pop'); festa.style.background = t.fundo;
+  show('jogo', h('div',{class:'festa'}, festa,
+      h('h1',null, tipo === 'chefe' ? 'Chefe derrotado!' : tipo === 'batalha' ? 'Vitória!' : 'Missão cumprida!'),
+      h('p',{class:'muted'}, tipo === 'chefe' && info.erro ? 'Você venceu o erro "' + info.erro + '". Ele sai da sua lista de pontos fracos se continuar acertando.' : info.recompensa ? 'Você conseguiu: ' + info.recompensa + '.' : 'Mandou bem, ' + S.profile.name + '.')),
+    h('div',{class:'stat'},
+      h('div',null, moedasEl2, h('span',null, tm.moeda)),
+      h('div',null, h('b',null,'+' + xp), h('span',null,'XP do herói')),
+      info.total ? h('div',null, h('b',null, info.acertos + '/' + info.total), h('span',null,'acertos')) : null,
+      h('div',null, h('b',null, S.streak.cur), h('span',null, S.streak.cur === 1 ? 'dia de sequência' : 'dias de sequência'))),
+    item ? h('section',{class:'card perfil-top'}, avatarEl(Object.assign({}, meuAvatar(), {item}), 64), h('div',{class:'grow'}, h('b',null,'Novo item: ' + ITENS[item].nome), h('div',{class:'small muted'},'Equipe na Loja para usar no seu avatar.'))) : null,
+    tipo === 'chefe' && r + 1 < tm.regioes.length && primeira ? h('div',{class:'note'}, 'Nova região liberada: ' + tm.regioes[r + 1] + '.') : null,
+    h('div',{class:'spacer'}),
+    h('button',{class:'btn',type:'button',onclick:() => goTab('inicio')},'Voltar ao mapa'));
+}
+function derrota(denovo){
+  const t = tutorDe(S.profile.target), pic = tutorEl(S.profile.target,'think',110,'pop'); pic.style.background = t.fundo;
+  show('jogo', h('div',{class:'festa'}, pic, h('h1',null,'Não foi dessa vez'),
+      h('p',{class:'muted'}, t.nome + ': faz parte. Agora você já conhece o caminho, e as palavras que errou vão voltar nas revisões.')),
+    h('div',{class:'spacer'}),
+    h('button',{class:'btn',type:'button',onclick:denovo},'Tentar de novo'),
+    h('button',{class:'btn sec',type:'button',onclick:() => goTab('inicio')},'Voltar ao mapa'));
+}
+
+/* ---------- loja de itens do avatar ---------- */
+function telaLoja(){
+  const j = J(), tm = TEMAS[j.tema] || TEMAS.viagem, equipado = (S.profile.avatar || {}).item || '';
+  const msg = h('p',{class:'small',role:'status'});
+  const equipar = k => { S.profile.avatar = Object.assign({}, meuAvatar(), {item:k || ''}); save(); telaLoja(); };
+  show('jogo', topoJogo('Loja'), h('h1',null,'Loja do herói'),
+    h('p',{class:'muted'}, 'Use ' + tm.moeda + ' para comprar itens para o seu avatar. Os chefes também dão itens.'),
+    h('section',{class:'card perfil-top'}, avatarEl(meuAvatar(), 72), h('div',{class:'grow'}, h('b',null, S.profile.name), h('div',{class:'small muted'}, equipado ? 'Usando: ' + ITENS[equipado].nome : 'Sem item equipado')),
+      equipado ? h('button',{class:'btn sec',type:'button',style:'width:auto',onclick:() => equipar('')},'Tirar') : null),
+    msg,
+    h('div',{class:'stack'}, Object.keys(ITENS).map(k => { const it = ITENS[k], tem = j.itens.includes(k);
+      return h('div',{class:'card item'}, avatarEl(Object.assign({}, meuAvatar(), {item:k}), 56),
+        h('div',{class:'grow'}, h('b',null, it.nome), h('div',{class:'small muted'}, tem ? 'Seu' : it.preco + ' ' + tm.moeda)),
+        tem ? h('button',{class:'btn' + (equipado === k ? ' sec' : ''),type:'button',style:'width:auto',disabled: equipado === k,onclick:() => equipar(k)}, equipado === k ? 'Usando' : 'Usar')
+          : h('button',{class:'btn sec',type:'button',style:'width:auto',onclick:() => { if (j.moedas < it.preco){ msg.textContent = 'Faltam ' + (it.preco - j.moedas) + ' ' + tm.moeda + '. Jogue mais uma missão.'; return; } j.moedas -= it.preco; j.itens.push(k); save(); equipar(k); }}, icon('coin'), String(it.preco))); })));
 }
 
 /* ============================== partida ============================== */
