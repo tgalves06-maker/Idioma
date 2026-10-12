@@ -1,2 +1,2 @@
-// Cole entre as aspas o endereço do seu App da Web do Apps Script (ele termina em /exec).
-window.IDIOMA_IA = { api: 'COLE_AQUI_O_ENDERECO_DO_APPS_SCRIPT' };
+// Endereço do App da Web do Apps Script (o servidor do Idioma IA).
+window.IDIOMA_IA = { api: 'https://script.google.com/macros/s/AKfycbwB4y_XZdeasDw1VmC0eSGQnhAQ6xILZHlH9qB1IzFKG3o4a3HpjWkywIyRgWBQQDgRpA/exec' };
