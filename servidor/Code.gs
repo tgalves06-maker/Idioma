@@ -7,6 +7,7 @@
  * O que este servidor faz:
  *   - cadastro e login por e-mail e senha, só para quem tem o código de convite;
  *   - guarda o progresso de cada pessoa na planilha;
+ *   - ouve a voz do aluno nos desafios de fala e avalia a pronúncia;
  *   - chama o Gemini com a chave guardada em Propriedades do script (GEMINI_API_KEY),
  *     que nunca vai para o celular de ninguém.
  */
@@ -77,6 +78,7 @@ function doPost(e) {
     if (a === 'saveState') return saida_(ok_(gravarEstado_(user, req)));
     if (a === 'ai') return saida_(ok_(ia_(user, req)));
     if (a === 'tts') return saida_(ok_(voz_(user, req)));
+    if (a === 'ouvir') return saida_(ok_(ouvir_(user, req)));
     return saida_(falha_('bad_request', 'Ação desconhecida.'));
   } catch (err) {
     if (err && err.code) return saida_(falha_(err.code, err.message));
@@ -274,6 +276,19 @@ function contarUso_(user, tokensIn, tokensOut) {
     }
     sh.appendRow([dia, user.id, 1, tokensIn, tokensOut]);
   });
+}
+/** Ouve a voz do aluno (WAV em base64) e avalia com o Gemini, seguindo o pedido do app. */
+function ouvir_(user, req) {
+  const audio = String(req.audio || '');
+  if (!audio || audio.length > 4000000 || !/^[A-Za-z0-9+/=]+$/.test(audio.slice(0, 200))) throw erro_('invalid', 'Áudio vazio ou longo demais.');
+  const pedido = String(req.prompt || '');
+  if (!pedido) throw erro_('invalid', 'Pedido vazio.');
+  if (pedido.length > MAX_PROMPT) throw erro_('invalid', 'Pedido grande demais.');
+  const mime = /^audio\/[a-z0-9.+-]+$/.test(String(req.mime || '')) ? String(req.mime) : 'audio/wav';
+  checarLimite_(user);
+  const r = gemini_([{ role: 'user', parts: [{ text: pedido }, { inlineData: { mimeType: mime, data: audio } }] }]);
+  contarUso_(user, r.tokensIn, r.tokensOut);
+  return r;
 }
 /** Lê uma frase em voz alta com uma voz do Gemini. Devolve o áudio em base64 (WAV ou PCM). */
 function voz_(user, req) {

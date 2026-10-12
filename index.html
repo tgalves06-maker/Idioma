@@ -307,6 +307,72 @@ nav#tabs{background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop
 .convite-txt span{font-size:13px;color:var(--muted)}
 .convite-txt .convite-cta{color:var(--accent);font-weight:700;font-size:14px;margin-top:2px}
 @media (prefers-reduced-motion: reduce){ .no.atual i,.dano{animation:none} }
+
+/* ===== mundo aberto ===== */
+#view.mundo-on{padding:0;gap:0;overflow:hidden}
+#view.mundo-on > *{animation:none}
+.mundo{position:relative;flex:1 1 auto!important;min-height:420px;overflow:hidden;background:#0D1022;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.mundo.saindo{animation:sai-regiao .65s ease forwards}
+@keyframes sai-regiao{to{filter:brightness(2.4) blur(6px);opacity:0}}
+.mundo-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hud{position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;gap:8px;z-index:2}
+.hud-heroi{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border:0;border-radius:999px;background:rgba(15,20,40,.62);color:#FFFFFF;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.hud-nv{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1}
+.hud-nv b{font-size:14px}.hud-nv small{font-size:11px;opacity:.85}
+.hud-xp{display:block;width:74px;height:5px;border-radius:9px;background:rgba(255,255,255,.25);margin-top:3px;overflow:hidden}
+.hud-xp i{display:block;height:100%;background:linear-gradient(90deg,#FACC15,#F97316)}
+.hud-menu,.hud-bau{width:40px;height:40px;flex:none;border-radius:50%;border:0;background:rgba(15,20,40,.62);color:#FFFFFF;font-size:18px;display:grid;place-items:center}
+.hud-bau{background:#F59E0B;animation:pulsa 1.6s infinite}
+.objetivo{position:absolute;top:62px;left:10px;right:10px;z-index:2;display:flex;align-items:center;gap:8px;padding:8px 12px;border:0;border-radius:14px;background:rgba(250,204,21,.95);color:#1B1F2E;font:600 13px var(--font-ui);text-align:left;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.objetivo span:not(.ic){flex:1}
+.objetivo small{font-weight:800;padding:2px 9px;border-radius:999px;background:rgba(0,0,0,.12)}
+.dpad{position:absolute;left:12px;bottom:14px;width:132px;height:132px;z-index:2}
+.dpad button{position:absolute;width:44px;height:44px;border-radius:12px;border:0;background:rgba(15,20,40,.5);color:#FFFFFF;font-size:16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);touch-action:none}
+.dpad button:active{background:rgba(15,20,40,.85)}
+.d-n{left:44px;top:0}.d-s{left:44px;bottom:0}.d-w{left:0;top:44px}.d-e{right:0;top:44px}
+.acao{position:absolute;right:16px;bottom:24px;z-index:2;width:84px;height:84px;border-radius:50%;border:3px solid #FFFFFF;background:linear-gradient(140deg,var(--tm1),var(--tm2));color:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:700 13px var(--font-ui);box-shadow:0 8px 22px rgba(0,0,0,.35);animation:pulsa 1.6s infinite}
+.acao[hidden]{display:none}
+.acao .ic svg{width:26px;height:26px}
+.toast-mundo{position:absolute;left:12px;right:12px;top:112px;z-index:3;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.toast-item{align-self:center;padding:8px 14px;border-radius:999px;background:rgba(15,20,40,.86);color:#FFFFFF;font-size:13px;font-weight:600;text-align:center;animation:entra .3s ease both;transition:opacity .4s,transform .4s}
+.toast-item.sai{opacity:0;transform:translateY(-8px)}
+.dlg{position:absolute;left:10px;right:10px;bottom:10px;z-index:4;max-height:74%;overflow:auto;padding:14px;border-radius:20px;background:var(--surface);color:var(--ink);box-shadow:0 -10px 40px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:10px;animation:sobe-dlg .25s ease both;touch-action:auto;user-select:text;-webkit-user-select:text}
+.dlg[hidden]{display:none}
+@keyframes sobe-dlg{from{transform:translateY(30px);opacity:0}}
+.dlg-topo{display:flex;align-items:center;gap:10px}
+.dlg-topo small{display:block;color:var(--muted);font-size:12px}
+.dlg-topo > .ic{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center}
+.dlg-x{width:36px;height:36px;flex:none;border-radius:50%;border:0;background:var(--sunk);color:var(--ink);font-size:20px;line-height:1}
+.dlg-fala{font-size:18px;font-weight:600;margin:0;min-height:1.4em}
+.dlg-narra{margin:0;font-size:14px;color:var(--muted)}
+.dlg-acoes{display:flex;flex-direction:column;gap:8px}
+.dlg .gravador{box-shadow:none;background:var(--sunk)}
+.narra .btn.link,.narra .btn.link .ic{color:#FFFFFF}
+.palavra-card{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-radius:14px;background:var(--accent-soft)}
+.palavra-card b{font-size:22px}
+.titulo-regiao{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(140deg,var(--tm1),var(--tm2));color:#FFFFFF;text-align:center;transition:opacity .8s ease,visibility .8s;pointer-events:none}
+.titulo-regiao b{font:800 26px var(--font-display)}
+.titulo-regiao.some{opacity:0;visibility:hidden}
+.nivel-up{position:absolute;left:0;right:0;top:0;bottom:0;margin:auto;height:fit-content;z-index:6;width:min(300px,86%);padding:22px;border-radius:24px;background:var(--surface);color:var(--ink);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;box-shadow:0 20px 60px rgba(0,0,0,.45);animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+.nivel-up b{font:800 36px var(--font-display);background:linear-gradient(140deg,var(--tm1),var(--tm2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nivel-up small{display:flex;align-items:center;gap:4px;color:var(--muted)}
+.menu-mundo{position:absolute;inset:0;z-index:6;background:rgba(10,12,30,.55);display:flex;align-items:flex-end}
+.menu-caixa{width:100%;max-height:88%;overflow:auto;padding:18px;border-radius:22px 22px 0 0;background:var(--surface);color:var(--ink);animation:sobe-dlg .25s ease both}
+.menu-caixa .btn.atual{outline:2px solid var(--accent)}
+/* gravador de voz */
+.gravador{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px;border-radius:20px;background:var(--surface);box-shadow:var(--shadow)}
+.ondas{display:flex;align-items:center;gap:4px;height:44px}
+.ondas i{display:block;width:5px;height:44px;border-radius:9px;background:linear-gradient(180deg,var(--tm1,#6D28D9),var(--tm2,#DB2777));transform:scaleY(.15);transition:transform .08s linear}
+.grava{display:flex;align-items:center;gap:10px;padding:14px 22px;border:0;border-radius:999px;background:linear-gradient(140deg,var(--tm1,#6D28D9),var(--tm2,#DB2777));color:#FFFFFF;font:700 16px var(--font-ui);box-shadow:0 8px 22px rgba(0,0,0,.2)}
+.grava .ic svg{width:24px;height:24px}
+.grava.on{background:#E5484D;animation:pulsa-v 1.2s infinite}
+@keyframes pulsa-v{0%{box-shadow:0 0 0 0 rgba(229,72,77,.55)}70%{box-shadow:0 0 0 18px rgba(229,72,77,0)}100%{box-shadow:0 0 0 0 rgba(229,72,77,0)}}
+.barra-fala{display:grid;grid-template-columns:96px 1fr 32px;align-items:center;gap:8px}
+.barra-fala .trilho{height:8px;border-radius:9px;background:var(--sunk);overflow:hidden}
+.barra-fala .trilho i{display:block;height:100%;background:linear-gradient(90deg,var(--tm1,#6D28D9),var(--tm2,#DB2777))}
+.nota-fala{font:800 26px var(--font-display);padding:2px 12px;border-radius:12px}
+.nota-fala.boa{background:#DCFCE7;color:#166534}.nota-fala.media{background:#FEF3C7;color:#92400E}.nota-fala.baixa{background:#FEE2E2;color:#991B1B}
+@media (prefers-reduced-motion: reduce){.acao,.hud-bau,.grava.on,.nivel-up{animation:none}}
 </style>
 </head>
 <body>
@@ -594,6 +660,7 @@ function aiMsg(e){
   if (c === 'offline') return 'Sem conexão. O professor precisa de internet. A revisão de palavras funciona sem ela.';
   if (c === 'limit' || c === 'config' || c === 'rate_limited') return (e && e.message) || 'O professor não está disponível agora. Tente de novo daqui a pouco.';
   if (c === 'auth') return 'Sua sessão terminou. Entre de novo.';
+  if (c === 'sem_ouvir') return 'O servidor ainda não sabe ouvir áudio. Grave de novo: vou usar o reconhecimento de voz do celular.';
   if (c === 'refused') return 'O professor não pôde responder a isso. Tente dizer de outro jeito.';
   return 'O professor se atrapalhou nessa resposta. Toque em Tentar de novo.';
 }
@@ -808,7 +875,7 @@ const ui = { screen:'welcome', tab:'inicio', min:null };
 const view = $('#view'), tabs = $('#tabs');
 const TABS = [['inicio','Início','home'],['aprender','Aprender','book'],['conversar','Conversar','chat'],['progresso','Progresso','chart'],['perfil','Perfil','user']];
 function pintarFundo(){ const t = S.profile ? tutorDe(S.profile.target) : null, r = document.documentElement.style; r.setProperty('--tint-a', t ? t.cor + '55' : '#FF9F7A55'); r.setProperty('--tint-b', '#7C5CFF40'); r.setProperty('--tint-c', t ? t.fundo + '99' : '#FFD84A44'); }
-function show(screen, ...kids){ pintarFundo(); ui.screen = screen; tabs.hidden = screen !== 'main'; view.replaceChildren(...kids.flat(Infinity).filter(Boolean)); view.scrollTop = 0; }
+function show(screen, ...kids){ pintarFundo(); view.classList.remove('mundo-on'); ui.screen = screen; tabs.hidden = screen !== 'main'; view.replaceChildren(...kids.flat(Infinity).filter(Boolean)); view.scrollTop = 0; }
 function drawTabs(){
   const lista = TABS.map(([k,label,ic]) => k === 'inicio' && modoAventura() ? [k,'Aventura','map'] : [k,label,ic]);
   tabs.replaceChildren(...lista.map(([k,label,ic]) => h('button',{type:'button','aria-current': ui.tab === k ? 'page' : null, onclick:() => goTab(k)}, icon(ic), label)));
@@ -1514,7 +1581,7 @@ const ITENS = {
 function J(){ if (!S.jogo) S.jogo = {tema:null, feitos:{}, moedas:0, itens:[], bau:'', vencidos:[]}; return S.jogo; }
 const noId = (r, i) => r + '-' + i;
 const noFeito = (r, i) => !!J().feitos[noId(r, i)];
-function noLiberado(r, i){ if (r === 0 && i === 0) return true; return i > 0 ? noFeito(r, i - 1) : noFeito(r - 1, NOS.length - 1); }
+function noLiberado(r, i){ if (i === 3 && !vozFeita(r)) return false; if (r === 0 && i === 0) return true; return i > 0 ? noFeito(r, i - 1) : noFeito(r - 1, NOS.length - 1); }
 function pintarTema(){ const tm = TEMAS[J().tema] || TEMAS.viagem, st = document.documentElement.style; st.setProperty('--tm1', tm.cor1); st.setProperty('--tm2', tm.cor2); }
 function modoAventura(){ return !!(S.profile && S.profile.modo === 'aventura'); }
 
@@ -1546,13 +1613,13 @@ function baseAventura(tm, r){
   return regras() + '\n\n' + ctx() + '\n\nO aluno está jogando um RPG para aprender ' + nomeIdioma(S.profile.target) + '. Tema: ' + tm.nome + ' (' + tm.estilo + '). Região atual: ' + tm.regioes[r] + '. ' +
     'Por trás da fantasia, cada desafio deve treinar ' + nomeIdioma(S.profile.target) + ' útil na vida real do aluno, no nível ' + S.level + '. Narração e instruções em ' + S.profile.native + '; falas e respostas em ' + nomeIdioma(S.profile.target) + '.';
 }
-function promptMissaoJogo(tm, r){
-  const L = nomeIdioma(S.profile.target);
-  return 'TAREFA: aventura_missao\n' + baseAventura(tm, r) + '\n\nCrie uma missão curta com 3 cenas encadeadas. Responda SOMENTE com um objeto JSON: {"titulo": nome da missão em até 6 palavras, "intro": 1 ou 2 frases de narração que situam a missão, "cenas": lista com 3 itens {"narra": 1 frase de narração, "npc": nome de um personagem da cena, "fala": fala do personagem em ' + L + ' adequada ao nível, "fala_t": tradução, "opcoes": [3 respostas possíveis em ' + L + '], "certa": índice da resposta adequada e correta (0 a 2), "boa": 1 frase do que acontece de bom quando o aluno responde bem, "ruim": 1 frase gentil explicando por que a resposta escolhida não serve}, "desafio": {"tarefa": instrução de uma frase que o aluno deve escrever em ' + L + ' para concluir a missão}, "recompensa": nome curto de um objeto da história}. Só uma opção correta por cena; varie a posição. Sem markdown.';
+function promptMissaoJogo(tm, r, i){
+  const L = nomeIdioma(S.profile.target), quem = i === 2 ? packDe(r).npc2 : packDe(r).npc1;
+  return 'TAREFA: aventura_missao\n' + baseAventura(tm, r) + '\n\nA missão é dada por ' + str(quem.nome) + ' (' + str(quem.papel) + '), que aparece como personagem nas cenas' + (str(quem.ola_t) ? ' e pediu: "' + str(quem.ola_t) + '"' : '') + '. Crie uma missão curta com 3 cenas encadeadas. Responda SOMENTE com um objeto JSON: {"titulo": nome da missão em até 6 palavras, "intro": 1 ou 2 frases de narração que situam a missão, "cenas": lista com 3 itens {"narra": 1 frase de narração, "npc": nome de um personagem da cena, "fala": fala do personagem em ' + L + ' adequada ao nível, "fala_t": tradução, "opcoes": [3 respostas possíveis em ' + L + '], "certa": índice da resposta adequada e correta (0 a 2), "boa": 1 frase do que acontece de bom quando o aluno responde bem, "ruim": 1 frase gentil explicando por que a resposta escolhida não serve}, "desafio": {"tarefa": instrução de uma frase que o aluno deve escrever em ' + L + ' para concluir a missão}, "recompensa": nome curto de um objeto da história}. Só uma opção correta por cena; varie a posição. Sem markdown.';
 }
 function promptBatalha(tm, r){
   const L = nomeIdioma(S.profile.target), hard = S.vocab.filter(v => v.box <= 1).slice(-6).map(v => v.w);
-  return 'TAREFA: aventura_batalha\n' + baseAventura(tm, r) + '\n\nCrie uma batalha de palavras contra um inimigo do tema (inspirado em "' + tm.inimigo + '"). Responda SOMENTE com um objeto JSON: {"inimigo": nome do inimigo, "fala": frase curta de desafio que ele diz, "rodadas": lista com 5 itens {"ataque": frase ou pergunta curta em ' + L + ' que o inimigo lança (pode ter ___ para completar), "ataque_t": tradução, "opcoes": [3 respostas em ' + L + '], "certa": índice da correta, "dica": explicação de 1 frase de por que é a correta}}.' + (hard.length ? ' Use nas rodadas algumas destas palavras que o aluno está aprendendo: ' + hard.join(', ') + '.' : '') + ' Misture vocabulário, gramática e respostas a perguntas. Varie a posição da correta. Sem markdown.';
+  return 'TAREFA: aventura_batalha\n' + baseAventura(tm, r) + '\n\nCrie uma batalha de palavras contra ' + nomeEnt(r, 'E') + ', inimigo do tema que bloqueia a ponte. Responda SOMENTE com um objeto JSON: {"inimigo": nome do inimigo, "fala": frase curta de desafio que ele diz, "rodadas": lista com 5 itens {"ataque": frase ou pergunta curta em ' + L + ' que o inimigo lança (pode ter ___ para completar), "ataque_t": tradução, "opcoes": [3 respostas em ' + L + '], "certa": índice da correta, "dica": explicação de 1 frase de por que é a correta}}.' + (hard.length ? ' Use nas rodadas algumas destas palavras que o aluno está aprendendo: ' + hard.join(', ') + '.' : '') + ' Misture vocabulário, gramática e respostas a perguntas. Varie a posição da correta. Sem markdown.';
 }
 function promptChefe(tm, r, erro){
   const L = nomeIdioma(S.profile.target);
@@ -1570,8 +1637,10 @@ function telaTemas(){
     h('button',{class:'btn link',type:'button',onclick:() => { S.profile.modo = 'normal'; save(); drawTabs(); goTab('inicio'); }},'Voltar ao modo normal'));
 }
 
-/* ---------- mapa ---------- */
-function telaAventura(){
+/* ---------- entrada da aventura: o mundo aberto ---------- */
+function telaAventura(){ const j = J(); if (!j.tema) return telaTemas(); pintarTema(); telaMundo(); }
+/* ---------- diário: a jornada inteira em etapas ---------- */
+function telaDiario(){
   const j = J(); if (!j.tema) return telaTemas();
   pintarTema();
   const tm = TEMAS[j.tema], x = xpInfo(), t = tutorDe(S.profile.target);
@@ -1580,9 +1649,6 @@ function telaAventura(){
     h('div',{class:'grow'}, h('b',{style:'font-size:18px;display:block'}, S.profile.name), h('span',{class:'small',style:'opacity:.9'}, 'Herói nível ' + x.n + ' · ' + x.nome)),
     tutorEl(S.profile.target, 'happy', 52, 'flutua')),
     h('div',{class:'av-canto'}, moedasEl()));
-  const bau = j.bau !== today() ? h('section',{class:'card fala-row'},
-    h('div',{class:'grow'}, h('b',null,'Baú do dia'), h('div',{class:'small muted'}, 'Abra uma vez por dia. Pode vir ' + tm.moeda + ' ou um item.')),
-    h('button',{class:'btn',type:'button',style:'width:auto',onclick:() => abrirBau()}, icon('chest'), 'Abrir')) : null;
   let atual = null;
   const regioes = tm.regioes.map((nome, r) => {
     const liberada = noLiberado(r, 0);
@@ -1597,24 +1663,25 @@ function telaAventura(){
     });
     return h('div',{class:'stack tight'},
       h('div',{class:'regiao'}, h('span',{class:'badge'}, NIVEL_REGIAO[r]), h('b',null, (r + 1) + '. ' + nome), liberada ? null : h('span',{class:'small muted'},'(vença o chefe anterior)')),
-      h('div',{class:'trilha'}, nos));
+      h('div',{class:'trilha'}, nos),
+      liberada ? h('div',{class:'small muted'}, icon('mic'), ' Desafio de voz: ' + tipoVoz(r).nome + (vozFeita(r) ? ' (feito)' : ' (pendente)')) : null);
   });
-  show('main', topo, bau,
-    atual ? h('button',{class:'btn',type:'button',onclick:() => jogar(atual[0], atual[1])}, 'Continuar a jornada') : h('div',{class:'note'},'Você venceu todas as regiões. Lenda! Troque de tema para uma nova jornada.'),
+  show('jogo', topoJogo('Diário da jornada'), topo,
+    h('button',{class:'btn',type:'button',onclick:() => telaMundo()}, 'Voltar ao mundo'),
+    atual ? null : h('div',{class:'note'},'Você venceu todas as regiões. Lenda! Troque de tema para uma nova jornada.'),
     h('section',{class:'mapa'}, regioes),
     h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:telaLoja}, icon('coin'), 'Loja'), h('button',{class:'btn sec',type:'button',onclick:telaTemas}, icon('map'), 'Trocar tema')),
     h('button',{class:'btn link',type:'button',onclick:() => { S.profile.modo = 'normal'; save(); drawTabs(); goTab('inicio'); }},'Voltar ao modo normal'));
 }
 function abrirBau(){
-  const j = J(); if (j.bau === today()) return;
+  const j = J(); if (j.bau === today()) return 'já aberto hoje.';
   j.bau = today();
   const faltam = Object.keys(ITENS).filter(k => !j.itens.includes(k) && ITENS[k].preco <= 120);
   let premio;
   if (faltam.length && Math.random() < .25){ const k = sorteia(faltam); j.itens.push(k); premio = 'Você ganhou: ' + ITENS[k].nome + '! Equipe na Loja.'; }
   else { const m = 20 + Math.floor(Math.random() * 31); j.moedas += m; premio = '+' + m + ' ' + TEMAS[j.tema].moeda + '.'; }
   save(); confete();
-  telaAventura();
-  view.prepend(h('div',{class:'note pop',role:'status'}, 'Baú aberto. ' + premio));
+  return premio;
 }
 function jogar(r, i){ const tipo = NOS[i]; if (!noLiberado(r, i)) return; if (tipo === 'missao') jogarMissao(r, i); else jogarBatalha(r, i, tipo === 'chefe'); }
 function topoJogo(titulo, vidas, max){
@@ -1630,7 +1697,7 @@ function jogarMissao(r, i, dados){
   const rodar = d => {
     const cenas = (Array.isArray(d && d.cenas) ? d.cenas : []).map(c => ({c, q: normQ({p:'', opcoes:c && c.opcoes, certa:c && c.certa})})).filter(x => x.c && str(x.c.fala) && x.q);
     if (cenas.length < 2){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A missão veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:() => jogarMissao(r, i)},'Gerar de novo'))); return; }
-    let vidas = 3, k = 0, acertos = 0;
+    const VM = vidasMax(); let vidas = VM, k = 0, acertos = 0;
     const cena = () => {
       if (k >= cenas.length) return desafio();
       const {c, q} = cenas[k], fb = h('div'), tr = h('div');
@@ -1645,7 +1712,7 @@ function jogarMissao(r, i, dados){
           fb.replaceChildren(h('div',{class:'note soft'}, str(c.ruim) || 'Essa não serviu. Tente outra.'));
           box.firstChild.replaceWith(vidasBarra()); }
         save(); }}, o));
-      const vidasBarra = () => h('div',{class:'row between'}, h('span',{class:'eyebrow'}, 'Cena ' + (k + 1) + ' de ' + cenas.length), vidasEl(vidas, 3));
+      const vidasBarra = () => h('div',{class:'row between'}, h('span',{class:'eyebrow'}, 'Cena ' + (k + 1) + ' de ' + cenas.length), vidasEl(vidas, VM));
       box.replaceChildren(vidasBarra(),
         k === 0 && str(d.intro) ? h('div',{class:'narra'}, h('b',{style:'display:block;margin-bottom:4px'}, str(d.titulo) || 'Missão'), str(d.intro)) : null,
         h('div',{class:'narra'}, str(c.narra)),
@@ -1671,7 +1738,7 @@ function jogarMissao(r, i, dados){
     };
     cena();
   };
-  if (dados) rodar(dados); else runAI(box, tutorDe(S.profile.target).nome + ' está preparando a missão...', () => ai(promptMissaoJogo(tm, r)), rodar);
+  if (dados) rodar(dados); else runAI(box, tutorDe(S.profile.target).nome + ' está preparando a missão...', () => ai(promptMissaoJogo(tm, r, i)), rodar);
 }
 
 /* ---------- batalha de palavras (e chefe) ---------- */
@@ -1683,7 +1750,7 @@ function jogarBatalha(r, i, chefe, dados){
   const rodar = d => {
     const rodadas = (Array.isArray(d && d.rodadas) ? d.rodadas : []).map(x => ({x, q: normQ({p:'', opcoes:x && x.opcoes, certa:x && x.certa})})).filter(y => y.x && str(y.x.ataque) && y.q);
     if (rodadas.length < 3){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A batalha veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:() => jogarBatalha(r, i, chefe)},'Gerar de novo'))); return; }
-    const nomeIni = str(chefe ? d.chefe : d.inimigo) || tm.inimigo, MAXV = 3, SEG = chefe ? 25 : 20;
+    const nomeIni = str(chefe ? d.chefe : d.inimigo) || tm.inimigo, MAXV = vidasMax(), SEG = chefe ? 25 : 20;
     let vidas = MAXV, k = 0, acertos = 0, timer = 0;
     const ini = h('span',{class:'inimigo'}); ini.innerHTML = inimigoSVG(j.tema, chefe);
     const hp = h('i',{style:'width:100%'});
@@ -1760,7 +1827,7 @@ function vitoria(r, i, tipo, info){
   const j = J(), tm = TEMAS[j.tema];
   const ganho = {missao:[30,20], batalha:[40,25], chefe:[100,60]}[tipo];
   const primeira = !noFeito(r, i);
-  j.moedas += ganho[0]; const xp = addXP(ganho[1]); const bonus = touchDay(); if (bonus) addXP(bonus);
+  j.moedas += ganho[0]; addXP(ganho[1]); const xp = ganharHXP({missao:40, batalha:50, chefe:120}[tipo]); const bonus = touchDay(); if (bonus) addXP(bonus);
   j.feitos[noId(r, i)] = true;
   let item = null;
   if (tipo === 'chefe'){ const k = !j.itens.includes(tm.item) ? tm.item : Object.keys(ITENS).find(z => !j.itens.includes(z)); if (k){ j.itens.push(k); item = k; } }
@@ -1776,7 +1843,7 @@ function vitoria(r, i, tipo, info){
       info.total ? h('div',null, h('b',null, info.acertos + '/' + info.total), h('span',null,'acertos')) : null,
       h('div',null, h('b',null, S.streak.cur), h('span',null, S.streak.cur === 1 ? 'dia de sequência' : 'dias de sequência'))),
     item ? h('section',{class:'card perfil-top'}, avatarEl(Object.assign({}, meuAvatar(), {item}), 64), h('div',{class:'grow'}, h('b',null,'Novo item: ' + ITENS[item].nome), h('div',{class:'small muted'},'Equipe na Loja para usar no seu avatar.'))) : null,
-    tipo === 'chefe' && r + 1 < tm.regioes.length && primeira ? h('div',{class:'note'}, 'Nova região liberada: ' + tm.regioes[r + 1] + '.') : null,
+    tipo === 'chefe' && r + 1 < tm.regioes.length && primeira ? h('div',{class:'note'}, 'O portal para ' + tm.regioes[r + 1] + ' acendeu. Entre nele no mapa.') : null,
     h('div',{class:'spacer'}),
     h('button',{class:'btn',type:'button',onclick:() => goTab('inicio')},'Voltar ao mapa'));
 }
@@ -1804,6 +1871,1279 @@ function telaLoja(){
         h('div',{class:'grow'}, h('b',null, it.nome), h('div',{class:'small muted'}, tem ? 'Seu' : it.preco + ' ' + tm.moeda)),
         tem ? h('button',{class:'btn' + (equipado === k ? ' sec' : ''),type:'button',style:'width:auto',disabled: equipado === k,onclick:() => equipar(k)}, equipado === k ? 'Usando' : 'Usar')
           : h('button',{class:'btn sec',type:'button',style:'width:auto',onclick:() => { if (j.moedas < it.preco){ msg.textContent = 'Faltam ' + (it.preco - j.moedas) + ' ' + tm.moeda + '. Jogue mais uma missão.'; return; } j.moedas -= it.preco; j.itens.push(k); save(); equipar(k); }}, icon('coin'), String(it.preco))); })));
+}
+
+/* ============================== mundo aberto do Modo Aventura ============================== */
+// Cada região é um mapa que o herói percorre. A névoa some conforme ele anda; os moradores dão missões,
+// o inimigo bloqueia a ponte, o guardião só abre o portão para quem fala em voz alta e o chefe espera depois.
+const MUNDO_MAPAS = [
+[ // 0 — vila: casas, praça com fonte, rio com ponte
+"####################",
+"#TT......P......TTT#",
+"#T......,,,......TT#",
+"#..f...,,C,,...f...#",
+"#.....,,,,,,,......#",
+"#T.r...,,,,,....r.T#",
+"#TT......,.......TT#",
+"#TTT.....,......TTT#",
+"#########GG#########",
+"#T*......,,V.....TT#",
+"#T.......,......c..#",
+"#..f.....,.....f...#",
+"#....2...,.......S.#",
+"#T.......,.......TT#",
+"#~~~~~~~~=~~~~~~~~~#",
+"#~~~k~~~~E~~~~~~~~~#",
+"#........,.......T.#",
+"#.Hhh....,....Hhh..#",
+"#.hhh....,....hhh..#",
+"#...1...,,,....a...#",
+"#.f....,,o,,...f...#",
+"#..n....,,,...b....#",
+"#T.......,.........#",
+"#.l......,.....l..T#",
+"#..Hhh...,...$Hhh..#",
+"#..hhh...,....hhh..#",
+"#T.......,......*TT#",
+"#TT..S...,@.....TTT#",
+"#TTT.....,.....TTTT#",
+"####################"],
+[ // 1 — floresta: trilha sinuosa, lago com barco, clareiras
+"####################",
+"#TTTTTT..P..TTTTTTT#",
+"#TTTT....,....TTTTT#",
+"#TTT..r.,C,.r..TTTT#",
+"#TT.....,,,.....TTT#",
+"#TTT.f...,...f.TTTT#",
+"#TTTT....,....TTTTT#",
+"#############G######",
+"#TTT...V..,,,,..TTT#",
+"#TT..f...,,...f..TT#",
+"#T*....,,....c....T#",
+"#TT...,,..........T#",
+"#T....,...r..2..TTT#",
+"#TT...,.........TTT#",
+"#~~~~~~=~~~~~~~TTTT#",
+"#~~k~~~E~~~~~~~~TTT#",
+"#TT...,.......~~~TT#",
+"#T....,,.......~~~T#",
+"#T.f...,,.Hhh....TT#",
+"#TT.....,.hhh..a.TT#",
+"#TTT..1.,....f...TT#",
+"#TT.....,,......TTT#",
+"#T..b....,,..r..*TT#",
+"#TT..S....,.....TTT#",
+"#TTT.....$,.......T#",
+"#TT..f....,...f..TT#",
+"#TTT.....,,.....TTT#",
+"#TTTT....,@....TTTT#",
+"#TTTTTT..,....TTTTT#",
+"####################"],
+[ // 2 — cidade: ruas largas, canal, muitas casas e postes
+"####################",
+"#l.......P.......l.#",
+"#..xx...,,,....xx..#",
+"#.....,,,C,,,......#",
+"#l....,,,,,,,....l.#",
+"#.....,,,,,,,......#",
+"#..r.....,......r..#",
+"######GG############",
+"#....,,V.......l...#",
+"#.Hhh.,.....Hhh....#",
+"#.hhh.,..c..hhh..*.#",
+"#.....,,,,,,,,,....#",
+"#.l.......2...,..l.#",
+"#..n..........,....#",
+"#~~~~~~~~~~~~~=~~~~#",
+"#~~k~~~~~~~~~~E~~~~#",
+"#.....,,,,,,,,,....#",
+"#.Hhh.,.......Hhh..#",
+"#.hhh.,..o....hhh..#",
+"#.....,.....1......#",
+"#l..b.,..........l.#",
+"#.....,,,,,,,,,,...#",
+"#.Hhh....a....,Hhh.#",
+"#.hhh..f...f..,hhh.#",
+"#.......S.....,....#",
+"#.l..x........,.$l.#",
+"#.Hhh.........,Hhh.#",
+"#.hhh.....@,,,,hhh.#",
+"#*.................#",
+"####################"],
+[ // 3 — castelo/fortaleza: pedras, fosso, pátio do chefe
+"####################",
+"#r.l.....P.....l.r.#",
+"#.......,,,........#",
+"#.l...,,,C,,,....l.#",
+"#.....,,,,,,,......#",
+"#r..l..,,,,,..l..r.#",
+"#.........,........#",
+"##########GG########",
+"#r.......V,......r.#",
+"#..c......,....rr..#",
+"#.rr......,..2.....#",
+"#.......,,,........#",
+"#T..f...,....*...T.#",
+"#~~~~~~~~=~~~~~~~~~#",
+"#~~~~k~~~E~~~~~~~~~#",
+"#~~~~~~~~,~~~~~~~~~#",
+"#........,.........#",
+"#.Hhh....,.....Hhh.#",
+"#.hhh....,..r..hhh.#",
+"#.....1..,.........#",
+"#..r.....,,,..a..r.#",
+"#.l.......,......l.#",
+"#...n.....,...b....#",
+"#..f..S...,....f...#",
+"#.Hhh.....,..$.Hhh.#",
+"#.hhh.....,....hhh.#",
+"#*........,........#",
+"#T.r......@.....rT.#",
+"#TT...............T#",
+"####################"]
+];
+
+/* ---------- herói: nível, título e corações ---------- */
+const semVazios = k => k.flat(Infinity).filter(x => x != null && x !== false && x !== '');
+const TITULOS = ['Aprendiz','Viajante','Aventureiro','Desbravador','Herói','Campeão','Mestre','Lenda'];
+const nivelHeroi = hxp => Math.floor(Math.sqrt((hxp || 0) / 40)) + 1;
+const hxpDoNivel = n => 40 * (n - 1) * (n - 1);
+const tituloHeroi = n => TITULOS[Math.min(n - 1, TITULOS.length - 1)];
+const vidasMax = () => 3 + Math.floor((nivelHeroi(J().hxp) - 1) / 3);
+function ganharHXP(n){
+  const j = J(), antes = nivelHeroi(j.hxp);
+  j.hxp = (j.hxp || 0) + n;
+  const depois = nivelHeroi(j.hxp);
+  if (depois > antes) j.subiu = depois;
+  return n;
+}
+function MW(){ const j = J(); if (!j.mundo) j.mundo = {r:0, pos:{}, vis:{}, voz:{}, falas:{}, abertos:{}, lidos:{}, palavras:{}, packs:{}, explor:{}}; return j.mundo; }
+const vozFeita = r => !!MW().voz[r] || noFeito(r, 3);
+
+/* ---------- palavras dos objetos do cenário ---------- */
+const PALAVRAS = {
+  arvore:  {pt:'árvore', en:'tree', es:'el árbol', fr:"l'arbre", it:"l'albero", de:'der Baum', p:'a árvore'},
+  cristal: {pt:'cristal', en:'crystal', es:'el cristal', fr:'le cristal', it:'il cristallo', de:'der Kristall', p:'o cristal'},
+  casa:    {pt:'casa', en:'house', es:'la casa', fr:'la maison', it:'la casa', de:'das Haus', p:'a casa'},
+  fonte:   {pt:'fonte', en:'fountain', es:'la fuente', fr:'la fontaine', it:'la fontana', de:'der Brunnen', p:'a fonte'},
+  poco:    {pt:'poço', en:'well', es:'el pozo', fr:'le puits', it:'il pozzo', de:'der Brunnen', p:'o poço'},
+  estatua: {pt:'estátua', en:'statue', es:'la estatua', fr:'la statue', it:'la statua', de:'die Statue', p:'a estátua'},
+  reator:  {pt:'reator', en:'reactor', es:'el reactor', fr:'le réacteur', it:'il reattore', de:'der Reaktor', p:'o reator'},
+  banco:   {pt:'banco', en:'bench', es:'el banco', fr:'le banc', it:'la panchina', de:'die Bank', p:'o banco'},
+  poste:   {pt:'poste de luz', en:'streetlight', es:'la farola', fr:'le lampadaire', it:'il lampione', de:'die Straßenlaterne', p:'o poste'},
+  tocha:   {pt:'tocha', en:'torch', es:'la antorcha', fr:'la torche', it:'la torcia', de:'die Fackel', p:'a tocha'},
+  antena:  {pt:'antena', en:'antenna', es:'la antena', fr:"l'antenne", it:"l'antenna", de:'die Antenne', p:'a antena'},
+  pedra:   {pt:'pedra', en:'rock', es:'la roca', fr:'le rocher', it:'la roccia', de:'der Felsen', p:'a pedra'},
+  caixa:   {pt:'caixa', en:'box', es:'la caja', fr:'la caisse', it:'la cassa', de:'die Kiste', p:'a caixa'},
+  barco:   {pt:'barco', en:'boat', es:'el barco', fr:'le bateau', it:'la barca', de:'das Boot', p:'o barco'},
+  nave:    {pt:'nave espacial', en:'spaceship', es:'la nave espacial', fr:'le vaisseau spatial', it:"l'astronave", de:'das Raumschiff', p:'a nave espacial'},
+  lago:    {pt:'lago', en:'lake', es:'el lago', fr:'le lac', it:'il lago', de:'der See', p:'o lago'},
+  flor:    {pt:'flor', en:'flower', es:'la flor', fr:'la fleur', it:'il fiore', de:'die Blume', p:'a flor'},
+  ponte:   {pt:'ponte', en:'bridge', es:'el puente', fr:'le pont', it:'il ponte', de:'die Brücke', p:'a ponte'},
+  portao:  {pt:'portão', en:'gate', es:'el portón', fr:'le portail', it:'il cancello', de:'das Tor', p:'o portão'},
+  placa:   {pt:'placa', en:'sign', es:'el letrero', fr:'le panneau', it:'il cartello', de:'das Schild', p:'a placa'},
+  bau:     {pt:'baú', en:'chest', es:'el cofre', fr:'le coffre', it:'il forziere', de:'die Truhe', p:'o baú'}
+};
+const PROP_PALAVRA = {
+  T:{espaco:'cristal', _:'arvore'}, H:{_:'casa'}, h:{_:'casa'}, o:{viagem:'fonte', fantasia:'poco', misterio:'estatua', espaco:'reator'},
+  n:{_:'banco'}, l:{fantasia:'tocha', espaco:'antena', _:'poste'}, r:{_:'pedra'}, x:{_:'caixa'}, k:{espaco:'nave', _:'barco'},
+  '~':{espaco:null, _:'lago'}, f:{_:'flor'}, '=':{_:'ponte'}, G:{_:'portao'}
+};
+function palavraDe(c){
+  const m = PROP_PALAVRA[c]; if (!m) return null;
+  const tema = J().tema, k = tema in m ? m[tema] : m._;
+  if (!k) return null;
+  const p = PALAVRAS[k], lang = S.profile.target;
+  return {k, alvo: lang === 'pt' ? p.p : p[lang] || p.en, pt: p.pt};
+}
+
+/* ---------- mapas ---------- */
+const TILE = 32;
+const ANDAVEL = new Set(['.', ',', 'f', '=', 'P']);
+function chaoSob(rows, x, y, ch){
+  if (ch === 'k') return '~';
+  const viz = [rows[y - 1] && rows[y - 1][x], rows[y + 1] && rows[y + 1][x], rows[y][x - 1], rows[y][x + 1]];
+  for (const p of ['=', ',', '.', 'f']) if (viz.includes(p)) return p;
+  return '.';
+}
+function montarMapa(r){
+  const rows = MUNDO_MAPAS[r], H = rows.length, W = rows[0].length, t = [], ent = {}, objs = [];
+  let ini = {x:1, y:1}, porta = null;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++){
+    let ch = rows[y][x];
+    if (ch === '@'){ ini = {x, y}; ch = chaoSob(rows, x, y, ch); }
+    else if ('12VCEabc$'.includes(ch)){ ent[ch] = {k:ch, x, y, hx:x, hy:y, px:x, py:y, dir:'s', passo:0, mov:null, espera:2 + Math.random() * 3}; ch = chaoSob(rows, x, y, ch); }
+    if (ch === 'P') porta = {x, y};
+    if ('TnlrxoSk*G'.includes(ch)) objs.push({c:ch, x, y, base:y + 1});
+    if (ch === 'H') objs.push({c:'H', x, y, base:y + 2});
+    t.push(ch);
+  }
+  return {r, W, H, t, ent, objs, ini, porta};
+}
+const tileEm = (m, x, y) => (x < 0 || y < 0 || x >= m.W || y >= m.H) ? '#' : m.t[y * m.W + x];
+function solido(m, x, y){
+  const c = tileEm(m, x, y);
+  if (c === 'G') return !vozFeita(m.r);
+  return !ANDAVEL.has(c);
+}
+function entAtiva(m, e){ if (e.k === 'E') return !noFeito(m.r, 1); if (e.k === 'C') return !noFeito(m.r, 3); return true; }
+function entEm(m, x, y){ for (const k in m.ent){ const e = m.ent[k]; if (!entAtiva(m, e)) continue; if ((e.x === x && e.y === y) || (e.mov && e.mov.x === x && e.mov.y === y)) return e; } return null; }
+
+/* ---------- conteúdo da região (gerado pelo Gemini uma vez e guardado) ---------- */
+function promptRegiao(tm, r){
+  const L = nomeIdioma(S.profile.target);
+  const pessoa = '{"nome": nome próprio, "papel": profissão ou papel em ' + S.profile.native + ' (2 a 4 palavras), "ola": fala curta em ' + L + ', "ola_t": tradução}';
+  return 'TAREFA: aventura_regiao\n' + baseAventura(tm, r) + '\n\nCrie os moradores e textos desta região de um mundo aberto que o aluno explora andando. Responda SOMENTE com um objeto JSON:\n' +
+    '{"npc1": ' + pessoa + ' (na fala, apresenta um problema do dia a dia e pede ajuda),\n "npc2": ' + pessoa + ' (mora do outro lado da ponte e também pede ajuda),\n "guardiao": ' + pessoa + ' (guarda o portão e só deixa passar quem fala em voz alta),\n "mercador": ' + pessoa + ' (vende itens),\n' +
+    ' "moradores": lista com 3 itens {"nome", "papel", "ola": fala curta em ' + L + ' puxando assunto, "ola_t", "pergunta": pergunta simples em ' + L + ' para o aluno, "pergunta_t", "opcoes": [3 respostas em ' + L + '], "certa": índice da resposta adequada, "reacao": reação curta em ' + L + ' à resposta certa, "reacao_t"},\n' +
+    ' "placas": lista com 3 itens {"texto": aviso curto em ' + L + ' do tipo que se lê numa placa de rua, loja ou estação, "texto_t": tradução},\n' +
+    ' "inimigo": nome do inimigo que bloqueia a ponte, "inimigo_fala": provocação curta dele em ' + L + ', "inimigo_fala_t": tradução, "chefe_fala": ameaça curta do chefe em ' + L + ', "chefe_fala_t": tradução}\n' +
+    'Tudo no nível ' + S.level + ', com situações reais (comprar, pedir informação, se apresentar, trabalho). Varie a posição da resposta certa. Sem markdown.';
+}
+function packPadrao(r){
+  const t = tutorDe(S.profile.target), nomes = [['Ana','moradora'],['Bruno','pescador'],['Clara','vendedora'],['Davi','carteiro'],['Elisa','professora'],['Félix','cozinheiro'],['Gabi','guia'],['Hugo','guarda']];
+  const p = i => { const n = nomes[(i + r * 2) % nomes.length]; return {nome:n[0], papel:n[1], ola:t.ola + '!', ola_t:'Olá!'}; };
+  return {padrao:true, npc1:p(0), npc2:p(1), guardiao:Object.assign(p(7), {papel:'guardião do portão'}), mercador:Object.assign(p(2), {papel:'mercador'}), moradores:[p(3), p(4), p(5)], placas:[], inimigo:TEMAS[J().tema].inimigo};
+}
+function packDe(r){ const k = r + '|' + J().tema + '|' + S.profile.target + '|' + S.level; return MW().packs[k] || packPadrao(r); }
+const carregandoPack = {};
+function carregarPack(r){
+  const k = r + '|' + J().tema + '|' + S.profile.target + '|' + S.level, w = MW();
+  if (w.packs[k] || carregandoPack[k]) return Promise.resolve(w.packs[k]);
+  carregandoPack[k] = ai(promptRegiao(TEMAS[J().tema], r)).then(d => {
+    if (!d || typeof d !== 'object' || !d.npc1) throw {code:'invalid_json'};
+    d.moradores = (Array.isArray(d.moradores) ? d.moradores : []).filter(x => x && str(x.nome)).slice(0, 3);
+    d.placas = (Array.isArray(d.placas) ? d.placas : []).filter(x => x && str(x.texto)).slice(0, 3);
+    // guarda só as regiões deste tema e idioma
+    Object.keys(w.packs).forEach(z => { if (z.split('|')[1] !== J().tema || z.split('|')[2] !== S.profile.target) delete w.packs[z]; });
+    w.packs[k] = d; save(); delete carregandoPack[k]; return d;
+  }, e => { delete carregandoPack[k]; throw e; });
+  return carregandoPack[k];
+}
+function nomeEnt(r, k){
+  const p = packDe(r), mo = p.moradores || [];
+  if (k === '1') return p.npc1.nome; if (k === '2') return p.npc2.nome; if (k === 'V') return p.guardiao.nome; if (k === '$') return p.mercador.nome;
+  if (k === 'E') return str(p.inimigo) || TEMAS[J().tema].inimigo; if (k === 'C') return 'Chefe da região';
+  const i = 'abc'.indexOf(k); return (mo[i] && mo[i].nome) || 'Morador';
+}
+function avatarEnt(r, k){ return avatarDeSemente(J().tema + r + k + nomeEnt(r, k)); }
+
+/* ---------- objetivo atual ---------- */
+function objetivo(r){
+  const p = packDe(r);
+  if (!noFeito(r, 0)) return {t:'Fale com ' + p.npc1.nome + ', que precisa de ajuda', alvo:'1'};
+  if (!noFeito(r, 1)) return {t:'Derrote ' + nomeEnt(r, 'E') + ' na ponte', alvo:'E'};
+  if (!noFeito(r, 2)) return {t:'Ajude ' + p.npc2.nome + ' do outro lado do rio', alvo:'2'};
+  if (!vozFeita(r)) return {t:'Fale em voz alta com o guardião ' + p.guardiao.nome, alvo:'V'};
+  if (!noFeito(r, 3)) return {t:'Enfrente o chefe depois do portão', alvo:'C'};
+  if (r + 1 < MUNDO_MAPAS.length) return {t:'Entre no portal para ' + TEMAS[J().tema].regioes[r + 1], alvo:'P'};
+  return {t:'Você completou a jornada! Explore, converse e treine.', alvo:null};
+}
+
+/* ---------- visual por tema ---------- */
+const SKINS = {
+  viagem:  {chao:'#A9D98C', chao2:'#9ACF7C', tufo:'#86C06A', trilha:'#E6DECF', borda:'#D2C7B2', agua:'#3EA7E1', agua2:'#9ED8F6', muro:'#5E8C4E', muroTopo:'#78A865', copa:['#3FA34D','#58B865'], copa2:'#2E8A3C', tronco:'#7A5232', telhados:['#E5484D','#2B78D4','#F0A020','#0F7A57'], parede:'#FFF4E2', flores:['#FF6FA8','#FFD84A','#FFFFFF'], ponte:'#B98552', clima:'nuvens', escuro:null, arvore:'redonda', luz:'255,231,163'},
+  fantasia:{chao:'#7CC46A', chao2:'#70B95E', tufo:'#5EA64E', trilha:'#DDBB82', borda:'#C29E62', agua:'#3C8DD8', agua2:'#A5D4F5', muro:'#6B6F80', muroTopo:'#9095A8', copa:['#2F8F4A','#43A85E'], copa2:'#22703A', tronco:'#6B4226', telhados:['#7C3AED','#B8323A','#2563EB','#C2410C'], parede:'#F3E3C3', flores:['#F472B6','#FDE047','#C4B5FD'], ponte:'#9C6B3E', clima:'folhas', escuro:null, arvore:'mista', luz:'255,210,122'},
+  misterio:{chao:'#5F6876', chao2:'#58616F', tufo:'#4F5866', trilha:'#7F8999', borda:'#6C7584', agua:'#1F3B5C', agua2:'#5A86B8', muro:'#3B3F4A', muroTopo:'#5A5F6E', copa:['#2F5D47','#3D7058'], copa2:'#244A39', tronco:'#3E2C22', telhados:['#4B5563','#7F1D1D','#1E3A8A','#374151'], parede:'#C9B699', flores:['#E2E8F0','#FCA5A5','#FDE68A'], ponte:'#6B5444', clima:'chuva', escuro:.4, arvore:'redonda', luz:'253,230,138'},
+  espaco:  {chao:'#2E3554', chao2:'#2A314D', tufo:'#38406A', trilha:'#414C78', borda:'#6D7CFF', agua:'#8E24BC', agua2:'#F0ABFC', muro:'#171C30', muroTopo:'#3A4266', copa:['#22D3EE','#A78BFA'], copa2:'#0E7490', tronco:'#64748B', telhados:['#E2E8F0','#C7D2FE','#BAE6FD','#FBCFE8'], parede:'#CBD5E1', flores:['#67E8F9','#F0ABFC','#FDE68A'], ponte:'#64748B', clima:'brilhos', escuro:.3, arvore:'cristal', luz:'165,243,252'}
+};
+function escuridao(sk){
+  if (sk.escuro != null) return sk.escuro;
+  const hr = new Date().getHours() + new Date().getMinutes() / 60;
+  if (hr >= 7 && hr < 17.5) return 0;
+  if (hr >= 17.5 && hr < 19) return (hr - 17.5) / 1.5 * .36;
+  if (hr >= 5.5 && hr < 7) return (7 - hr) / 1.5 * .36;
+  return .36;
+}
+// gerador previsível para detalhes do cenário (o mesmo mapa sempre igual)
+const ruido = (x, y, s) => { let n = (x * 374761393 + y * 668265263 + (s || 0) * 982451653) | 0; n = (n ^ (n >>> 13)) * 1274126177 | 0; return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
+function imgSVG(svg, size){
+  const i = new Image();
+  i.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '"'));
+  return i;
+}
+function rr(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+
+/* ---------- camada fixa: chão, caminhos, água e muros ---------- */
+function desenharChao(m, sk, escala){
+  const cv = document.createElement('canvas'); cv.width = m.W * TILE * escala; cv.height = m.H * TILE * escala;
+  const c = cv.getContext('2d'); c.scale(escala, escala);
+  const T = TILE, eh = (x, y, set) => set.includes(tileEm(m, x, y));
+  for (let y = 0; y < m.H; y++) for (let x = 0; x < m.W; x++){
+    const ch = tileEm(m, x, y), X = x * T, Y = y * T;
+    c.fillStyle = (x + y) % 2 ? sk.chao : sk.chao2; c.fillRect(X, Y, T, T);
+    if (J().tema === 'espaco'){ c.strokeStyle = 'rgba(255,255,255,.05)'; c.strokeRect(X + .5, Y + .5, T - 1, T - 1); }
+    else for (let i = 0; i < 3; i++){ const a = ruido(x, y, i); if (a < .55){ c.fillStyle = sk.tufo; const px = X + ruido(x, y, i + 9) * 26 + 3, py = Y + ruido(x, y, i + 17) * 26 + 3; if (J().tema === 'misterio'){ c.fillRect(px, py, 6, 3); } else { c.beginPath(); c.moveTo(px, py + 4); c.lineTo(px + 2, py); c.lineTo(px + 4, py + 4); c.fill(); } } }
+    if (ch === ',' || ch === 'P' || (ch === 'G')){
+      c.fillStyle = sk.borda; rr(c, X - 1, Y - 1, T + 2, T + 2, 9); c.fill();
+      c.fillStyle = sk.trilha; rr(c, X + 1, Y + 1, T - 2, T - 2, 8); c.fill();
+      // emenda com o vizinho
+      if (eh(x + 1, y, ',PG')) c.fillRect(X + T / 2, Y + 1, T, T - 2);
+      if (eh(x, y + 1, ',PG=')) c.fillRect(X + 1, Y + T / 2, T - 2, T);
+      if (J().tema === 'espaco'){ c.fillStyle = 'rgba(109,124,255,.35)'; c.fillRect(X + T / 2 - 1, Y + 4, 2, T - 8); }
+      else for (let i = 0; i < 2; i++){ c.fillStyle = 'rgba(0,0,0,.07)'; c.beginPath(); c.arc(X + 6 + ruido(x, y, 30 + i) * 20, Y + 6 + ruido(x, y, 40 + i) * 20, 2.2, 0, 7); c.fill(); }
+    }
+    if (ch === '~' || ch === 'k' || ch === '='){
+      c.fillStyle = sk.agua; c.fillRect(X, Y, T, T);
+      c.fillStyle = 'rgba(255,255,255,.12)';
+      if (!eh(x, y - 1, '~k=')) c.fillRect(X, Y, T, 4);
+    }
+    if (ch === '='){
+      c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(X + 2, Y + 2, T - 4, T);
+      c.fillStyle = sk.ponte; c.fillRect(X + 3, Y, T - 6, T);
+      c.fillStyle = 'rgba(0,0,0,.18)'; for (let i = 0; i < 4; i++) c.fillRect(X + 3, Y + i * 8 + 7, T - 6, 1.5);
+      c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(X + 2, Y, 2, T); c.fillRect(X + T - 4, Y, 2, T);
+    }
+    if (ch === '#'){
+      c.fillStyle = sk.muro; c.fillRect(X, Y, T, T);
+      c.fillStyle = sk.muroTopo; c.fillRect(X, Y, T, 10);
+      if (J().tema === 'viagem'){ c.fillStyle = 'rgba(255,255,255,.12)'; for (let i = 0; i < 4; i++){ c.beginPath(); c.arc(X + 4 + i * 8, Y + 5, 4, 0, 7); c.fill(); } }
+      else if (J().tema === 'espaco'){ c.fillStyle = 'rgba(109,124,255,.6)'; c.fillRect(X, Y + 10, T, 2); }
+      else { c.strokeStyle = 'rgba(0,0,0,.22)'; c.lineWidth = 1; for (let i = 0; i < 2; i++){ c.beginPath(); c.moveTo(X, Y + 10 + i * 11); c.lineTo(X + T, Y + 10 + i * 11); c.stroke(); c.beginPath(); c.moveTo(X + (i ? 8 : 20), Y + 10 + i * 11); c.lineTo(X + (i ? 8 : 20), Y + 21 + i * 11); c.stroke(); } }
+    }
+    if (ch === 'f'){ sk.flores.forEach((cor, i) => { c.fillStyle = cor; const px = X + 6 + ruido(x, y, 50 + i) * 20, py = Y + 6 + ruido(x, y, 60 + i) * 20; for (let p = 0; p < 4; p++){ c.beginPath(); c.arc(px + Math.cos(p * 1.57) * 2.4, py + Math.sin(p * 1.57) * 2.4, 2, 0, 7); c.fill(); } c.fillStyle = '#FDE047'; c.beginPath(); c.arc(px, py, 1.4, 0, 7); c.fill(); }); }
+  }
+  return cv;
+}
+
+/* ---------- personagens ---------- */
+function desenharPessoa(c, cx, by, av, o){
+  // cx = centro, by = linha dos pés. o: {dir, passo, item, escala, alpha}
+  o = o || {}; const s = o.escala || 1, d = o.dir || 's', anda = Math.sin(o.passo || 0);
+  const pele = AV.pele[av.pele % AV.pele.length], hc = AV.cabelo[av.hc % AV.cabelo.length], roupa = AV.roupa[av.roupa % AV.roupa.length], est = av.cabelo % 6, it = o.item || '';
+  c.save(); c.translate(cx, by); c.scale(s, s);
+  const pulo = o.parado ? Math.sin((o.t || 0) * 2.4) * .6 : Math.abs(anda) * -1.6;
+  c.fillStyle = 'rgba(0,0,0,.22)'; c.beginPath(); c.ellipse(0, 0, 9, 3.4, 0, 0, 7); c.fill();
+  c.translate(0, pulo);
+  if (it === 'capa'){ c.fillStyle = '#B8323A'; c.beginPath(); c.moveTo(-7, -17); c.lineTo(7, -17); c.lineTo(9 + anda, -2); c.lineTo(-9 - anda, -2); c.fill(); }
+  // pernas
+  c.fillStyle = INK;
+  c.fillRect(-5, -6 + (anda > 0 ? -anda * 2 : 0), 4, 6); c.fillRect(1, -6 + (anda < 0 ? anda * 2 : 0), 4, 6);
+  // corpo
+  c.fillStyle = roupa; rr(c, -8, -18, 16, 13, 5); c.fill();
+  c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(-8, -17, 16, 3);
+  // braços
+  c.fillStyle = pele;
+  c.beginPath(); c.arc(-9, -11 + anda * 2, 2.6, 0, 7); c.fill(); c.beginPath(); c.arc(9, -11 - anda * 2, 2.6, 0, 7); c.fill();
+  if (it === 'medalha'){ c.fillStyle = '#FFD84A'; c.beginPath(); c.arc(3, -12, 2.4, 0, 7); c.fill(); }
+  // cabeça
+  const hy = -27;
+  if (est === 1 && d !== 'n'){ c.fillStyle = hc; rr(c, -10, hy - 6, 20, 17, 6); c.fill(); }
+  c.fillStyle = pele; c.beginPath(); c.arc(0, hy, 10, 0, 7); c.fill();
+  c.fillStyle = hc;
+  if (d === 'n'){ c.beginPath(); c.arc(0, hy - 1, 10.4, 0, 7); c.fill(); }
+  else if (est === 3){ for (const [px, py] of [[-8, -3], [-5, -8], [0, -10], [5, -8], [8, -3]]){ c.beginPath(); c.arc(px, hy + py, 4.2, 0, 7); c.fill(); } }
+  else if (est === 4){ c.fillStyle = roupa; c.beginPath(); c.arc(0, hy - 2, 10.5, Math.PI, 0); c.fill(); c.fillRect(d === 'w' ? -16 : 0, hy - 3, 16, 3); }
+  else { c.beginPath(); c.arc(0, hy - 1, 10.6, Math.PI * 1.02, Math.PI * 1.98); c.fill(); c.fillRect(-10.4, hy - 2, 4, 6); c.fillRect(6.4, hy - 2, 4, 6); if (est === 2){ c.beginPath(); c.arc(0, hy - 12, 4, 0, 7); c.fill(); } }
+  if (d !== 'n'){
+    c.fillStyle = INK;
+    const ox = d === 'e' ? 3 : d === 'w' ? -3 : 0;
+    if (d === 's'){ c.fillRect(-4.5 + ox, hy, 2.4, 3.2); c.fillRect(2.1 + ox, hy, 2.4, 3.2); }
+    else c.fillRect(ox + (d === 'e' ? 1 : -3.4), hy, 2.4, 3.2);
+    c.fillStyle = 'rgba(255,120,120,.35)'; if (d === 's'){ c.beginPath(); c.arc(-6, hy + 4, 1.8, 0, 7); c.arc(6, hy + 4, 1.8, 0, 7); c.fill(); }
+    if (it === 'oculos'){ c.fillStyle = '#141B33'; c.fillRect(-6 + ox, hy - 1, 12, 4); }
+  }
+  // chapéus e itens na cabeça
+  if (it === 'mago'){ c.fillStyle = '#5B3FA0'; c.beginPath(); c.moveTo(-12, hy - 5); c.lineTo(12, hy - 5); c.lineTo(2, hy - 26); c.fill(); c.fillStyle = '#FFD84A'; c.beginPath(); c.arc(1, hy - 15, 1.8, 0, 7); c.fill(); }
+  else if (it === 'coroa'){ c.fillStyle = '#FFD84A'; c.beginPath(); c.moveTo(-8, hy - 7); c.lineTo(-8, hy - 15); c.lineTo(-4, hy - 11); c.lineTo(0, hy - 17); c.lineTo(4, hy - 11); c.lineTo(8, hy - 15); c.lineTo(8, hy - 7); c.fill(); }
+  else if (it === 'capacete'){ c.strokeStyle = '#E6EEF7'; c.lineWidth = 2; c.fillStyle = 'rgba(191,230,255,.3)'; c.beginPath(); c.arc(0, hy, 13.5, 0, 7); c.fill(); c.stroke(); }
+  else if (it === 'detetive' || it === 'viajante'){ c.fillStyle = it === 'detetive' ? '#6B4F3A' : '#F0782F'; c.beginPath(); c.ellipse(0, hy - 7, 15, 3.4, 0, 0, 7); c.fill(); c.beginPath(); c.arc(0, hy - 8, 8.5, Math.PI, 0); c.fill(); }
+  c.restore();
+}
+
+/* ---------- objetos do cenário ---------- */
+function desenharObj(c, o, sk, t, m){
+  const T = TILE, X = o.x * T, Y = o.y * T, tema = J().tema;
+  if (o.c === 'T'){
+    const tipo = sk.arvore === 'mista' ? ((o.x * 7 + o.y * 3) % 3 ? 'pinheiro' : 'redonda') : sk.arvore, bal = Math.sin(t * 1.3 + o.x * .8 + o.y * .5) * 1.4;
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.ellipse(X + 16, Y + 28, 12, 4, 0, 0, 7); c.fill();
+    if (tipo === 'cristal'){
+      const brilho = .75 + Math.sin(t * 2 + o.x) * .25;
+      [[-7, 8, 0], [0, 16, 1], [7, 10, 0]].forEach(([dx, hgt, k]) => { c.fillStyle = sk.copa[k]; c.globalAlpha = brilho; c.beginPath(); c.moveTo(X + 16 + dx - 5, Y + 28); c.lineTo(X + 16 + dx, Y + 28 - hgt - 10); c.lineTo(X + 16 + dx + 5, Y + 28); c.fill(); c.globalAlpha = 1; c.fillStyle = 'rgba(255,255,255,.5)'; c.fillRect(X + 16 + dx - 1, Y + 28 - hgt - 2, 1.5, hgt - 2); });
+      return;
+    }
+    c.fillStyle = sk.tronco; c.fillRect(X + 13, Y + 14, 6, 14);
+    if (tipo === 'pinheiro'){
+      for (let i = 0; i < 3; i++){ c.fillStyle = i % 2 ? sk.copa[1] : sk.copa[0]; c.beginPath(); c.moveTo(X + 3 + i * 2 + bal * (1 - i * .3), Y + 20 - i * 9); c.lineTo(X + 16 + bal, Y - 4 - i * 9); c.lineTo(X + 29 - i * 2 + bal * (1 - i * .3), Y + 20 - i * 9); c.fill(); }
+    } else {
+      c.fillStyle = sk.copa2; c.beginPath(); c.arc(X + 16 + bal, Y + 8, 14, 0, 7); c.fill();
+      c.fillStyle = sk.copa[0]; c.beginPath(); c.arc(X + 11 + bal, Y + 4, 10, 0, 7); c.arc(X + 21 + bal, Y + 6, 10, 0, 7); c.fill();
+      c.fillStyle = sk.copa[1]; c.beginPath(); c.arc(X + 13 + bal, Y, 6, 0, 7); c.fill();
+      if (tema !== 'misterio' && (o.x + o.y) % 4 === 0){ c.fillStyle = '#E5484D'; c.beginPath(); c.arc(X + 20 + bal, Y + 10, 2, 0, 7); c.arc(X + 9 + bal, Y + 9, 2, 0, 7); c.fill(); }
+    }
+  } else if (o.c === 'H'){
+    const W = 3 * T, cor = sk.telhados[(o.x + o.y) % sk.telhados.length];
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(X + 4, Y + 2 * T - 6, W, 8);
+    if (tema === 'espaco'){
+      c.fillStyle = sk.parede; c.beginPath(); c.ellipse(X + W / 2, Y + 2 * T - 4, W / 2 - 2, 2 * T - 6, 0, Math.PI, 0); c.fill();
+      c.fillStyle = cor; c.beginPath(); c.ellipse(X + W / 2, Y + 2 * T - 4, W / 2 - 8, 2 * T - 14, 0, Math.PI, 0); c.fill();
+      c.fillStyle = '#1E293B'; rr(c, X + W / 2 - 8, Y + 2 * T - 24, 16, 20, 7); c.fill();
+      c.fillStyle = 'rgba(' + sk.luz + ',.9)'; for (let i = 0; i < 3; i++){ c.beginPath(); c.arc(X + 22 + i * 26, Y + 26, 4, 0, 7); c.fill(); }
+      return;
+    }
+    c.fillStyle = sk.parede; c.fillRect(X + 4, Y + 12, W - 8, 2 * T - 14);
+    c.fillStyle = 'rgba(0,0,0,.08)'; c.fillRect(X + 4, Y + 12, W - 8, 4);
+    // telhado
+    c.fillStyle = cor; c.beginPath(); c.moveTo(X - 2, Y + 16); c.lineTo(X + 12, Y - 10); c.lineTo(X + W - 12, Y - 10); c.lineTo(X + W + 2, Y + 16); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X - 2, Y + 13, W + 4, 3);
+    c.fillStyle = 'rgba(255,255,255,.18)'; for (let i = 0; i < 3; i++) c.fillRect(X + 4 + i * 4, Y + 6 - i * 6, W - 8 - i * 8, 1.5);
+    // chaminé
+    c.fillStyle = '#7C5A45'; c.fillRect(X + W - 26, Y - 16, 8, 14);
+    // porta e janelas
+    c.fillStyle = '#5A3A24'; rr(c, X + W / 2 - 7, Y + 2 * T - 22, 14, 22, 4); c.fill(); c.fillStyle = '#FFD84A'; c.beginPath(); c.arc(X + W / 2 + 4, Y + 2 * T - 11, 1.4, 0, 7); c.fill();
+    const noite = MUNDO ? MUNDO.esc > .2 : false;
+    c.fillStyle = noite ? 'rgb(' + sk.luz + ')' : '#BFE3F7';
+    for (const wx of [X + 14, X + W - 30]){ c.fillRect(wx, Y + 28, 16, 13); c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(wx + 7, Y + 28, 2, 13); c.fillRect(wx, Y + 34, 16, 1.5); c.fillStyle = noite ? 'rgb(' + sk.luz + ')' : '#BFE3F7'; }
+  } else if (o.c === 'n'){
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(X + 3, Y + 22, 26, 5);
+    c.fillStyle = '#8B5A2B'; c.fillRect(X + 3, Y + 12, 26, 4); c.fillRect(X + 3, Y + 18, 26, 4); c.fillStyle = '#5A3A1A'; c.fillRect(X + 5, Y + 22, 3, 6); c.fillRect(X + 24, Y + 22, 3, 6);
+  } else if (o.c === 'l'){
+    const fogo = tema === 'fantasia';
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.ellipse(X + 16, Y + 28, 6, 2.5, 0, 0, 7); c.fill();
+    c.fillStyle = fogo ? '#6B4226' : '#334155'; c.fillRect(X + 14, Y - 6, 4, 34);
+    if (fogo){ const f = Math.sin(t * 12 + o.x) * 1.5; c.fillStyle = '#F97316'; c.beginPath(); c.ellipse(X + 16, Y - 10, 5, 8 + f, 0, 0, 7); c.fill(); c.fillStyle = '#FDE047'; c.beginPath(); c.ellipse(X + 16, Y - 8, 2.6, 4.5 + f / 2, 0, 0, 7); c.fill(); }
+    else if (tema === 'espaco'){ c.fillStyle = '#94A3B8'; c.beginPath(); c.arc(X + 16, Y - 8, 6, Math.PI, 0); c.fill(); c.fillStyle = (Math.floor(t * 2 + o.x) % 2) ? '#F43F5E' : '#22D3EE'; c.beginPath(); c.arc(X + 16, Y - 16, 2.6, 0, 7); c.fill(); }
+    else { c.fillStyle = '#334155'; c.fillRect(X + 9, Y - 12, 14, 4); c.fillStyle = 'rgb(' + sk.luz + ')'; c.fillRect(X + 11, Y - 8, 10, 6); }
+  } else if (o.c === 'r'){
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.ellipse(X + 16, Y + 27, 12, 4, 0, 0, 7); c.fill();
+    c.fillStyle = tema === 'espaco' ? '#475569' : '#8A93A3'; c.beginPath(); c.moveTo(X + 4, Y + 27); c.lineTo(X + 8, Y + 12); c.lineTo(X + 18, Y + 8); c.lineTo(X + 28, Y + 16); c.lineTo(X + 28, Y + 27); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.22)'; c.beginPath(); c.moveTo(X + 9, Y + 14); c.lineTo(X + 18, Y + 10); c.lineTo(X + 20, Y + 16); c.fill();
+  } else if (o.c === 'x'){
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(X + 5, Y + 25, 24, 5);
+    c.fillStyle = tema === 'espaco' ? '#64748B' : '#B07A43'; c.fillRect(X + 5, Y + 6, 22, 20); c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 2; c.strokeRect(X + 6, Y + 7, 20, 18); c.beginPath(); c.moveTo(X + 6, Y + 7); c.lineTo(X + 26, Y + 25); c.stroke();
+  } else if (o.c === 'o'){
+    const T2 = t * 3;
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.ellipse(X + 16, Y + 26, 15, 5, 0, 0, 7); c.fill();
+    if (tema === 'espaco'){ c.fillStyle = '#334155'; c.beginPath(); c.arc(X + 16, Y + 16, 13, 0, 7); c.fill(); const g = .6 + Math.sin(T2) * .3; c.fillStyle = 'rgba(34,211,238,' + g + ')'; c.beginPath(); c.arc(X + 16, Y + 16, 8, 0, 7); c.fill(); c.strokeStyle = '#A5F3FC'; c.lineWidth = 1.5; c.beginPath(); c.arc(X + 16, Y + 16, 10 + Math.sin(T2) * 1.5, 0, 7); c.stroke(); return; }
+    if (tema === 'misterio'){ c.fillStyle = '#6B7280'; c.fillRect(X + 9, Y + 14, 14, 12); c.fillStyle = '#9CA3AF'; c.fillRect(X + 12, Y - 2, 8, 16); c.beginPath(); c.arc(X + 16, Y - 5, 5, 0, 7); c.fill(); return; }
+    c.fillStyle = '#9AA3B2'; c.beginPath(); c.ellipse(X + 16, Y + 20, 15, 8, 0, 0, 7); c.fill();
+    c.fillStyle = sk.agua; c.beginPath(); c.ellipse(X + 16, Y + 19, 12, 5.5, 0, 0, 7); c.fill();
+    c.fillStyle = '#9AA3B2'; c.fillRect(X + 14, Y + 4, 4, 15);
+    c.fillStyle = sk.agua2; for (let i = 0; i < 6; i++){ const a = (T2 + i) % 1.6 / 1.6, ang = i / 6 * Math.PI * 2; c.globalAlpha = 1 - a; c.beginPath(); c.arc(X + 16 + Math.cos(ang) * a * 10, Y + 4 - Math.sin(a * Math.PI) * 8 + a * 14, 1.6, 0, 7); c.fill(); }
+    c.globalAlpha = 1;
+  } else if (o.c === 'S'){
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(X + 12, Y + 26, 10, 3);
+    c.fillStyle = '#6B4226'; c.fillRect(X + 15, Y + 10, 3, 18);
+    c.fillStyle = tema === 'espaco' ? '#334155' : '#C08A4E'; rr(c, X + 3, Y + 1, 26, 15, 3); c.fill();
+    c.fillStyle = tema === 'espaco' ? '#67E8F9' : 'rgba(60,35,15,.6)'; c.fillRect(X + 7, Y + 6, 18, 1.5); c.fillRect(X + 7, Y + 10, 13, 1.5);
+  } else if (o.c === '*'){
+    const aberto = MW().abertos[m.r + ':' + o.x + ',' + o.y];
+    c.fillStyle = 'rgba(0,0,0,.22)'; c.fillRect(X + 4, Y + 25, 24, 4);
+    c.fillStyle = '#8B5A2B'; c.fillRect(X + 5, Y + 13, 22, 13);
+    if (aberto){ c.fillStyle = '#5A3A1A'; c.fillRect(X + 5, Y + 6, 22, 7); }
+    else { c.fillStyle = '#A0682F'; rr(c, X + 5, Y + 6, 22, 9, 4); c.fill(); c.fillStyle = '#FFD84A'; c.fillRect(X + 14, Y + 12, 4, 6); const b = (Math.sin(t * 3 + o.x) + 1) / 2; c.fillStyle = 'rgba(255,230,120,' + (b * .8) + ')'; c.beginPath(); c.arc(X + 26, Y + 6, 1.5 + b, 0, 7); c.fill(); }
+  } else if (o.c === 'G'){
+    const aberto = vozFeita(m.r);
+    c.fillStyle = sk.muroTopo; c.fillRect(X + 1, Y - 10, 5, T + 8); c.fillRect(X + T - 6, Y - 10, 5, T + 8);
+    if (!aberto){
+      if (tema === 'espaco' || tema === 'fantasia'){ const a = .45 + Math.sin(t * 4 + o.x) * .2; c.fillStyle = tema === 'espaco' ? 'rgba(34,211,238,' + a + ')' : 'rgba(167,139,250,' + a + ')'; c.fillRect(X + 6, Y - 6, T - 12, T + 4); c.fillStyle = 'rgba(255,255,255,.5)'; for (let i = 0; i < 3; i++) c.fillRect(X + 6, Y - 4 + ((t * 20 + i * 12) % (T + 2)), T - 12, 1); }
+      else { c.fillStyle = sk.ponte; for (let i = 0; i < 4; i++) c.fillRect(X + 7 + i * 5, Y - 6, 3, T + 4); c.fillRect(X + 6, Y + 2, T - 12, 3); c.fillRect(X + 6, Y + 18, T - 12, 3); }
+    }
+  } else if (o.c === 'k'){
+    const b = Math.sin(t * 1.8 + o.x) * 1.5;
+    if (tema === 'espaco'){ c.fillStyle = '#E2E8F0'; c.beginPath(); c.ellipse(X + 16, Y + 16 + b, 14, 7, 0, 0, 7); c.fill(); c.fillStyle = '#38BDF8'; c.beginPath(); c.ellipse(X + 16, Y + 13 + b, 6, 4, 0, 0, 7); c.fill(); return; }
+    c.fillStyle = '#8B5A2B'; c.beginPath(); c.moveTo(X + 2, Y + 14 + b); c.lineTo(X + 30, Y + 14 + b); c.lineTo(X + 25, Y + 24 + b); c.lineTo(X + 7, Y + 24 + b); c.fill();
+    c.fillStyle = '#F8FAFC'; c.beginPath(); c.moveTo(X + 16, Y - 6 + b); c.lineTo(X + 16, Y + 12 + b); c.lineTo(X + 27, Y + 12 + b); c.fill(); c.fillStyle = '#5A3A1A'; c.fillRect(X + 15, Y - 6 + b, 2, 20);
+  }
+}
+
+/* ---------- estado do mundo na tela ---------- */
+let MUNDO = null;
+function revelar(W, x, y){
+  const m = W.m; let novos = 0;
+  for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++){
+    if (dx * dx + dy * dy > 17) continue;
+    const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= m.W || ny >= m.H) continue;
+    const i = ny * m.W + nx; if (!W.vis[i]){ W.vis[i] = 1; novos++; }
+  }
+  if (novos){
+    W.fogSujo = true;
+    const w = MW(); w.vis[m.r] = Array.from(W.vis).join('');
+    W.novosVis = (W.novosVis || 0) + novos;
+    if (W.novosVis >= 14){ W.novosVis -= 14; ganharHXP(2); }
+    const pct = W.vis.reduce((a, b) => a + b, 0) / W.vis.length;
+    const ex = w.explor[m.r] || 0;
+    if (pct >= .5 && ex < 1){ w.explor[m.r] = 1; J().moedas += 15; ganharHXP(15); toastMundo('Você já descobriu metade de ' + TEMAS[J().tema].regioes[m.r] + '. +15 ' + TEMAS[J().tema].moeda); }
+    if (pct >= .8 && ex < 2){ w.explor[m.r] = 2; J().moedas += 30; ganharHXP(30); toastMundo('Região explorada! +30 ' + TEMAS[J().tema].moeda); confete(); }
+  }
+}
+function caminho(m, de, alvos, ignorar){
+  // busca em largura até qualquer um dos alvos [{x,y}]
+  const W = m.W, chave = (x, y) => y * W + x, fim = new Set(alvos.map(a => chave(a.x, a.y)));
+  if (fim.has(chave(de.x, de.y))) return [];
+  const veio = new Map([[chave(de.x, de.y), -1]]), fila = [de];
+  while (fila.length){
+    const p = fila.shift();
+    for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]){
+      const nx = p.x + dx, ny = p.y + dy, k = chave(nx, ny);
+      if (veio.has(k) || solido(m, nx, ny)) continue;
+      const e = entEm(m, nx, ny); if (e && e !== ignorar) continue;
+      veio.set(k, chave(p.x, p.y));
+      if (fim.has(k)){ const rota = []; let c = k; while (c !== chave(de.x, de.y)){ rota.unshift({x:c % W, y:Math.floor(c / W)}); c = veio.get(c); } return rota; }
+      fila.push({x:nx, y:ny});
+    }
+  }
+  return null;
+}
+function vizinhosLivres(m, x, y){ return [[0, 1], [0, -1], [1, 0], [-1, 0]].map(([dx, dy]) => ({x:x + dx, y:y + dy})).filter(p => !solido(m, p.x, p.y)); }
+
+function telaMundo(rForcada){
+  const j = J(), w = MW(), tm = TEMAS[j.tema], sk = SKINS[j.tema] || SKINS.viagem;
+  if (rForcada != null) w.r = rForcada;
+  let r = w.r || 0; if (!noLiberado(r, 0)) r = w.r = 0;
+  const m = montarMapa(r), pos = w.pos[r] || [m.ini.x, m.ini.y];
+  if (solido(m, pos[0], pos[1]) || entEm(m, pos[0], pos[1])){ pos[0] = m.ini.x; pos[1] = m.ini.y; }
+  const visS = w.vis[r] || '', vis = new Uint8Array(m.W * m.H); for (let i = 0; i < vis.length; i++) vis[i] = visS[i] === '1' ? 1 : 0;
+
+  const cv = h('canvas',{class:'mundo-cv', 'aria-label':'Mapa de ' + tm.regioes[r] + '. Toque num lugar para andar até ele.'});
+  const hud = h('div',{class:'hud'});
+  const obj = h('button',{class:'objetivo',type:'button'});
+  const acao = h('button',{class:'acao',type:'button',hidden:true});
+  const toast = h('div',{class:'toast-mundo',role:'status','aria-live':'polite'});
+  const dlg = h('div',{class:'dlg',hidden:true});
+  const titulo = h('div',{class:'titulo-regiao'}, h('span',{class:'badge'}, NIVEL_REGIAO[r]), h('b',null, (r + 1) + '. ' + tm.regioes[r]), h('small',null, tm.nome));
+  const dpad = h('div',{class:'dpad'}, [['n','▲'],['w','◀'],['e','▶'],['s','▼']].map(([d, s]) => h('button',{type:'button',class:'d-' + d,'aria-label':{n:'Andar para cima',s:'Andar para baixo',w:'Andar para a esquerda',e:'Andar para a direita'}[d],'data-d':d}, s)));
+  const raiz = h('section',{class:'mundo'}, cv, hud, obj, dpad, acao, toast, dlg, titulo);
+  show('main', raiz); view.classList.add('mundo-on');
+
+  const W = MUNDO = {m, r, sk, tm, cv, raiz, dlg, toast, vis, esc:escuridao(sk), t:0, Z:1, dpr:1,
+    heroi:{x:pos[0], y:pos[1], px:pos[0], py:pos[1], dir:'s', passo:0, mov:null, rota:[], aoChegar:null},
+    pet:{px:pos[0], py:pos[1] + 1, trilha:[]}, cam:{x:0, y:0, ok:false}, segura:null, parts:[], falas:[], nuvens:[], toque:null, salvoEm:0, ocupado:false,
+    imgs:{pet:imgSVG(tutorSVG(S.profile.target, 'happy'), 120), ini:imgSVG(inimigoSVG(j.tema, false), 120), chefe:imgSVG(inimigoSVG(j.tema, true), 120)}};
+  for (let i = 0; i < 3; i++) W.nuvens.push({x:Math.random() * m.W * TILE, y:Math.random() * m.H * TILE, r:60 + Math.random() * 50, v:6 + Math.random() * 6});
+  revelar(W, W.heroi.x, W.heroi.y);
+  W.solido = (x, y) => solido(m, x, y);
+  window.__mundo = W;
+
+  /* ----- HUD ----- */
+  const pintarHUD = () => {
+    const n = nivelHeroi(j.hxp), base = hxpDoNivel(n), prox = hxpDoNivel(n + 1), pct = Math.round(((j.hxp || 0) - base) / (prox - base) * 100);
+    const bauOk = j.bau !== today();
+    hud.replaceChildren(...semVazios([
+      h('button',{class:'hud-heroi',type:'button','aria-label':'Herói nível ' + n,onclick:() => abrirMenuMundo()}, avatarEl(meuAvatar(), 40),
+        h('span',{class:'hud-nv'}, h('b',null,'Nv ' + n), h('small',null, tituloHeroi(n)), h('span',{class:'hud-xp'}, h('i',{style:'width:' + pct + '%'})))),
+      h('span',{class:'grow'}),
+      bauOk ? h('button',{class:'hud-bau',type:'button','aria-label':'Abrir o baú do dia',onclick:() => { const p = abrirBau(true); toastMundo('Baú do dia: ' + p); pintarHUD(); }}, icon('chest')) : null,
+      moedasEl(),
+      h('button',{class:'hud-menu',type:'button','aria-label':'Menu da aventura',onclick:() => abrirMenuMundo()}, '☰')]));
+    const o = objetivo(r);
+    obj.replaceChildren(...semVazios([icon('flag'), h('span',null, o.t), o.alvo ? h('small',null,'Ir') : null]));
+    obj.onclick = () => { if (!o.alvo) return; irAte(o.alvo); };
+  };
+  W.pintarHUD = pintarHUD; pintarHUD();
+
+  /* ----- tamanho e camadas ----- */
+  let chao = null, fog = document.createElement('canvas'), luz = document.createElement('canvas');
+  fog.width = m.W; fog.height = m.H;
+  const medir = () => {
+    const rect = raiz.getBoundingClientRect(); if (!rect.width) return;
+    W.vw = rect.width; W.vh = rect.height; W.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W.Z = clamp(rect.width / (11 * TILE), .9, 1.6);
+    cv.width = Math.round(W.vw * W.dpr); cv.height = Math.round(W.vh * W.dpr);
+    luz.width = Math.round(W.vw / 2); luz.height = Math.round(W.vh / 2);
+    const esc = W.dpr * W.Z; if (!chao || W.escChao !== esc){ W.escChao = esc; chao = desenharChao(m, sk, Math.min(esc, 2.5)); }
+  };
+  medir();
+  const ro = window.ResizeObserver ? new ResizeObserver(medir) : null; if (ro) ro.observe(raiz);
+  const atualizarFog = () => {
+    const c = fog.getContext('2d'), img = c.createImageData(m.W, m.H);
+    for (let i = 0; i < vis.length; i++){ img.data[i * 4] = 16; img.data[i * 4 + 1] = 18; img.data[i * 4 + 2] = 38; img.data[i * 4 + 3] = vis[i] ? 0 : 205; }
+    c.putImageData(img, 0, 0); W.fogSujo = false;
+  };
+  atualizarFog();
+
+  /* ----- movimento ----- */
+  const DIRS = {n:[0, -1], s:[0, 1], e:[1, 0], w:[-1, 0]};
+  const passo = d => {
+    const H0 = W.heroi; H0.dir = d;
+    const nx = H0.x + DIRS[d][0], ny = H0.y + DIRS[d][1];
+    if (solido(m, nx, ny) || entEm(m, nx, ny)) return false;
+    H0.mov = {x:nx, y:ny, de:{x:H0.x, y:H0.y}, p:0};
+    return true;
+  };
+  const chegou = () => {
+    const H0 = W.heroi; H0.x = H0.mov.x; H0.y = H0.mov.y; H0.mov = null;
+    W.pet.trilha.push({x:H0.x, y:H0.y}); if (W.pet.trilha.length > 3) W.pet.trilha.shift();
+    revelar(W, H0.x, H0.y); if (W.fogSujo) atualizarFog();
+    w.pos[r] = [H0.x, H0.y];
+    if (Date.now() - W.salvoEm > 4000){ W.salvoEm = Date.now(); save(); }
+    poeira(H0.px, H0.py);
+    // portal
+    if (m.porta && H0.x === m.porta.x && H0.y === m.porta.y && noFeito(r, 3)){ entrarPortal(); return; }
+    // conversa espontânea dos moradores por perto
+    for (const k of 'abc$12'){ const e = m.ent[k]; if (!e) continue; const d2 = Math.abs(e.x - H0.x) + Math.abs(e.y - H0.y);
+      if (d2 <= 2 && !W.falas.some(f => f.e === e) && (!e.falouEm || W.t - e.falouEm > 25)){ e.falouEm = W.t; const fala = falaCurta(k); if (fala) W.falas.push({e, txt:fala, ate:W.t + 3.5}); } }
+    if (H0.rota.length){ const p = H0.rota.shift(); const d = p.x > H0.x ? 'e' : p.x < H0.x ? 'w' : p.y > H0.y ? 's' : 'n'; if (!passo(d)){ H0.rota = []; replanejar(); } }
+    else if (H0.aoChegar){ const f = H0.aoChegar; H0.aoChegar = null; f(); }
+  };
+  let ultimoAlvo = null;
+  const replanejar = () => { const u = ultimoAlvo; if (!u) return; if (u.refazer) u.refazer(); else andarAte(u.alvos, u.fim, u.ign); };
+  const andarAte = (alvos, fim, ign, refazer) => {
+    if (W.ocupado) return false;
+    const H0 = W.heroi, rota = caminho(m, {x:H0.x, y:H0.y}, alvos, ign);
+    if (!rota){ toastMundo('Não dá para chegar lá por enquanto.'); return false; }
+    ultimoAlvo = {alvos, fim, ign, refazer};
+    H0.rota = rota; H0.aoChegar = () => { ultimoAlvo = null; if (fim) fim(); };
+    if (!H0.mov){ if (!rota.length){ H0.aoChegar = null; ultimoAlvo = null; if (fim) fim(); } else { const p = H0.rota.shift(); passo(p.x > H0.x ? 'e' : p.x < H0.x ? 'w' : p.y > H0.y ? 's' : 'n'); } }
+    return true;
+  };
+  const virarPara = (x, y) => { const H0 = W.heroi; H0.dir = x > H0.x ? 'e' : x < H0.x ? 'w' : y > H0.y ? 's' : 'n'; };
+  const irAte = k => {
+    if (k === 'P'){ if (m.porta) andarAte([m.porta]); return; }
+    const e = m.ent[k]; if (!e || !entAtiva(m, e)) return;
+    andarAte(vizinhosLivres(m, e.x, e.y), () => { virarPara(e.x, e.y); interagir({ent:e}); }, e, () => irAte(k));
+  };
+  W.irAte = irAte;
+
+  /* ----- toque no mapa ----- */
+  const telaParaTile = (cx, cy) => { const b = cv.getBoundingClientRect(); return {x:Math.floor(((cx - b.left) / W.Z + W.cam.x) / TILE), y:Math.floor(((cy - b.top) / W.Z + W.cam.y) / TILE)}; };
+  W.tileParaTela = (x, y) => { const b = cv.getBoundingClientRect(); return {x:b.left + ((x + .5) * TILE - W.cam.x) * W.Z, y:b.top + ((y + .5) * TILE - W.cam.y) * W.Z}; };
+  cv.addEventListener('pointerdown', ev => {
+    if (W.ocupado || !dlg.hidden) return;
+    destravarAudio && destravarAudio();
+    const p = telaParaTile(ev.clientX, ev.clientY);
+    W.toque = {x:p.x, y:p.y, t:W.t};
+    // pet: dá uma dica
+    if (Math.abs(p.x - Math.round(W.pet.px)) + Math.abs(p.y - Math.round(W.pet.py)) === 0){ dicaPet(); return; }
+    const e = entEm(m, p.x, p.y);
+    if (e){ irAte(e.k); return; }
+    if (solido(m, p.x, p.y)){
+      const c = tileEm(m, p.x, p.y);
+      andarAte(vizinhosLivres(m, p.x, p.y), () => { virarPara(p.x, p.y); interagir({tile:c, x:p.x, y:p.y}); });
+      return;
+    }
+    const c = tileEm(m, p.x, p.y);
+    andarAte([{x:p.x, y:p.y}], c === 'f' || c === '=' ? () => interagir({tile:c, x:p.x, y:p.y, pisando:true}) : null);
+  });
+
+  /* ----- direcional e teclado ----- */
+  dpad.querySelectorAll('button').forEach(b => {
+    const d = b.dataset.d;
+    b.addEventListener('pointerdown', ev => { ev.preventDefault(); if (W.ocupado || !dlg.hidden) return; W.heroi.rota = []; W.heroi.aoChegar = null; W.segura = d; if (!W.heroi.mov) passo(d); });
+    ['pointerup','pointerleave','pointercancel'].forEach(t => b.addEventListener(t, () => { if (W.segura === d) W.segura = null; }));
+  });
+  const teclas = {ArrowUp:'n', ArrowDown:'s', ArrowLeft:'w', ArrowRight:'e', w:'n', s:'s', a:'w', d:'e', W:'n', S:'s', A:'w', D:'e'};
+  const kd = ev => {
+    if (!raiz.isConnected) return document.removeEventListener('keydown', kd);
+    if (/INPUT|TEXTAREA/.test((ev.target && ev.target.tagName) || '')) return;
+    if (!dlg.hidden){ if (ev.key === 'Escape') fecharDlg(); return; }
+    if (teclas[ev.key]){ ev.preventDefault(); W.heroi.rota = []; W.heroi.aoChegar = null; W.segura = teclas[ev.key]; if (!W.heroi.mov) passo(teclas[ev.key]); }
+    else if ((ev.key === ' ' || ev.key === 'Enter') && W.alvoPerto){ ev.preventDefault(); interagir(W.alvoPerto); }
+  };
+  const ku = ev => { if (teclas[ev.key] === W.segura) W.segura = null; };
+  document.addEventListener('keydown', kd); document.addEventListener('keyup', ku);
+
+  /* ----- o que está ao lado do herói ----- */
+  const procurarPerto = () => {
+    const H0 = W.heroi; if (H0.mov) return null;
+    const ordem = [DIRS[H0.dir]].concat(Object.values(DIRS));
+    let melhor = null, pri = 99;
+    for (const [dx, dy] of ordem){
+      const x = H0.x + dx, y = H0.y + dy, e = entEm(m, x, y);
+      if (e && pri > 0){ melhor = {ent:e}; pri = 0; }
+      const c = tileEm(m, x, y);
+      if (!e && 'S*G'.includes(c) && pri > 1){ melhor = {tile:c, x, y}; pri = 1; }
+      if (!e && palavraDe(c) && pri > 2){ melhor = {tile:c, x, y}; pri = 2; }
+    }
+    return melhor;
+  };
+  const rotuloAcao = a => {
+    if (a.ent) return a.ent.k === 'E' || a.ent.k === 'C' ? ['swords', 'Enfrentar'] : ['chat', 'Falar'];
+    if (a.tile === 'S') return ['book', 'Ler'];
+    if (a.tile === '*') return ['chest', 'Abrir'];
+    return ['sound', 'Olhar'];
+  };
+  acao.onclick = () => { if (W.alvoPerto) interagir(W.alvoPerto); };
+
+  /* ----- diálogo ----- */
+  const fecharDlg = () => { dlg.hidden = true; dlg.replaceChildren(); W.ocupado = false; pintarHUD(); };
+  W.fecharDlg = fecharDlg;
+  const abrirDlg = (quem, partes, acoes) => {
+    W.ocupado = true; W.segura = null; W.heroi.rota = [];
+    const topo = h('div',{class:'dlg-topo'}, quem.av ? avatarEl(quem.av, 44) : quem.el || null, h('div',{class:'grow'}, h('b',null, quem.nome), quem.papel ? h('small',null, quem.papel) : null),
+      h('button',{class:'dlg-x',type:'button','aria-label':'Fechar janela',onclick:fecharDlg}, '×'));
+    dlg.replaceChildren(...semVazios([topo, partes, h('div',{class:'dlg-acoes'}, acoes)]));
+    dlg.hidden = false;
+  };
+  const falaEl = (txt, trad) => {
+    const p = h('p',{class:'alvo dlg-fala'}), tr = h('p',{class:'small muted',hidden:true}, trad || '');
+    let i = 0; const digita = () => { if (!p.isConnected && i) return; p.textContent = txt.slice(0, i); if (i++ < txt.length) setTimeout(digita, 18); }; digita();
+    return h('div',{class:'stack tight'}, p, h('div',{class:'row'}, ouvirBtn(txt), trad ? h('button',{class:'btn link',type:'button',onclick:() => { tr.hidden = !tr.hidden; }},'Traduzir') : null), tr);
+  };
+  const narra = t => h('p',{class:'dlg-narra'}, t);
+  const btn = (t, f, sec) => h('button',{class:'btn' + (sec ? ' sec' : ''),type:'button',onclick:f}, t);
+  const ent = k => ({nome:nomeEnt(r, k), av:avatarEnt(r, k)});
+  const recompensa = (hx, moedas, msg) => { ganharHXP(hx); if (moedas) j.moedas += moedas; addXP(Math.round(hx / 2)); save(); pintarHUD(); toastMundo(msg + ' +' + hx + ' XP' + (moedas ? ' · +' + moedas + ' ' + tm.moeda : '')); };
+
+  function interagir(a){
+    W.alvoPerto = null; acao.hidden = true;
+    if (a.ent) return falarCom(a.ent);
+    const c = a.tile;
+    if (c === 'S'){
+      const i = m.objs.filter(o => o.c === 'S').findIndex(o => o.x === a.x && o.y === a.y), pl = (packDe(r).placas || [])[i];
+      if (!pl){ abrirDlg({nome:'Placa', el:icon('book')}, [narra('As letras estão apagadas. Talvez dê para ler mais tarde.')], [btn('Fechar', fecharDlg, true)]); carregarPack(r).catch(() => {}); return; }
+      const k = r + ':S' + i, nova = !w.lidos[k];
+      abrirDlg({nome:'Placa', el:icon('book')}, [falaEl(pl.texto, pl.texto_t)], [btn('Fechar', fecharDlg, true)]);
+      if (nova){ w.lidos[k] = 1; addWord({w:pl.texto, t:pl.texto_t}); recompensa(5, 0, 'Placa lida.'); }
+      return;
+    }
+    if (c === '*'){
+      const k = r + ':' + a.x + ',' + a.y;
+      if (w.abertos[k]){ abrirDlg({nome:'Baú', el:icon('chest')}, [narra('Vazio. Você já pegou o que tinha aqui.')], [btn('Fechar', fecharDlg, true)]); return; }
+      w.abertos[k] = 1; const moedas = 15 + Math.floor(ruido(a.x, a.y, r) * 25); confete(); faiscas(a.x, a.y, '#FFD84A');
+      const pb = PALAVRAS.bau, alvoBau = S.profile.target === 'pt' ? pb.p : pb[S.profile.target] || pb.en;
+      abrirDlg({nome:'Baú escondido', el:icon('chest')}, [narra('Você achou um baú! Dentro tem ' + moedas + ' ' + tm.moeda + '.'), cartaoPalavra({alvo:alvoBau, pt:'baú'})], [btn('Pegar', fecharDlg)]);
+      recompensa(20, moedas, 'Baú aberto!');
+      return;
+    }
+    if (c === 'G' && !vozFeita(r)){
+      const p = palavraDe('G');
+      abrirDlg({nome:'Portão fechado', el:icon('lock')}, [narra('O portão não abre com força. Fale com o guardião ' + packDe(r).guardiao.nome + ': ele só abre para quem fala em voz alta.'), p ? cartaoPalavra(p) : null], [btn('Ir até o guardião', () => { fecharDlg(); irAte('V'); }), btn('Fechar', fecharDlg, true)]);
+      return;
+    }
+    const p = palavraDe(c);
+    if (p){
+      const k = r + ':' + p.k, nova = !w.palavras[k];
+      abrirDlg({nome:'Você olha ao redor', el:icon('sound')}, [cartaoPalavra(p), nova ? h('p',{class:'small muted'}, 'Palavra nova! Ela entra nas suas revisões.') : null], [btn('Fechar', fecharDlg, true)]);
+      falar(p.alvo);
+      if (nova){ w.palavras[k] = 1; addWord({w:p.alvo, t:p.pt}); faiscas(a.x, a.y, '#FDE047'); recompensa(5, 0, 'Palavra descoberta: ' + p.alvo + '.'); }
+    }
+  }
+  function cartaoPalavra(p){ return h('div',{class:'palavra-card'}, h('b',{class:'alvo'}, p.alvo), h('span',{class:'muted'}, p.pt), ouvirBtn(p.alvo)); }
+
+  function falarCom(e){
+    const k = e.k, p = packDe(r), quem = ent(k);
+    if (p.padrao) carregarPack(r).then(() => pintarHUD(), () => {});
+    e.dir = W.heroi.x > e.x ? 'e' : W.heroi.x < e.x ? 'w' : W.heroi.y > e.y ? 's' : 'n';
+    if (k === '1' || k === '2'){
+      const i = k === '1' ? 0 : 2, n = k === '1' ? p.npc1 : p.npc2;
+      quem.papel = str(n.papel);
+      if (!noFeito(r, i)) abrirDlg(quem, [falaEl(str(n.ola), str(n.ola_t)), narra(n.nome + ' precisa da sua ajuda. É uma missão em ' + nomeIdioma(S.profile.target) + '.')],
+        [btn('Aceitar a missão', () => { fecharDlg(); salvarPos(); jogarMissao(r, i); }), btn('Agora não', fecharDlg, true)]);
+      else abrirDlg(quem, [narra(k === '1' ? 'Obrigado pela ajuda! Dizem que ' + nomeEnt(r, 'E') + ' bloqueia a ponte ao norte.' : 'Valeu! O guardião ' + p.guardiao.nome + ' cuida do portão. Ele só abre para quem fala em voz alta.')], [btn('Até mais', fecharDlg, true)]);
+      return;
+    }
+    if (k === 'E'){
+      quem.av = null; quem.el = (() => { const s = h('span',{class:'avatar',style:'width:44px;height:44px;background:var(--surface)'}); s.innerHTML = inimigoSVG(j.tema, false); return s; })();
+      if (!noFeito(r, 0)){ abrirDlg(quem, [narra(quem.nome + ' bloqueia a ponte e ri de você. Ajude ' + p.npc1.nome + ' primeiro para ganhar coragem.')], [btn('Ir até ' + p.npc1.nome, () => { fecharDlg(); irAte('1'); }), btn('Fechar', fecharDlg, true)]); return; }
+      abrirDlg(quem, [str(p.inimigo_fala) ? falaEl(p.inimigo_fala, p.inimigo_fala_t) : narra(quem.nome + ' não deixa ninguém passar.'), narra('Batalha de palavras: responda rápido para tirar a vida dele.')],
+        [btn('Lutar!', () => { fecharDlg(); salvarPos(); jogarBatalha(r, 1, false); }), btn('Fugir', fecharDlg, true)]);
+      return;
+    }
+    if (k === 'V'){
+      const tv = tipoVoz(r); quem.papel = str(p.guardiao.papel) || 'guardião do portão';
+      if (!noFeito(r, 2)){ abrirDlg(quem, [falaEl(str(p.guardiao.ola), str(p.guardiao.ola_t)), narra('Ajude ' + p.npc2.nome + ' antes. Depois volte aqui.')], [btn('Fechar', fecharDlg, true)]); return; }
+      if (!vozFeita(r)){ abrirDlg(quem, [falaEl(str(p.guardiao.ola), str(p.guardiao.ola_t)), h('div',{class:'note'}, h('b',null, 'Desafio de voz: ' + tv.nome), h('div',{class:'small'}, tv.desc + ' Obrigatório para abrir o portão.'))],
+        [btn('Aceitar o desafio de voz', () => { fecharDlg(); salvarPos(); telaVoz(r); }), btn('Agora não', fecharDlg, true)]); return; }
+      abrirDlg(quem, [narra('O portão está aberto. Boa sorte contra o chefe!')], [btn('Valeu', fecharDlg, true)]);
+      return;
+    }
+    if (k === 'C'){
+      quem.nome = 'Chefe da região'; quem.av = null; quem.el = (() => { const s = h('span',{class:'avatar',style:'width:44px;height:44px;background:var(--surface)'}); s.innerHTML = inimigoSVG(j.tema, true); return s; })();
+      abrirDlg(quem, [str(p.chefe_fala) ? falaEl(p.chefe_fala, p.chefe_fala_t) : narra('O chefe desta região foi feito do erro que você mais repete.'), narra('Vença 5 golpes e acerte o golpe final escrevendo.')],
+        [btn('Enfrentar o chefe', () => { fecharDlg(); salvarPos(); jogarBatalha(r, 3, true); }), btn('Ainda não', fecharDlg, true)]);
+      return;
+    }
+    if (k === '$'){
+      quem.papel = str(p.mercador.papel);
+      abrirDlg(quem, [falaEl(str(p.mercador.ola), str(p.mercador.ola_t))], [btn('Ver a loja', () => { fecharDlg(); salvarPos(); telaLoja(); }), btn('Tchau', fecharDlg, true)]);
+      return;
+    }
+    // moradores
+    const i = 'abc'.indexOf(k), mo = (p.moradores || [])[i] || {}, chave = r + ':' + k + ':' + J().tema;
+    quem.papel = str(mo.papel);
+    const q = normQ({p:'', opcoes:mo.opcoes, certa:mo.certa});
+    if (w.falas[chave] || !q || !str(mo.pergunta)){
+      abrirDlg(quem, [falaEl(str(mo.ola) || tutorDe(S.profile.target).ola + '!', str(mo.ola_t))],
+        [str(mo.pergunta) ? btn('Responder falando', () => conversaVoz(quem, mo, chave), true) : null, btn('Até mais', fecharDlg, true)]);
+      return;
+    }
+    const fb = h('div');
+    const ops = q.opcoes.map((o, oi) => h('button',{class:'opt alvo',type:'button',onclick:ev => {
+      ops.forEach(b => { b.disabled = true; }); const ok = oi === q.certa;
+      ev.currentTarget.classList.add(ok ? 'ok' : 'no'); if (!ok) ops[q.certa].classList.add('ok');
+      w.falas[chave] = 1;
+      if (ok){ fb.replaceChildren(falaEl(str(mo.reacao) || '🙂', str(mo.reacao_t))); recompensa(15, 10, 'Boa conversa!'); skill('conversa', 75); }
+      else { fb.replaceChildren(narra('Quase! A resposta mais natural está em verde.')); recompensa(5, 0, 'Conversa feita.'); skill('conversa', 45); }
+      dlg.querySelector('.dlg-acoes').replaceChildren(btn('Até mais', fecharDlg, true));
+    }}, o));
+    abrirDlg(quem, [falaEl(str(mo.ola), str(mo.ola_t)), falaEl(str(mo.pergunta), str(mo.pergunta_t)), h('div',{class:'stack tight'}, ops), fb],
+      [btn('Responder falando', () => conversaVoz(quem, mo, chave), true)]);
+  }
+  // Responder a um morador com a própria voz: avaliação curta, dentro do diálogo
+  function conversaVoz(quem, mo, chave){
+    const out = h('div');
+    const item = {texto:str(mo.pergunta), texto_t:str(mo.pergunta_t)};
+    abrirDlg(quem, [falaEl(item.texto, item.texto_t), narra('Responda falando, com uma frase completa.'),
+      gravadorUI(15, fala => {
+        out.replaceChildren(loadingEl('Ouvindo a sua voz...'));
+        avaliarFala(fala, promptAvaliarFala(VOZ_TIPOS[1], item, [])).then(res => {
+          const n = clamp(Math.round(Number(res && res.nota) || 0), 0, 100);
+          out.replaceChildren(resultadoFala(res));
+          registrarFala(res);
+          const k2 = chave + ':voz:' + today();
+          if (n >= 50 && !w.falas[k2]){ w.falas[k2] = 1; w.falas[chave] = 1; recompensa(25, 15, 'Você conversou falando!'); }
+        }, e => out.replaceChildren(h('div',{class:'note soft'}, e && e.code === 'sem_ouvir' ? 'O servidor ainda não ouve áudio. Grave de novo: vou usar o reconhecimento de voz do celular.' : aiMsg(e))));
+      }), out],
+      [btn('Até mais', fecharDlg, true)]);
+  }
+  const salvarPos = () => { w.pos[r] = [W.heroi.x, W.heroi.y]; save(); };
+  W.salvarPos = salvarPos;
+
+  function entrarPortal(){
+    if (r + 1 >= MUNDO_MAPAS.length){ abrirDlg({nome:'Portal final', el:icon('crown')}, [narra('Você completou todas as regiões de ' + tm.nome + '. Lenda! Troque de tema no menu para uma nova jornada, ou continue explorando e conversando.')], [btn('Fechar', fecharDlg, true)]); return; }
+    W.ocupado = true; raiz.classList.add('saindo'); salvarPos();
+    setTimeout(() => telaMundo(r + 1), 650);
+  }
+  function dicaPet(){
+    const o = objetivo(r), t = tutorDe(S.profile.target);
+    W.falas.push({pet:true, txt:o.alvo ? o.t + '!' : 'Bora explorar?', ate:W.t + 3.5});
+    if (o.alvo) toastMundo(t.nome + ': ' + o.t + '. Toque na faixa de cima para eu te levar.');
+  }
+  function falaCurta(k){
+    const p = packDe(r), frase = t => { const x = /^.*?[.!?](\s|$)/.exec(str(t)); return x ? x[0].trim() : str(t); };
+    if (k === '1' && !noFeito(r, 0)) return frase(p.npc1.ola);
+    if (k === '2' && !noFeito(r, 2)) return frase(p.npc2.ola);
+    if (k === '$') return frase(p.mercador.ola);
+    const mo = (p.moradores || [])['abc'.indexOf(k)];
+    return mo ? frase(mo.ola) : '';
+  }
+
+  /* ----- partículas ----- */
+  function poeira(x, y){ if (j.tema === 'espaco') return; for (let i = 0; i < 3; i++) W.parts.push({x:(x + .5) * TILE + (Math.random() - .5) * 8, y:(y + 1) * TILE - 4, vx:(Math.random() - .5) * 14, vy:-6 - Math.random() * 6, vida:.5, max:.5, tipo:'poeira'}); }
+  function faiscas(x, y, cor){ for (let i = 0; i < 14; i++){ const a = Math.random() * 6.28, v = 30 + Math.random() * 40; W.parts.push({x:(x + .5) * TILE, y:(y + .5) * TILE, vx:Math.cos(a) * v, vy:Math.sin(a) * v - 20, vida:.9, max:.9, tipo:'faisca', cor}); } }
+  W.faiscas = faiscas;
+  function clima(dt){
+    const P = W.parts, vx0 = W.cam.x, vy0 = W.cam.y, vw = W.vw / W.Z, vh = W.vh / W.Z;
+    const tipo = sk.clima;
+    if (tipo === 'chuva' && P.length < 160) for (let i = 0; i < 4; i++) P.push({x:vx0 + Math.random() * (vw + 60), y:vy0 - 10, vx:-60, vy:420, vida:vh / 420, max:1, tipo:'chuva'});
+    if (tipo === 'folhas' && Math.random() < dt * (W.esc > .25 ? 3 : 1.4)) P.push(W.esc > .25 ? {x:vx0 + Math.random() * vw, y:vy0 + Math.random() * vh, vx:0, vy:0, vida:4, max:4, tipo:'vagalume', f:Math.random() * 6} : {x:vx0 + Math.random() * vw, y:vy0 - 10, vx:10, vy:22, vida:vh / 22, max:9, tipo:'folha', f:Math.random() * 6});
+    if (tipo === 'brilhos' && Math.random() < dt * 4) P.push({x:vx0 + Math.random() * vw, y:vy0 + Math.random() * vh, vx:0, vy:-4, vida:1.6, max:1.6, tipo:'brilho'});
+    if (tipo === 'nuvens' && Math.random() < dt * .08) { const y0 = vy0 + Math.random() * vh * .6; for (let i = 0; i < 4; i++) P.push({x:vx0 - 20 - i * 14, y:y0 + (i % 2) * 10, vx:70, vy:-6, vida:(vw + 80) / 70, max:9, tipo:'passaro', f:i}); }
+    // fumaça das chaminés
+    if (j.tema !== 'espaco' && Math.random() < dt * 1.5){ const casas = m.objs.filter(o => o.c === 'H'); if (casas.length){ const o = casas[Math.floor(Math.random() * casas.length)]; P.push({x:o.x * TILE + 3 * TILE - 22, y:o.y * TILE - 18, vx:6, vy:-14, vida:2.4, max:2.4, tipo:'fumaca'}); } }
+    for (let i = P.length - 1; i >= 0; i--){ const p = P[i]; p.vida -= dt; if (p.vida <= 0){ P.splice(i, 1); continue; }
+      if (p.tipo === 'folha'){ p.x += (p.vx + Math.sin(W.t * 2 + p.f) * 18) * dt; p.y += p.vy * dt; }
+      else if (p.tipo === 'vagalume'){ p.x += Math.sin(W.t + p.f) * 10 * dt; p.y += Math.cos(W.t * 1.3 + p.f) * 8 * dt; }
+      else { p.x += p.vx * dt; p.y += p.vy * dt; if (p.tipo === 'faisca') p.vy += 80 * dt; }
+      if (p.tipo === 'chuva' && p.vida < .02 && Math.random() < .3) P.push({x:p.x, y:p.y, vx:0, vy:0, vida:.35, max:.35, tipo:'pingo'}); }
+  }
+
+  /* ----- moradores andando ----- */
+  function moverEnts(dt){
+    for (const k in m.ent){
+      const e = m.ent[k]; if (!entAtiva(m, e)) continue;
+      if (e.mov){ e.mov.p += dt * 2.2; e.passo += dt * 12; if (e.mov.p >= 1){ e.x = e.mov.x; e.y = e.mov.y; e.mov = null; } }
+      else if ('abc'.includes(k)){
+        e.espera -= dt;
+        const pertoHeroi = Math.abs(e.x - W.heroi.x) + Math.abs(e.y - W.heroi.y) <= 3;
+        if (e.espera <= 0 && !W.ocupado && !pertoHeroi){
+          e.espera = 2 + Math.random() * 4;
+          const ds = Object.entries(DIRS).filter(([d, v]) => { const nx = e.x + v[0], ny = e.y + v[1]; return Math.abs(nx - e.hx) + Math.abs(ny - e.hy) <= 2 && !solido(m, nx, ny) && !entEm(m, nx, ny) && !(nx === W.heroi.x && ny === W.heroi.y) && !(W.heroi.mov && nx === W.heroi.mov.x && ny === W.heroi.mov.y) && tileEm(m, nx, ny) !== 'G'; });
+          if (ds.length){ const [d, v] = ds[Math.floor(Math.random() * ds.length)]; e.dir = d; e.mov = {x:e.x + v[0], y:e.y + v[1], p:0}; }
+        }
+      }
+      const fx = e.mov ? e.x + (e.mov.x - e.x) * e.mov.p : e.x, fy = e.mov ? e.y + (e.mov.y - e.y) * e.mov.p : e.y;
+      e.px = fx; e.py = fy;
+    }
+  }
+
+  /* ----- desenho de cada quadro ----- */
+  const tela = cv.getContext('2d');
+  let ultimo = performance.now(), tickLuz = 0;
+  function quadro(agora){
+    if (!raiz.isConnected){ if (ro) ro.disconnect(); document.removeEventListener('keydown', kd); document.removeEventListener('keyup', ku); if (MUNDO === W) MUNDO = null; return; }
+    const dt = Math.min(.05, (agora - ultimo) / 1000); ultimo = agora; W.t += dt;
+    if ((tickLuz += dt) > 30){ tickLuz = 0; W.esc = escuridao(sk); }
+    const H0 = W.heroi;
+    if (H0.mov){ H0.mov.p += dt * 5.2; H0.passo += dt * 16; if (H0.mov.p >= 1){ H0.px = H0.mov.x; H0.py = H0.mov.y; chegou(); if (!H0.mov && W.segura && dlg.hidden && !W.ocupado) passo(W.segura); } }
+    if (H0.mov){ H0.px = H0.mov.de.x + (H0.mov.x - H0.mov.de.x) * H0.mov.p; H0.py = H0.mov.de.y + (H0.mov.y - H0.mov.de.y) * H0.mov.p; }
+    else if (W.segura && dlg.hidden && !W.ocupado) passo(W.segura);
+    // pet segue o herói
+    const alvoPet = W.pet.trilha.length >= 2 ? W.pet.trilha[W.pet.trilha.length - 2] : {x:H0.px, y:H0.py + .8};
+    W.pet.px += (alvoPet.x - W.pet.px) * Math.min(1, dt * 4); W.pet.py += (alvoPet.y - W.pet.py) * Math.min(1, dt * 4);
+    moverEnts(dt); clima(dt);
+    // câmera
+    const vw = W.vw / W.Z, vh = W.vh / W.Z;
+    const cx = clamp((H0.px + .5) * TILE - vw / 2, 0, Math.max(0, m.W * TILE - vw)), cy = clamp((H0.py + .5) * TILE - vh / 2 + 30, 0, Math.max(0, m.H * TILE - vh));
+    if (!W.cam.ok){ W.cam.x = cx; W.cam.y = cy; W.cam.ok = true; } else { W.cam.x += (cx - W.cam.x) * Math.min(1, dt * 6); W.cam.y += (cy - W.cam.y) * Math.min(1, dt * 6); }
+    // botão de ação
+    const perto = !W.ocupado && dlg.hidden ? procurarPerto() : null;
+    const chaveP = perto ? (perto.ent ? perto.ent.k : perto.tile + perto.x + ',' + perto.y) : '';
+    if (chaveP !== W.chavePerto){ W.chavePerto = chaveP; W.alvoPerto = perto; if (perto){ const [ic, t] = rotuloAcao(perto); acao.replaceChildren(icon(ic), h('span',null,t)); acao.hidden = false; } else acao.hidden = true; }
+
+    const s = W.dpr * W.Z;
+    tela.setTransform(1, 0, 0, 1, 0, 0); tela.fillStyle = '#0D1022'; tela.fillRect(0, 0, cv.width, cv.height);
+    tela.setTransform(s, 0, 0, s, -W.cam.x * s, -W.cam.y * s);
+    tela.imageSmoothingEnabled = true;
+    tela.drawImage(chao, 0, 0, m.W * TILE, m.H * TILE);
+    const x0 = Math.floor(W.cam.x / TILE) - 1, y0 = Math.floor(W.cam.y / TILE) - 1, x1 = x0 + Math.ceil(vw / TILE) + 3, y1 = y0 + Math.ceil(vh / TILE) + 4;
+    // água viva
+    tela.fillStyle = sk.agua2;
+    for (let y = Math.max(0, y0); y < Math.min(m.H, y1); y++) for (let x = Math.max(0, x0); x < Math.min(m.W, x1); x++){
+      const c = tileEm(m, x, y); if (c !== '~' && c !== 'k') continue;
+      for (let i = 0; i < 2; i++){ const fase = (W.t * .6 + ruido(x, y, i + 70)) % 1; tela.globalAlpha = Math.sin(fase * Math.PI) * .55; tela.fillRect(x * TILE + 4 + ruido(x, y, i + 80) * 18, y * TILE + 6 + i * 13 + Math.sin(W.t * 2 + x) * 1.5, 9, 2); }
+    }
+    tela.globalAlpha = 1;
+    // sombras de nuvens
+    if (sk.clima === 'nuvens'){ tela.fillStyle = 'rgba(20,40,60,.08)'; W.nuvens.forEach(n => { n.x += n.v * dt; if (n.x - n.r > m.W * TILE) n.x = -n.r; tela.beginPath(); tela.ellipse(n.x, n.y, n.r, n.r * .55, 0, 0, 7); tela.fill(); }); }
+    // portal
+    if (m.porta){ const P = m.porta, ativo = noFeito(r, 3), X = (P.x + .5) * TILE, Y = (P.y + .5) * TILE;
+      tela.save(); tela.translate(X, Y);
+      if (ativo){ for (let i = 0; i < 3; i++){ tela.strokeStyle = i % 2 ? tm.cor1 : tm.cor2; tela.lineWidth = 3; tela.globalAlpha = .9 - i * .2; tela.beginPath(); tela.ellipse(0, 0, 13 - i * 3, 15 - i * 3, W.t * (i + 1), 0, 4.5); tela.stroke(); }
+        tela.globalAlpha = 1; for (let i = 0; i < 6; i++){ const a = W.t * 2 + i; tela.fillStyle = '#FFFFFF'; tela.beginPath(); tela.arc(Math.cos(a) * 14, Math.sin(a) * 16, 1.5, 0, 7); tela.fill(); } }
+      else { tela.strokeStyle = 'rgba(0,0,0,.3)'; tela.lineWidth = 3; tela.beginPath(); tela.ellipse(0, 0, 12, 14, 0, 0, 7); tela.stroke(); }
+      tela.restore(); }
+    // marca do toque
+    if (W.toque && W.t - W.toque.t < .6){ const a = (W.t - W.toque.t) / .6; tela.strokeStyle = 'rgba(255,255,255,' + (1 - a) + ')'; tela.lineWidth = 2; tela.beginPath(); tela.ellipse((W.toque.x + .5) * TILE, (W.toque.y + .8) * TILE, 6 + a * 8, 3 + a * 4, 0, 0, 7); tela.stroke(); }
+    // objetos e personagens em ordem de profundidade
+    const lista = [];
+    for (const o of m.objs){ const largo = o.c === 'H' ? 3 : 1; if (o.x + largo < x0 || o.x > x1 || o.y > y1 || o.base < y0) continue; lista.push({b:o.base, f:() => desenharObj(tela, o, sk, W.t, m)}); }
+    for (const k in m.ent){ const e = m.ent[k]; if (!entAtiva(m, e)) continue; if (e.px < x0 - 1 || e.px > x1 || e.py < y0 - 1 || e.py > y1) continue; lista.push({b:e.py + 1, f:() => desenharEnt(e)}); }
+    lista.push({b:H0.py + 1.01, f:() => desenharPessoa(tela, (H0.px + .5) * TILE, (H0.py + 1) * TILE - 3, meuAvatar(), {dir:H0.dir, passo:H0.mov ? H0.passo : 0, item:(S.profile.avatar || {}).item, parado:!H0.mov, t:W.t})});
+    lista.push({b:W.pet.py + .9, f:() => { const im = W.imgs.pet; if (im.complete && im.naturalWidth){ const b = Math.sin(W.t * 4) * 1.5; tela.fillStyle = 'rgba(0,0,0,.18)'; tela.beginPath(); tela.ellipse((W.pet.px + .5) * TILE, (W.pet.py + 1) * TILE - 4, 8, 3, 0, 0, 7); tela.fill(); tela.drawImage(im, (W.pet.px + .5) * TILE - 12, (W.pet.py + 1) * TILE - 28 + b, 24, 24); } }});
+    lista.sort((a, b) => a.b - b.b).forEach(o => o.f());
+    // partículas
+    for (const p of W.parts){
+      const a = p.vida / p.max;
+      if (p.tipo === 'chuva'){ tela.strokeStyle = 'rgba(180,200,230,.45)'; tela.lineWidth = 1; tela.beginPath(); tela.moveTo(p.x, p.y); tela.lineTo(p.x - 3, p.y + 10); tela.stroke(); }
+      else if (p.tipo === 'pingo'){ tela.strokeStyle = 'rgba(200,220,255,' + a * .6 + ')'; tela.beginPath(); tela.ellipse(p.x, p.y, (1 - a) * 6 + 1, (1 - a) * 2.4 + .5, 0, 0, 7); tela.stroke(); }
+      else if (p.tipo === 'folha'){ tela.fillStyle = (p.f > 3 ? '#E8A33D' : '#9BC53D'); tela.save(); tela.translate(p.x, p.y); tela.rotate(W.t * 2 + p.f); tela.fillRect(-3, -1.5, 6, 3); tela.restore(); }
+      else if (p.tipo === 'vagalume'){ tela.fillStyle = 'rgba(253,240,130,' + (Math.sin(W.t * 5 + p.f) * .4 + .5) * Math.min(1, a * 3) + ')'; tela.beginPath(); tela.arc(p.x, p.y, 2, 0, 7); tela.fill(); }
+      else if (p.tipo === 'brilho'){ tela.fillStyle = 'rgba(200,240,255,' + Math.sin(a * Math.PI) + ')'; tela.fillRect(p.x - .8, p.y - 3, 1.6, 6); tela.fillRect(p.x - 3, p.y - .8, 6, 1.6); }
+      else if (p.tipo === 'passaro'){ tela.strokeStyle = 'rgba(30,40,60,.7)'; tela.lineWidth = 1.5; const asa = Math.sin(W.t * 10 + p.f) * 3; tela.beginPath(); tela.moveTo(p.x - 5, p.y - asa); tela.lineTo(p.x, p.y); tela.lineTo(p.x + 5, p.y - asa); tela.stroke(); }
+      else if (p.tipo === 'fumaca'){ tela.fillStyle = 'rgba(220,220,230,' + a * .45 + ')'; tela.beginPath(); tela.arc(p.x + Math.sin(W.t + p.y) * 3, p.y, 4 + (1 - a) * 6, 0, 7); tela.fill(); }
+      else if (p.tipo === 'poeira'){ tela.fillStyle = 'rgba(255,255,255,' + a * .5 + ')'; tela.beginPath(); tela.arc(p.x, p.y, 2 + (1 - a) * 3, 0, 7); tela.fill(); }
+      else if (p.tipo === 'faisca'){ tela.fillStyle = p.cor; tela.globalAlpha = a; tela.fillRect(p.x - 1.5, p.y - 1.5, 3, 3); tela.globalAlpha = 1; }
+    }
+    // névoa do que ainda não foi descoberto
+    tela.imageSmoothingEnabled = true; tela.drawImage(fog, 0, 0, m.W * TILE, m.H * TILE);
+    // luz e noite
+    if (W.esc > .02){
+      const lc = luz.getContext('2d'), ls = luz.width / W.vw * W.Z;
+      lc.globalCompositeOperation = 'source-over'; lc.clearRect(0, 0, luz.width, luz.height);
+      lc.fillStyle = 'rgba(8,12,40,' + W.esc + ')'; lc.fillRect(0, 0, luz.width, luz.height);
+      lc.globalCompositeOperation = 'destination-out';
+      const furo = (x, y, rad, forca) => { const X = (x - W.cam.x) * ls, Y = (y - W.cam.y) * ls, R = rad * ls; if (X < -R || Y < -R || X > luz.width + R || Y > luz.height + R) return; const g = lc.createRadialGradient(X, Y, 0, X, Y, R); g.addColorStop(0, 'rgba(0,0,0,' + forca + ')'); g.addColorStop(1, 'rgba(0,0,0,0)'); lc.fillStyle = g; lc.fillRect(X - R, Y - R, R * 2, R * 2); };
+      furo((H0.px + .5) * TILE, (H0.py + .4) * TILE, 120, .9);
+      m.objs.forEach(o => { if (o.c === 'l') furo((o.x + .5) * TILE, (o.y - .2) * TILE, 80 + Math.sin(W.t * 8 + o.x) * 2, 1); else if (o.c === 'H'){ furo(o.x * TILE + 22, o.y * TILE + 34, 30, .8); furo(o.x * TILE + 3 * TILE - 22, o.y * TILE + 34, 30, .8); } else if (o.c === 'o' && j.tema === 'espaco') furo((o.x + .5) * TILE, (o.y + .5) * TILE, 60, .9); });
+      if (m.porta && noFeito(r, 3)) furo((m.porta.x + .5) * TILE, (m.porta.y + .5) * TILE, 70, 1);
+      for (const p of W.parts) if (p.tipo === 'vagalume') furo(p.x, p.y, 14, .7);
+      tela.setTransform(1, 0, 0, 1, 0, 0); tela.drawImage(luz, 0, 0, cv.width, cv.height);
+      tela.setTransform(s, 0, 0, s, -W.cam.x * s, -W.cam.y * s);
+      tela.globalCompositeOperation = 'lighter';
+      m.objs.forEach(o => { if (o.c !== 'l') return; const X = (o.x + .5) * TILE, Y = (o.y - .3) * TILE; const g = tela.createRadialGradient(X, Y, 0, X, Y, 40); g.addColorStop(0, 'rgba(' + sk.luz + ',.35)'); g.addColorStop(1, 'rgba(' + sk.luz + ',0)'); tela.fillStyle = g; tela.fillRect(X - 40, Y - 40, 80, 80); });
+      tela.globalCompositeOperation = 'source-over';
+    }
+    // sinais acima das cabeças e balões de fala
+    const ob = objetivo(r);
+    for (const k in m.ent){ const e = m.ent[k]; if (!entAtiva(m, e)) continue; const X = (e.px + .5) * TILE, Y = (e.py + 1) * TILE - (k === 'C' ? 66 : k === 'E' ? 44 : 46);
+      if (!W.vis[e.y * m.W + e.x]) continue;
+      const marca = ob.alvo === k ? '!' : ('abc'.includes(k) && !w.falas[r + ':' + k + ':' + j.tema]) ? '…' : '';
+      if (marca){ const b = Math.sin(W.t * 5) * 2.5; tela.fillStyle = marca === '!' ? '#FACC15' : '#FFFFFF'; tela.strokeStyle = 'rgba(0,0,0,.35)'; tela.lineWidth = 1.5; tela.beginPath(); tela.arc(X, Y - 6 + b, 8, 0, 7); tela.fill(); tela.stroke(); tela.fillStyle = INK; tela.font = '800 12px system-ui, sans-serif'; tela.textAlign = 'center'; tela.textBaseline = 'middle'; tela.fillText(marca, X, Y - 5.5 + b); }
+      const dist = Math.abs(e.x - H0.x) + Math.abs(e.y - H0.y);
+      if (dist <= 3 && k !== 'C'){ tela.font = '700 9px system-ui, sans-serif'; tela.textAlign = 'center'; tela.textBaseline = 'alphabetic'; const nm = nomeEnt(r, k); const tw = tela.measureText(nm).width; tela.fillStyle = 'rgba(15,20,40,.6)'; rr(tela, X - tw / 2 - 4, (e.py + 1) * TILE + 1, tw + 8, 12, 6); tela.fill(); tela.fillStyle = '#FFFFFF'; tela.fillText(nm, X, (e.py + 1) * TILE + 10); }
+    }
+    W.falas = W.falas.filter(f => f.ate > W.t);
+    for (const f of W.falas){
+      const X = ((f.pet ? W.pet.px : f.e.px) + .5) * TILE, Y = ((f.pet ? W.pet.py : f.e.py) + 1) * TILE - (f.pet ? 36 : 52);
+      balao(tela, X, Y, f.txt, Math.min(1, (f.ate - W.t) * 3));
+    }
+    // seta para o objetivo fora da tela
+    if (ob.alvo){ const e = ob.alvo === 'P' ? m.porta : m.ent[ob.alvo]; if (e){ const ex = ((e.px != null ? e.px : e.x) + .5) * TILE, ey = ((e.py != null ? e.py : e.y) + .5) * TILE;
+      if (ex < W.cam.x || ex > W.cam.x + vw || ey < W.cam.y || ey > W.cam.y + vh){
+        const cxv = W.cam.x + vw / 2, cyv = W.cam.y + vh / 2, ang = Math.atan2(ey - cyv, ex - cxv);
+        const ax = clamp(cxv + Math.cos(ang) * vw, W.cam.x + 26, W.cam.x + vw - 26), ay = clamp(cyv + Math.sin(ang) * vh, W.cam.y + 90, W.cam.y + vh - 110);
+        tela.save(); tela.translate(ax, ay); tela.rotate(ang); tela.globalAlpha = .75 + Math.sin(W.t * 5) * .25; tela.fillStyle = '#FACC15'; tela.strokeStyle = INK; tela.lineWidth = 2; tela.beginPath(); tela.moveTo(14, 0); tela.lineTo(-8, -10); tela.lineTo(-3, 0); tela.lineTo(-8, 10); tela.closePath(); tela.fill(); tela.stroke(); tela.restore(); } } }
+    requestAnimationFrame(quadro);
+  }
+  function desenharEnt(e){
+    const X = (e.px + .5) * TILE, Y = (e.py + 1) * TILE - 3;
+    if (e.k === 'E' || e.k === 'C'){
+      const chefe = e.k === 'C', tam = chefe ? 64 : 42, b = Math.sin(W.t * 3) * 3, im = chefe ? W.imgs.chefe : W.imgs.ini;
+      if (chefe){ const g = tela.createRadialGradient(X, Y - 26, 4, X, Y - 26, 48); g.addColorStop(0, 'rgba(244,63,94,' + (.35 + Math.sin(W.t * 3) * .15) + ')'); g.addColorStop(1, 'rgba(244,63,94,0)'); tela.fillStyle = g; tela.fillRect(X - 48, Y - 74, 96, 96); }
+      tela.fillStyle = 'rgba(0,0,0,.25)'; tela.beginPath(); tela.ellipse(X, Y + 1, tam * .32, tam * .1, 0, 0, 7); tela.fill();
+      if (im.complete && im.naturalWidth) tela.drawImage(im, X - tam / 2, Y - tam + b - 2, tam, tam);
+      return;
+    }
+    const av = avatarEnt(r, e.k);
+    desenharPessoa(tela, X, Y, av, {dir:e.dir, passo:e.mov ? e.passo : 0, parado:!e.mov, t:W.t + e.hx, item:e.k === 'V' ? (j.tema === 'espaco' ? 'capacete' : 'detetive') : e.k === '$' ? 'viajante' : ''});
+    if (e.k === 'V'){ tela.fillStyle = '#94A3B8'; tela.fillRect(X + 10, Y - 34, 2.5, 32); tela.fillStyle = '#E2E8F0'; tela.beginPath(); tela.moveTo(X + 11.2, Y - 42); tela.lineTo(X + 15, Y - 34); tela.lineTo(X + 7.5, Y - 34); tela.fill(); }
+    if (e.k === '$'){ tela.fillStyle = '#B07A43'; tela.fillRect(X - 16, Y - 10, 8, 8); tela.fillStyle = '#FFD84A'; tela.beginPath(); tela.arc(X - 12, Y - 13, 2.5, 0, 7); tela.fill(); }
+  }
+  function balao(c, X, Y, txt, alpha){
+    c.save(); c.globalAlpha = alpha; c.font = '600 10px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'top';
+    const palavras = String(txt).split(' '), linhas = []; let l = '';
+    for (const p of palavras){ const t2 = l ? l + ' ' + p : p; if (c.measureText(t2).width > 130 && l){ linhas.push(l); l = p; } else l = t2; }
+    if (l) linhas.push(l); const ls = linhas.slice(0, 3), w2 = Math.max(...ls.map(x => c.measureText(x).width)) + 14, h2 = ls.length * 12 + 9;
+    const bx = clamp(X - w2 / 2, W.cam.x + 4, W.cam.x + W.vw / W.Z - w2 - 4), by = Y - h2;
+    c.fillStyle = '#FFFFFF'; c.strokeStyle = 'rgba(20,27,51,.25)'; c.lineWidth = 1; rr(c, bx, by, w2, h2, 8); c.fill(); c.stroke();
+    c.beginPath(); c.moveTo(X - 4, by + h2 - .5); c.lineTo(X, by + h2 + 5); c.lineTo(X + 4, by + h2 - .5); c.fill();
+    c.fillStyle = INK; ls.forEach((x, i) => c.fillText(x, bx + 7, by + 5 + i * 12));
+    c.restore();
+  }
+  requestAnimationFrame(quadro);
+
+  // conteúdo da região e avisos de chegada
+  carregarPack(r).then(() => { if (MUNDO === W) pintarHUD(); }, () => {});
+  setTimeout(() => titulo.classList.add('some'), 2200);
+  if (j.subiu){ const n = j.subiu; j.subiu = 0; save(); setTimeout(() => subiuDeNivel(n), 500); }
+  if (w.anim === 'portao' && r === w.animR){ w.anim = null; save(); const g = m.objs.find(o => o.c === 'G'); if (g) setTimeout(() => { faiscas(g.x, g.y, '#A5F3FC'); faiscas(g.x + 1, g.y, '#FDE68A'); toastMundo('O portão se abriu! O chefe espera do outro lado.'); }, 700); }
+}
+function toastMundo(t){
+  const W = MUNDO; if (!W || !W.toast.isConnected) return;
+  const el = h('div',{class:'toast-item'}, t); W.toast.append(el);
+  setTimeout(() => el.classList.add('sai'), 3200); setTimeout(() => el.remove(), 3700);
+}
+function subiuDeNivel(n){
+  const W = MUNDO; if (!W) return;
+  confete();
+  const coracao = (n - 1) % 3 === 0;
+  const el = h('div',{class:'nivel-up',role:'status'}, h('span',{class:'eyebrow'},'Subiu de nível!'), h('b',null, 'Nível ' + n), h('span',null, tituloHeroi(n)),
+    coracao ? h('small',null, icon('heart'), ' +1 coração nas missões e batalhas') : h('small',null,'Continue: a cada 3 níveis você ganha um coração.'),
+    h('button',{class:'btn',type:'button',onclick:() => el.remove()},'Continuar'));
+  W.raiz.append(el);
+}
+function abrirMenuMundo(){
+  const W = MUNDO; if (!W) return;
+  const j = J(), tm = TEMAS[j.tema], n = nivelHeroi(j.hxp);
+  const pal = Object.keys(MW().palavras).filter(k => k.startsWith(W.r + ':')).length;
+  const exp = Math.round(W.vis.reduce((a, b) => a + b, 0) / W.vis.length * 100);
+  W.ocupado = true;
+  const fechar = () => { el.remove(); W.ocupado = false; };
+  const regioes = tm.regioes.map((nome, r) => {
+    const lib = noLiberado(r, 0);
+    return h('button',{class:'btn sec' + (r === W.r ? ' atual' : ''),type:'button',disabled:!lib,onclick:() => { fechar(); W.salvarPos(); telaMundo(r); }}, lib ? icon('map') : icon('lock'), NIVEL_REGIAO[r] + ' · ' + nome);
+  });
+  const el = h('div',{class:'menu-mundo'}, h('div',{class:'menu-caixa stack'},
+    h('div',{class:'row between'}, h('b',null, tm.nome), h('button',{class:'dlg-x',type:'button','aria-label':'Fechar',onclick:fechar},'×')),
+    h('div',{class:'stat'},
+      h('div',null, h('b',null, 'Nv ' + n), h('span',null, tituloHeroi(n))),
+      h('div',null, h('b',null, String(vidasMax())), h('span',null,'corações')),
+      h('div',null, h('b',null, exp + '%'), h('span',null,'explorado')),
+      h('div',null, h('b',null, String(pal)), h('span',null,'palavras achadas'))),
+    h('span',{class:'eyebrow'},'Viajar para'), h('div',{class:'stack tight'}, regioes),
+    h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); W.salvarPos(); telaLoja(); }}, icon('coin'), 'Loja'), h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); W.salvarPos(); telaDiario(); }}, icon('book'), 'Diário')),
+    h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); telaTemas(); }}, icon('map'), 'Trocar tema'), h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); S.profile.modo = 'normal'; save(); drawTabs(); goTab('inicio'); }}, 'Modo normal')),
+    h('p',{class:'small muted'}, 'Como jogar: toque no mapa para andar ou use as setas. Toque nas pessoas para conversar e nos objetos para aprender o nome deles. A faixa amarela no topo te leva até o próximo objetivo.')));
+  W.raiz.append(el);
+}
+
+/* ============================== desafios de voz ============================== */
+const VOZ_TIPOS = [
+  {k:'repetir', nome:'Eco do guardião', desc:'Ouça e repita 3 frases em voz alta.', seg:10, total:3},
+  {k:'responder', nome:'Perguntas do portão', desc:'Responda 3 perguntas falando uma frase completa.', seg:15, total:3},
+  {k:'conversa', nome:'Conversa no portão', desc:'Converse por voz com o guardião: 4 falas suas.', seg:20, total:4},
+  {k:'discurso', nome:'Prova de fala', desc:'Fale por 30 segundos sobre um tema e depois responda à pergunta do guardião.', seg:45, total:2}
+];
+const tipoVoz = r => VOZ_TIPOS[Math.min(r, VOZ_TIPOS.length - 1)];
+function promptVoz(tm, r, tv, guardiao){
+  const L = nomeIdioma(S.profile.target), N = S.profile.native;
+  const itens = {
+    repetir:'"itens": 3 itens {"texto": frase curta e útil em ' + L + ' para repetir em voz alta (5 a 9 palavras), "texto_t": tradução, "foco": em ' + N + ', o som ou a palavra mais difícil de pronunciar nela}',
+    responder:'"itens": 3 itens {"texto": pergunta pessoal simples em ' + L + ' sobre a rotina, o trabalho ou os interesses do aluno, "texto_t": tradução, "foco": em ' + N + ', uma dica curta de como começar a resposta}',
+    conversa:'"itens": 1 item {"texto": primeira pergunta do guardião em ' + L + ' que abre uma conversa sobre o dia a dia do aluno, "texto_t": tradução, "foco": em ' + N + ', a situação da conversa em 1 frase}',
+    discurso:'"itens": 1 item {"texto": tema em ' + L + ' para o aluno falar por 30 segundos (descrever algo da vida dele ou dar a opinião sobre um assunto do dia a dia), "texto_t": tradução, "foco": 3 palavras úteis em ' + L + ' separadas por vírgula}'
+  }[tv.k];
+  return 'TAREFA: aventura_voz\n' + baseAventura(tm, r) + '\n\nO guardião ' + str(guardiao.nome) + ' só abre o portão para quem fala em voz alta. Crie o desafio de fala "' + tv.nome + '". Responda SOMENTE com um objeto JSON: {"fala": frase curta do guardião em ' + L + ' apresentando o desafio, "fala_t": tradução, ' + itens + '}. Tudo no nível ' + S.level + '. Sem markdown.';
+}
+function promptAvaliarFala(tv, item, hist){
+  const L = nomeIdioma(S.profile.target), N = S.profile.native;
+  let tarefa;
+  if (tv.k === 'repetir') tarefa = 'O aluno devia repetir em voz alta esta frase: "' + item.texto + '". Compare o que ele disse com a frase; a comunicação mede se ele disse a frase completa.';
+  else if (tv.k === 'responder') tarefa = 'Ele ouviu a pergunta "' + item.texto + '" e devia responder falando uma frase completa e coerente.';
+  else if (tv.k === 'conversa') tarefa = 'É uma conversa falada com o guardião do portão. Até agora:\n' + hist.map(t => (t.g ? 'Guardião: ' : 'Aluno: ') + t.texto).join('\n') + '\nO aluno responde agora à última fala do guardião.';
+  else tarefa = (item.extra ? 'O guardião fez a pergunta "' + item.texto + '" e o aluno responde falando.' : 'O aluno devia falar por cerca de 30 segundos sobre: "' + item.texto + '".') + ' Avalie também fluência, vocabulário e coerência.';
+  const pede = tv.k === 'conversa' ? ', "resposta": a próxima fala do guardião em ' + L + ', curta, reagindo ao que o aluno disse e fazendo outra pergunta, "resposta_t": tradução'
+    : tv.k === 'discurso' && !item.extra ? ', "resposta": uma pergunta de acompanhamento do guardião em ' + L + ' sobre o que o aluno falou, "resposta_t": tradução' : '';
+  return 'TAREFA: avaliar_fala\n' + regras() + '\n\n' + ctx() + '\n\nNum jogo, o aluno gravou a própria voz falando ' + L + '. ' + tarefa +
+    '\n\nResponda SOMENTE com um objeto JSON: {"ouvi": transcrição fiel do que o aluno disse ("" se nada foi entendido), "pronuncia": nota de 0 a 100 da pronúncia, "comunicacao": nota de 0 a 100 de quanto ele cumpriu a tarefa e se fez entender, "nota": nota geral de 0 a 100, "elogio": 1 frase curta em ' + N + ' sobre o que foi bem, "dica": a dica mais útil em 1 frase em ' + N + ' (cite a palavra ou o som a melhorar, ou o erro de gramática), "melhor": a forma natural em ' + L + ' do que ele quis dizer' + pede + '}. Seja justo e encorajador para o nível ' + S.level + ': sotaque não é erro, só o que atrapalha o entendimento. Se não houver fala ou ela estiver em outro idioma, dê nota baixa e explique na dica. Sem markdown.';
+}
+let OUVIR_OK = true;
+function modoGravacao(){
+  const md = navigator.mediaDevices;
+  if (OUVIR_OK && md && md.getUserMedia && (window.AudioContext || window.webkitAudioContext)) return 'audio';
+  if (SR) return 'sr';
+  return 'texto';
+}
+// Grava o microfone em WAV mono de 16 kHz (formato que o Gemini entende).
+async function gravador(){
+  const stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true}});
+  const Ctx = window.AudioContext || window.webkitAudioContext, ac = new Ctx();
+  if (ac.state === 'suspended') try { await ac.resume(); } catch(e){}
+  const src = ac.createMediaStreamSource(stream), proc = ac.createScriptProcessor(4096, 1, 1), partes = [];
+  let nivel = 0, pico = 0;
+  proc.onaudioprocess = ev => { const d = ev.inputBuffer.getChannelData(0); partes.push(new Float32Array(d)); let s = 0; for (let i = 0; i < d.length; i++) s += d[i] * d[i]; nivel = Math.sqrt(s / d.length); pico = Math.max(pico, nivel); };
+  src.connect(proc); proc.connect(ac.destination);
+  return {
+    nivel: () => nivel,
+    parar: async () => {
+      try { proc.disconnect(); src.disconnect(); } catch(e){}
+      stream.getTracks().forEach(t => t.stop());
+      const rate = ac.sampleRate; try { ac.close(); } catch(e){}
+      const total = partes.reduce((a, p) => a + p.length, 0), passo = rate / 16000, n = Math.floor(total / passo), pcm = new Int16Array(n);
+      const tudo = new Float32Array(total); let o = 0; for (const p of partes){ tudo.set(p, o); o += p.length; }
+      for (let i = 0; i < n; i++){ const a = Math.floor(i * passo), b = Math.min(total, Math.floor((i + 1) * passo)); let s = 0; for (let k = a; k < b; k++) s += tudo[k]; const v = clamp(s / Math.max(1, b - a), -1, 1); pcm[i] = v < 0 ? v * 0x8000 : v * 0x7FFF; }
+      const blob = wavBlob(btoaPCM(pcm), 'audio/pcm;rate=16000');
+      const b64 = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1] || ''); fr.readAsDataURL(blob); });
+      return {b64, seg: total / rate, pico};
+    }
+  };
+}
+function btoaPCM(pcm){ const u8 = new Uint8Array(pcm.buffer); let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
+// Botão grande de gravar, com ondas que reagem à voz.
+function gravadorUI(segMax, aoFalar){
+  const modo = modoGravacao(), st = h('p',{class:'small muted',role:'status'});
+  if (modo === 'texto'){
+    const ta = h('textarea',{class:'input',rows:2,placeholder:'Escreva o que você diria'});
+    return h('div',{class:'gravador stack tight'}, h('p',{class:'small'},'Este aparelho não deixa gravar aqui. Escreva o que você diria; quando der, use o celular para treinar falando.'), ta,
+      h('button',{class:'btn',type:'button',onclick:() => { const t = ta.value.trim(); if (t) aoFalar({modo:'texto', texto:t}); }},'Enviar'));
+  }
+  const ondas = h('div',{class:'ondas','aria-hidden':'true'}, Array.from({length:18}, () => h('i')));
+  const tempo = h('span',{class:'small muted'}, modo === 'audio' ? 'Até ' + segMax + ' s' : '');
+  const rot = h('span',null,'Toque para falar');
+  const b = h('button',{class:'grava',type:'button','aria-label':'Gravar a sua voz'}, icon('mic'), rot);
+  let rec = null, ini = 0, timer = 0, srRec = null;
+  const animar = () => {
+    if (!rec) return;
+    if (!b.isConnected){ const r2 = rec; rec = null; r2.parar(); return; }
+    const n = rec.nivel(), seg = (Date.now() - ini) / 1000;
+    ondas.querySelectorAll('i').forEach((el, i) => { el.style.transform = 'scaleY(' + (0.15 + Math.min(1, n * 9) * (0.4 + 0.6 * Math.abs(Math.sin(seg * 7 + i)))) + ')'; });
+    tempo.textContent = Math.floor(seg) + ' s de ' + segMax + ' s';
+    requestAnimationFrame(animar);
+  };
+  const parar = async () => {
+    clearTimeout(timer); const r2 = rec; rec = null; b.classList.remove('on'); rot.textContent = 'Toque para falar'; if (!r2) return;
+    const out = await r2.parar();
+    ondas.querySelectorAll('i').forEach(el => { el.style.transform = ''; });
+    if (out.seg < .7 || out.pico < .01){ st.textContent = 'Não ouvi nada. Fale mais perto do microfone e tente de novo.'; return; }
+    st.textContent = ''; aoFalar({modo:'audio', b64:out.b64, seg:out.seg});
+  };
+  b.onclick = async () => {
+    if (modo === 'sr'){
+      if (srRec){ try { srRec.stop(); } catch(e){} return; }
+      try {
+        srRec = new SR(); srRec.lang = LANGS[S.profile.target].tts; srRec.interimResults = false; srRec.maxAlternatives = 1;
+        srRec.onstart = () => { b.classList.add('on'); rot.textContent = 'Ouvindo... toque para parar'; };
+        srRec.onresult = ev => { const t = ev.results[0][0].transcript; if (t) aoFalar({modo:'sr', texto:t}); };
+        srRec.onerror = ev => { st.textContent = ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? 'O microfone está bloqueado. Libere a permissão do navegador.' : ev.error === 'no-speech' ? 'Não ouvi nada. Tente de novo.' : 'Não consegui ouvir agora. Tente de novo.'; };
+        srRec.onend = () => { srRec = null; b.classList.remove('on'); rot.textContent = 'Toque para falar'; };
+        srRec.start();
+      } catch(e){ st.textContent = 'Não consegui ligar o microfone.'; }
+      return;
+    }
+    if (rec) return parar();
+    try { rec = await gravador(); }
+    catch(e){ rec = null; st.textContent = e && e.name === 'NotAllowedError' ? 'O microfone está bloqueado. Libere a permissão do microfone para este site nas configurações do navegador.' : 'Não consegui ligar o microfone.'; return; }
+    ini = Date.now(); b.classList.add('on'); rot.textContent = 'Gravando... toque para parar'; st.textContent = '';
+    timer = setTimeout(parar, segMax * 1000); animar();
+  };
+  return h('div',{class:'gravador'}, ondas, b, tempo, st);
+}
+async function avaliarFala(fala, prompt){
+  if (fala.modo === 'audio'){
+    try { const d = await api('ouvir', {audio:fala.b64, mime:'audio/wav', prompt}); return extrairJSON(d && d.text); }
+    catch(e){ if (e && e.code === 'bad_request'){ OUVIR_OK = false; throw {code:'sem_ouvir'}; } throw e; }
+  }
+  return ai(prompt + '\n\n' + (fala.modo === 'sr'
+    ? 'Não há áudio: o reconhecimento de voz do celular transcreveu a fala do aluno assim: "' + fala.texto + '". Use essa transcrição em "ouvi" e estime a pronúncia por ela (palavras trocadas ou faltando indicam pronúncia difícil).'
+    : 'O aparelho não grava áudio e o aluno escreveu: "' + fala.texto + '". Avalie o texto; em "pronuncia" repita a nota de comunicação.'));
+}
+function registrarFala(res){
+  const j = J(); if (!j.falas) j.falas = [];
+  const n = clamp(Math.round(Number(res && res.nota) || 0), 0, 100), p = clamp(Math.round(Number(res && res.pronuncia) || n), 0, 100);
+  j.falas.push({d:today(), n, p}); if (j.falas.length > 60) j.falas.shift();
+  skill('conversa', n);
+  save();
+}
+function resultadoFala(res){
+  res = res && typeof res === 'object' ? res : {};
+  const n = clamp(Math.round(Number(res.nota) || 0), 0, 100), p = clamp(Math.round(Number(res.pronuncia) || 0), 0, 100), c = clamp(Math.round(Number(res.comunicacao) || 0), 0, 100);
+  const barra = (rot, v) => h('div',{class:'barra-fala'}, h('span',{class:'small'}, rot), h('span',{class:'trilho'}, h('i',{style:'width:' + v + '%'})), h('b',{class:'small'}, String(v)));
+  return h('div',{class:'card stack tight resultado-fala'},
+    h('div',{class:'row between'}, h('span',{class:'eyebrow'},'Eu ouvi'), h('b',{class:'nota-fala ' + (n >= 75 ? 'boa' : n >= 50 ? 'media' : 'baixa')}, String(n))),
+    h('p',{class:'alvo',style:'font-style:italic'}, str(res.ouvi) ? '“' + str(res.ouvi) + '”' : '(não deu para entender)'),
+    barra('Pronúncia', p), barra('Comunicação', c),
+    str(res.elogio) ? h('p',{class:'small'}, '👍 ' + str(res.elogio)) : null,
+    str(res.dica) ? h('p',{class:'small'}, '💡 ' + str(res.dica)) : null,
+    str(res.melhor) ? h('div',{class:'note soft row between'}, h('span',{class:'alvo',style:'font-weight:600'}, str(res.melhor)), ouvirBtn(str(res.melhor))) : null);
+}
+function telaVoz(r, dados){
+  pintarTema();
+  const j = J(), tm = TEMAS[j.tema], tv = tipoVoz(r), p = packDe(r), box = h('div',{class:'stack'});
+  show('jogo', topoJogo(tv.nome), box);
+  const guard = () => avatarEl(avatarEnt(r, 'V'), 52);
+  const rodar = d => {
+    const itens = (Array.isArray(d && d.itens) ? d.itens : []).filter(x => x && str(x.texto));
+    if (!itens.length){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'O desafio veio incompleto.'), h('button',{class:'btn sec',type:'button',onclick:() => telaVoz(r)},'Gerar de novo'))); return; }
+    const notas = [], pron = [], hist = [];
+    let k = 0, atual = itens[0];
+    if (tv.k === 'conversa') hist.push({g:true, texto:str(atual.texto)});
+    const etapa = aviso => {
+      const out = h('div'), prox = h('div');
+      let melhor = -1, melhorRes = null;
+      const titulo = tv.k === 'repetir' ? 'Repita em voz alta:' : tv.k === 'responder' ? 'Responda falando:' : tv.k === 'conversa' ? p.guardiao.nome + ' diz:' : atual.extra ? 'Responda à pergunta:' : 'Fale por cerca de 30 segundos sobre:';
+      const aoFalar = fala => {
+        out.replaceChildren(loadingEl('Ouvindo a sua voz...')); prox.replaceChildren();
+        avaliarFala(fala, promptAvaliarFala(tv, atual, hist)).then(res => {
+          res = res && typeof res === 'object' ? res : {};
+          const n = clamp(Math.round(Number(res.nota) || 0), 0, 100);
+          registrarFala(res);
+          reagir(n >= 60);
+          if (n > melhor){ melhor = n; melhorRes = res; }
+          out.replaceChildren(resultadoFala(res));
+          const ultimo = k + 1 >= tv.total;
+          prox.replaceChildren(h('div',{class:'row'},
+            h('button',{class:'btn sec',type:'button',onclick:() => { out.replaceChildren(); prox.replaceChildren(); view.scrollTop = 0; }},'Gravar de novo'),
+            h('button',{class:'btn',type:'button',onclick:() => {
+              notas.push(melhor); pron.push(clamp(Math.round(Number(melhorRes.pronuncia) || melhor), 0, 100));
+              if (ultimo) return fim();
+              k++;
+              if (tv.k === 'conversa' || tv.k === 'discurso'){
+                if (tv.k === 'conversa') hist.push({texto:str(melhorRes.ouvi)});
+                const seg = str(melhorRes.resposta) ? {texto:str(melhorRes.resposta), texto_t:str(melhorRes.resposta_t), extra:true} : (itens[k] || {texto:itens[0].texto, extra:true});
+                if (tv.k === 'conversa') hist.push({g:true, texto:seg.texto});
+                atual = seg;
+              } else atual = itens[k] || itens[itens.length - 1];
+              etapa();
+            }}, ultimo ? 'Ver resultado' : tv.k === 'conversa' ? 'Continuar a conversa' : 'Próxima')));
+        }, e => {
+          if (e && e.code === 'sem_ouvir') return etapa('O servidor ainda não sabe ouvir áudio (falta atualizar o Code.gs). Por enquanto vou usar o reconhecimento de voz do celular: grave de novo.');
+          out.replaceChildren(h('div',{class:'note soft stack'}, h('p',null, aiMsg(e)), h('button',{class:'btn sec',type:'button',onclick:() => aoFalar(fala)},'Tentar de novo')));
+        });
+      };
+      box.replaceChildren(...semVazios([
+        h('div',{class:'row between'}, h('span',{class:'eyebrow'}, 'Fala ' + (k + 1) + ' de ' + tv.total), h('span',{class:'small muted'}, tv.nome)),
+        aviso ? h('div',{class:'note soft'}, aviso) : null,
+        k === 0 && str(d.fala) ? h('div',{class:'card fala-row'}, guard(), h('div',{class:'grow stack tight'}, h('b',null, p.guardiao.nome), h('p',{class:'alvo'}, str(d.fala)), h('div',{class:'row'}, ouvirBtn(str(d.fala)), str(d.fala_t) ? h('span',{class:'small muted'}, str(d.fala_t)) : null))) : null,
+        h('section',{class:'narra stack tight'}, h('span',{class:'small',style:'opacity:.85'}, titulo), h('b',{class:'alvo',style:'font-size:20px'}, str(atual.texto)),
+          h('div',{class:'row'}, ouvirBtn(str(atual.texto)), str(atual.texto_t) ? (() => { const tr = h('span',{class:'small',hidden:true}, str(atual.texto_t)); return h('span',null, h('button',{class:'btn link',type:'button',style:'color:#FFFFFF',onclick:() => { tr.hidden = !tr.hidden; }},'Traduzir'), tr); })() : null),
+          str(atual.foco) ? h('small',{style:'opacity:.9'}, '💡 ' + str(atual.foco)) : null),
+        coachEl('happy', tv.k === 'repetir' ? 'Ouça primeiro, depois repita no mesmo ritmo.' : tv.k === 'discurso' ? 'Não precisa ser perfeito: fale sem parar, com frases simples.' : 'Fale com calma. Uma frase completa já vale.'),
+        gravadorUI(tv.seg, aoFalar), out, prox]));
+      if (tv.k === 'repetir' && !aviso) setTimeout(() => { if (box.isConnected) falar(str(atual.texto)); }, 400);
+      view.scrollTop = 0;
+    };
+    const fim = () => {
+      const media = Math.round(notas.reduce((a, b) => a + b, 0) / notas.length), mp = Math.round(pron.reduce((a, b) => a + b, 0) / pron.length);
+      if (media < 60){
+        const t = tutorDe(S.profile.target), pic = tutorEl(S.profile.target,'think',110,'pop'); pic.style.background = t.fundo;
+        show('jogo', h('div',{class:'festa'}, pic, h('h1',null,'Quase lá!'), h('p',{class:'muted'}, p.guardiao.nome + ' precisa entender melhor para abrir o portão. Sua média foi ' + media + '; o mínimo é 60. Repetir em voz alta é o melhor treino.')),
+          h('div',{class:'spacer'}), h('button',{class:'btn',type:'button',onclick:() => telaVoz(r)},'Tentar de novo'), h('button',{class:'btn sec',type:'button',onclick:() => goTab('inicio')},'Voltar ao mapa'));
+        return;
+      }
+      const w = MW(); w.voz[r] = true; w.anim = 'portao'; w.animR = r;
+      j.moedas += 50; const hx = ganharHXP(80); addXP(30); const bonus = touchDay(); if (bonus) addXP(bonus); save(); setTimeout(confete, 150);
+      const t = tutorDe(S.profile.target), festa = tutorEl(S.profile.target,'cheer',120,'pop'); festa.style.background = t.fundo;
+      show('jogo', h('div',{class:'festa'}, festa, h('h1',null,'O portão se abriu!'), h('p',{class:'muted'}, p.guardiao.nome + ' entendeu tudo. O chefe da região espera do outro lado.')),
+        h('div',{class:'stat'}, h('div',null, h('b',null, String(media)), h('span',null,'nota da fala')), h('div',null, h('b',null, String(mp)), h('span',null,'pronúncia')),
+          h('div',null, h('b',null,'+' + hx), h('span',null,'XP do herói')), h('div',null, h('b',null,'+50'), h('span',null, tm.moeda))),
+        h('div',{class:'spacer'}), h('button',{class:'btn',type:'button',onclick:() => goTab('inicio')},'Voltar ao mapa'));
+    };
+    etapa();
+  };
+  if (dados) rodar(dados);
+  else runAI(box, p.guardiao.nome + ' está preparando o desafio...', () => ai(promptVoz(tm, r, tv, p.guardiao)), rodar);
 }
 
 /* ============================== partida ============================== */
