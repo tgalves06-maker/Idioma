@@ -348,6 +348,8 @@ nav#tabs{background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop
 .dlg-acoes{display:flex;flex-direction:column;gap:8px}
 .dlg .gravador{box-shadow:none;background:var(--sunk)}
 .narra .btn.link,.narra .btn.link .ic{color:#FFFFFF}
+.ouvir.tocando .ic{animation:pulse 1s infinite}
+.ouvir.tocando{opacity:1}
 .palavra-card{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-radius:14px;background:var(--accent-soft)}
 .palavra-card b{font-size:22px}
 .titulo-regiao{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(140deg,var(--tm1),var(--tm2));color:#FFFFFF;text-align:center;transition:opacity .8s ease,visibility .8s;pointer-events:none}
@@ -813,7 +815,7 @@ let PLAYER = null;
 function prefVoz(){
   const p = (S.profile && S.profile.voz) || {};
   const lang = S.profile ? S.profile.target : 'en';
-  return { motor: p.motor || 'gemini', gemini: p.gemini || VOZ_PADRAO[lang] || 'Kore', aparelho: p.aparelho || '', velocidade: p.velocidade || (lv() >= 0 && lv() < 3 ? 0.9 : 1) };
+  return { auto: p.auto !== false, motor: p.motor || 'gemini', gemini: p.gemini || VOZ_PADRAO[lang] || 'Kore', aparelho: p.aparelho || '', velocidade: p.velocidade || (lv() >= 0 && lv() < 3 ? 0.9 : 1) };
 }
 // Um WAV silencioso curto destrava o áudio no iPhone dentro do toque do usuário.
 const SILENCIO = (() => { const n = 240, b = new DataView(new ArrayBuffer(44 + n * 2)); const w = (o, t) => { for (let i = 0; i < t.length; i++) b.setUint8(o + i, t.charCodeAt(i)); };
@@ -850,32 +852,135 @@ function falarAparelho(texto, pref){
     speechSynthesis.cancel(); speechSynthesis.speak(u); return true;
   } catch(e){ return false; }
 }
-// Fala o texto. Chamada direto do toque do usuário, para o celular permitir o som.
-function falar(texto, prefExtra){
+/* ---------- motor de áudio: toca sozinho, em fila, com cache e sem travar ---------- */
+let AC = null, FONTE = null, TELA_ID = 0, FALA_ID = 0, FILA = [], TOCANDO = 0, fimAtual = null;
+const audioPronto = new Map(); // texto + voz -> Promise do WAV
+try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch(e){} // iPhone: toca mesmo no modo silencioso
+function ctxAudio(){ if (!AC){ const C = window.AudioContext || window.webkitAudioContext; if (C) try { AC = new C(); } catch(e){} } return AC; }
+// O primeiro toque na tela libera o som para o resto do uso (exigência do iPhone e do Chrome).
+function destravarAudio(){
+  const a = ctxAudio();
+  if (a){ if (a.state !== 'running') a.resume().catch(() => {}); if (!destravarAudio.ok){ try { const s = a.createBufferSource(); s.buffer = a.createBuffer(1, 1, 22050); s.connect(a.destination); s.start(0); destravarAudio.ok = true; } catch(e){} } }
+  try { if (!PLAYER){ PLAYER = new Audio(); PLAYER.src = SILENCIO; const p = PLAYER.play(); if (p) p.catch(() => {}); } } catch(e){}
+}
+['touchend','pointerdown','click','keydown'].forEach(t => document.addEventListener(t, destravarAudio, {capture:true, passive:true}));
+const autoAudio = () => prefVoz().auto !== false;
+const chaveVoz = (texto, pref) => pref.gemini + '|' + (pref.velocidade < 0.95 ? 1 : 0) + '|' + texto;
+function hashTxt(t){ let x = 5381; for (let i = 0; i < t.length; i++) x = ((x * 33) ^ t.charCodeAt(i)) >>> 0; return x.toString(36) + '-' + t.length; }
+const CACHE_VOZ = 'idioma-voz-v1', urlVoz = k => location.origin + '/__voz/' + hashTxt(k);
+async function lerCacheVoz(k){ try { if (!window.caches) return null; const r = await (await caches.open(CACHE_VOZ)).match(urlVoz(k)); return r ? await r.arrayBuffer() : null; } catch(e){ return null; } }
+function gravarCacheVoz(k, buf){ try { if (window.caches) caches.open(CACHE_VOZ).then(c => c.put(urlVoz(k), new Response(buf, {headers:{'Content-Type':'audio/wav'}}))).catch(() => {}); } catch(e){} }
+let emVoo = 0; const esperando = [];
+function limitar(fn, urgente){
+  return new Promise((res, rej) => {
+    const vai = () => { emVoo++; fn().then(res, rej).finally(() => { emVoo--; const n = esperando.shift(); if (n) n(); }); };
+    if (urgente || emVoo < 3) vai(); else esperando.push(vai);
+  });
+}
+// Busca o áudio antes da hora, para tocar sem espera quando a frase aparecer.
+function prepararAudio(texto, prefExtra, urgente){
+  texto = String(texto || '').trim(); if (!texto) return Promise.resolve(null);
   const pref = Object.assign(prefVoz(), prefExtra || {});
-  if (pref.motor !== 'gemini' || !GEMINI_VOZ_OK) return Promise.resolve(falarAparelho(texto, pref));
-  if (!PLAYER) PLAYER = new Audio();
+  if (pref.motor !== 'gemini' || !GEMINI_VOZ_OK) return Promise.resolve(null);
+  const k = chaveVoz(texto, pref);
+  if (audioPronto.has(k)) return audioPronto.get(k);
+  const p = lerCacheVoz(k).then(buf => buf || limitar(() => api('tts', {text:texto, voice:pref.gemini, slow: pref.velocidade < 0.95}), urgente)
+    .then(d => wavBlob(d.audio, d.mime).arrayBuffer()).then(b => { gravarCacheVoz(k, b); return b; }));
+  audioPronto.set(k, p);
+  p.catch(e => { audioPronto.delete(k); if (e && (e.code === 'bad_request' || e.code === 'config')) GEMINI_VOZ_OK = false; });
+  return p;
+}
+function pararSom(){
+  if (FONTE){ try { FONTE.onended = null; FONTE.stop(); } catch(e){} FONTE = null; }
+  try { if (PLAYER){ PLAYER.onended = null; PLAYER.pause(); } } catch(e){}
   try { speechSynthesis.cancel(); } catch(e){}
-  PLAYER.pause(); PLAYER.src = SILENCIO; const destrava = PLAYER.play(); if (destrava) destrava.catch(() => {});
-  const chave = pref.gemini + '|' + texto;
-  const pronto = audioCache.has(chave) ? Promise.resolve(audioCache.get(chave))
-    : api('tts', {text:texto, voice:pref.gemini, slow: pref.velocidade < 0.95}).then(d => { const url = URL.createObjectURL(wavBlob(d.audio, d.mime)); audioCache.set(chave, url); return url; });
-  return pronto.then(url => { PLAYER.pause(); PLAYER.src = url; PLAYER.playbackRate = pref.velocidade < 0.8 ? 0.85 : 1; return PLAYER.play().then(() => true); })
-    .catch(e => {
-      if (e && (e.code === 'bad_request' || e.code === 'config')) GEMINI_VOZ_OK = false; // servidor sem a voz: usa a do aparelho
-      return falarAparelho(texto, pref);
-    });
+  const f = fimAtual; fimAtual = null; if (f) f();
+}
+// Para tudo: usado ao trocar de tela, abrir outra conversa ou começar a gravar.
+function pararAudio(){ TELA_ID++; FALA_ID++; FILA = []; TOCANDO = 0; document.querySelectorAll('.ouvir.tocando').forEach(b => b.classList.remove('tocando')); pararSom(); }
+function falarAparelho(texto, pref){
+  return new Promise(res => {
+    try {
+      if (!('speechSynthesis' in window)) return res(false);
+      const lang = S.profile.target, lista = vozesAparelho(lang);
+      const voz = lista.find(v => v.voiceURI === pref.aparelho) || lista[0];
+      const u = new SpeechSynthesisUtterance(texto);
+      u.lang = voz ? voz.lang : LANGS[lang].tts; if (voz) u.voice = voz; u.rate = pref.velocidade;
+      let feito = false; const fim = () => { if (feito) return; feito = true; if (fimAtual === fim) fimAtual = null; res(true); };
+      u.onend = fim; u.onerror = fim; setTimeout(fim, 2500 + texto.length * 110);
+      speechSynthesis.cancel(); fimAtual = fim; speechSynthesis.speak(u);
+    } catch(e){ res(false); }
+  });
+}
+function tocarBuffer(buf, pref){
+  return new Promise(res => {
+    let feito = false; const fim = () => { if (feito) return; feito = true; if (fimAtual === fim) fimAtual = null; res(true); };
+    const taxa = pref.velocidade < 0.8 ? 0.85 : 1;
+    const elemento = () => {
+      try {
+        if (!PLAYER) PLAYER = new Audio();
+        const url = URL.createObjectURL(new Blob([buf], {type:'audio/wav'}));
+        PLAYER.src = url; PLAYER.playbackRate = taxa; PLAYER.onended = () => { URL.revokeObjectURL(url); fim(); };
+        fimAtual = fim;
+        const p = PLAYER.play(); if (p) p.catch(() => { fimAtual = null; falarAparelho(PLAYER.dataset.texto || '', pref).then(() => res(false)); });
+      } catch(e){ res(false); }
+    };
+    const a = ctxAudio();
+    if (!a || a.state !== 'running') return elemento();
+    try {
+      a.decodeAudioData(buf.slice(0), b => {
+        const s = a.createBufferSource(); s.buffer = b; s.playbackRate.value = taxa; s.connect(a.destination);
+        s.onended = () => { if (FONTE === s) FONTE = null; fim(); };
+        FONTE = s; fimAtual = fim; s.start(0);
+        setTimeout(fim, b.duration * 1000 / taxa + 1500);
+      }, () => elemento());
+    } catch(e){ elemento(); }
+  });
+}
+// Fala o texto e devolve quando terminar. Se a voz natural demorar, usa a do celular para não deixar em silêncio.
+function falar(texto, prefExtra){
+  texto = String(texto || '').trim(); if (!texto) return Promise.resolve(false);
+  const pref = Object.assign(prefVoz(), prefExtra || {}), id = ++FALA_ID;
+  pararSom();
+  if (pref.motor !== 'gemini' || !GEMINI_VOZ_OK) return falarAparelho(texto, pref);
+  destravarAudio();
+  if (PLAYER) PLAYER.dataset.texto = texto;
+  const limite = new Promise(res => setTimeout(() => res('tempo'), 6000));
+  return Promise.race([prepararAudio(texto, prefExtra, true), limite]).then(buf => {
+    if (id !== FALA_ID) return false;
+    if (buf === 'tempo' || !buf) return falarAparelho(texto, pref);
+    return tocarBuffer(buf, pref);
+  }, () => id === FALA_ID ? falarAparelho(texto, pref) : false);
+}
+// Fila de falas automáticas da tela: tocam uma depois da outra.
+function autoFalar(texto, prefExtra, botao){
+  texto = String(texto || '').trim(); if (!texto || !autoAudio()) return;
+  FILA.push({texto, prefExtra, botao, tela:TELA_ID}); prepararAudio(texto, prefExtra);
+  if (!TOCANDO) tocarFila(TELA_ID);
+}
+function tocarFila(tela){
+  if (tela !== TELA_ID) return;
+  const it = FILA.shift(); if (!it){ TOCANDO = 0; return; }
+  if (it.tela !== TELA_ID || (it.botao && !it.botao.isConnected)) return tocarFila(tela);
+  TOCANDO = 1; if (it.botao) it.botao.classList.add('tocando');
+  falar(it.texto, it.prefExtra).then(() => { if (it.botao) it.botao.classList.remove('tocando'); setTimeout(() => tocarFila(tela), 280); });
 }
 const podeFalar = () => true;
-function destravarAudio(){ try { if (!PLAYER) PLAYER = new Audio(); PLAYER.src = SILENCIO; const p = PLAYER.play(); if (p) p.catch(() => {}); } catch(e){} }
-const ouvirBtn = texto => h('button',{class:'btn link',type:'button','aria-label':'Ouvir',onclick:ev => { const b = ev.currentTarget; b.disabled = true; falar(texto).finally(() => { b.disabled = false; }); }}, icon('sound'), 'Ouvir');
+// Botão de repetir: a frase já toca sozinha quando aparece; este botão toca de novo.
+function ouvirBtn(texto, o){
+  o = o || {};
+  const b = h('button',{class:'btn link ouvir',type:'button','aria-label':'Ouvir de novo',onclick:() => {
+    pararAudio(); b.classList.add('tocando'); falar(texto, o.voz).finally(() => b.classList.remove('tocando')); }}, icon('sound'), 'Repetir');
+  if (o.auto !== false) setTimeout(() => { if (b.isConnected) autoFalar(texto, o.voz, b); }, 40);
+  return b;
+}
 
 /* ============================== navegação ============================== */
 const ui = { screen:'welcome', tab:'inicio', min:null };
 const view = $('#view'), tabs = $('#tabs');
 const TABS = [['inicio','Início','home'],['aprender','Aprender','book'],['conversar','Conversar','chat'],['progresso','Progresso','chart'],['perfil','Perfil','user']];
 function pintarFundo(){ const t = S.profile ? tutorDe(S.profile.target) : null, r = document.documentElement.style; r.setProperty('--tint-a', t ? t.cor + '55' : '#FF9F7A55'); r.setProperty('--tint-b', '#7C5CFF40'); r.setProperty('--tint-c', t ? t.fundo + '99' : '#FFD84A44'); }
-function show(screen, ...kids){ pintarFundo(); view.classList.remove('mundo-on'); ui.screen = screen; tabs.hidden = screen !== 'main'; view.replaceChildren(...kids.flat(Infinity).filter(Boolean)); view.scrollTop = 0; }
+function show(screen, ...kids){ pararAudio(); pintarFundo(); view.classList.remove('mundo-on'); ui.screen = screen; tabs.hidden = screen !== 'main'; view.replaceChildren(...kids.flat(Infinity).filter(Boolean)); view.scrollTop = 0; }
 function drawTabs(){
   const lista = TABS.map(([k,label,ic]) => k === 'inicio' && modoAventura() ? [k,'Aventura','map'] : [k,label,ic]);
   tabs.replaceChildren(...lista.map(([k,label,ic]) => h('button',{type:'button','aria-current': ui.tab === k ? 'page' : null, onclick:() => goTab(k)}, icon(ic), label)));
@@ -1296,7 +1401,7 @@ function chatUI(o){
   const tutor = (reply, pt, mood) => {
     const tr = h('div');
     const b = h('div',{class:'bubble tutor'}, h('div',{class:'alvo'}, reply), tr,
-      h('div',{class:'acts'}, podeFalar() ? h('button',{type:'button',onclick:() => falar(reply, vozExtra)},'Ouvir') : null,
+      h('div',{class:'acts'}, podeFalar() ? h('button',{type:'button',onclick:() => { pararAudio(); falar(reply, vozExtra); }},'Repetir') : null,
         pt ? h('button',{type:'button',onclick:() => tr.replaceChildren(h('div',{class:'tr'},pt))},'Traduzir') : null));
     const row = h('div',{class:'msg tutor'}, o.rosto ? o.rosto() : tutorEl(S.profile.target, mood || 'neutral', 36, mood === 'happy' ? 'pop' : ''), b);
     log.append(row); row.scrollIntoView({block:'end'});
@@ -1322,7 +1427,7 @@ function chatUI(o){
         save(); if (o.onTurn) o.onTurn(!!fix);
       }
       tutor(reply, str(r.pt), fix ? 'think' : 'happy'); setStatus();
-      if (o.autoFalar && o.autoFalar()) falar(reply, vozExtra);
+      if (o.autoFalar ? o.autoFalar() : autoAudio()) autoFalar(reply, vozExtra);
       if (o.alvo && turns >= o.alvo && !ended){ ended = true; composer.hidden = true; if (o.onDone) o.onDone(); }
     } catch(e){
       wait.remove();
@@ -1415,7 +1520,7 @@ function telaAvaliacao(n, conversa){
       h('section',{class:'card stack'}, h('h3',null,'Suas notas'), aneisN, h('p',{class:'small muted'}, '+' + ganho + ' XP pela conversa avaliada.')),
       frases.length ? h('section',{class:'card stack'}, h('h3',null,'Como um nativo diria'), frases.map(f => h('div',{class:'stack tight',style:'padding-bottom:10px;border-bottom:1px solid var(--line)'},
         h('div',{class:'small muted'},'Você disse'), h('p',{class:'alvo',style:'text-decoration:line-through;text-decoration-color:var(--warn);opacity:.8'}, str(f.voce)),
-        h('div',{class:'small muted'}, n.nome + ' diria'), h('div',{class:'row between'}, h('p',{class:'alvo',style:'font-weight:600'}, str(f.nativo)), ouvirBtn(str(f.nativo))),
+        h('div',{class:'small muted'}, n.nome + ' diria'), h('div',{class:'row between'}, h('p',{class:'alvo',style:'font-weight:600'}, str(f.nativo)), ouvirBtn(str(f.nativo), {auto:false})),
         str(f.porque) ? h('p',{class:'small'}, str(f.porque)) : null))) : h('div',{class:'note'},'Nenhuma frase precisou de ajuste. Você falou com naturalidade.'),
       Array.isArray(r.treinar) && r.treinar.length ? h('section',{class:'card stack tight'}, h('h3',null,'Para treinar a seguir'), r.treinar.slice(0,3).map(x => h('p',null,'• ' + str(x)))) : null,
       palavras.length ? h('section',{class:'card stack tight'}, h('h3',null,'Palavras guardadas para revisão'), palavras.map(w => h('div',{class:'row between'}, h('span',null, h('mark',{class:'alvo'}, str(w.w)), ' ', h('span',{class:'muted small'}, str(w.t))), ouvirBtn(str(w.w))))) : null,
@@ -1547,6 +1652,7 @@ function cartaoVoz(){
       chipSet([['gemini','Voz natural (Gemini)'],['aparelho','Voz do celular']], pref.motor, false, v => { guarda({motor:v}); draw(); }),
       opcoes,
       h('div',{class:'stack tight'}, h('span',{class:'small muted'},'Velocidade'), chipSet(VELOCIDADES, pref.velocidade, false, v => guarda({velocidade:v}))),
+      h('div',{class:'stack tight'}, h('span',{class:'small muted'},'Tocar as frases sozinho quando aparecem'), chipSet([['sim','Sim'],['nao','Não']], pref.auto ? 'sim' : 'nao', false, v => guarda({auto: v === 'sim'}))),
       testar, msg);
   };
   draw();
@@ -1698,6 +1804,7 @@ function jogarMissao(r, i, dados){
     const cenas = (Array.isArray(d && d.cenas) ? d.cenas : []).map(c => ({c, q: normQ({p:'', opcoes:c && c.opcoes, certa:c && c.certa})})).filter(x => x.c && str(x.c.fala) && x.q);
     if (cenas.length < 2){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A missão veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:() => jogarMissao(r, i)},'Gerar de novo'))); return; }
     const VM = vidasMax(); let vidas = VM, k = 0, acertos = 0;
+    cenas.forEach(x => prepararAudio(str(x.c.fala)));
     const cena = () => {
       if (k >= cenas.length) return desafio();
       const {c, q} = cenas[k], fb = h('div'), tr = h('div');
@@ -1718,7 +1825,7 @@ function jogarMissao(r, i, dados){
         h('div',{class:'narra'}, str(c.narra)),
         coachEl('neutral', 'O que você responde?'),
         h('div',{class:'msg tutor'}, npc, h('div',{class:'bubble tutor'}, h('div',{class:'small muted',style:'margin-bottom:2px'}, str(c.npc)), h('div',{class:'alvo'}, str(c.fala)), tr,
-          h('div',{class:'acts'}, h('button',{type:'button',onclick:() => falar(str(c.fala))},'Ouvir'), str(c.fala_t) ? h('button',{type:'button',onclick:() => tr.replaceChildren(h('div',{class:'tr'}, str(c.fala_t)))},'Traduzir') : null))),
+          h('div',{class:'acts'}, ouvirBtn(str(c.fala)), str(c.fala_t) ? h('button',{type:'button',onclick:() => tr.replaceChildren(h('div',{class:'tr'}, str(c.fala_t)))},'Traduzir') : null))),
         h('div',{class:'stack'}, btns), fb);
       view.scrollTop = 0;
     };
@@ -1752,6 +1859,7 @@ function jogarBatalha(r, i, chefe, dados){
     if (rodadas.length < 3){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A batalha veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:() => jogarBatalha(r, i, chefe)},'Gerar de novo'))); return; }
     const nomeIni = str(chefe ? d.chefe : d.inimigo) || tm.inimigo, MAXV = vidasMax(), SEG = chefe ? 25 : 20;
     let vidas = MAXV, k = 0, acertos = 0, timer = 0;
+    rodadas.forEach(y => prepararAudio(str(y.x.ataque).replace(/_{2,}/g, '...')));
     const ini = h('span',{class:'inimigo'}); ini.innerHTML = inimigoSVG(j.tema, chefe);
     const hp = h('i',{style:'width:100%'});
     const arena = h('section',{class:'arena'}, h('b',null, nomeIni), ini, h('div',{class:'hp','aria-label':'Vida do inimigo'}, hp),
@@ -1784,7 +1892,7 @@ function jogarBatalha(r, i, chefe, dados){
       const cab = h('div',{class:'row between'}, h('span',{class:'eyebrow'}, 'Golpe ' + (k + 1) + ' de ' + rodadas.length), vidasEl(vidas, MAXV));
       box.replaceChildren(cab, arena,
         h('div',{class:'card stack tight'}, h('span',{class:'small muted'}, nomeIni + ' ataca:'), h('p',{class:'alvo',style:'font-size:21px;font-weight:600'}, str(x.ataque)), tr,
-          h('div',{class:'row'}, h('button',{class:'btn link',type:'button',style:'padding:0',onclick:() => falar(str(x.ataque).replace(/_{2,}/g, '...'))}, icon('sound'), 'Ouvir'),
+          h('div',{class:'row'}, ouvirBtn(str(x.ataque).replace(/_{2,}/g, '...')),
             str(x.ataque_t) ? h('button',{class:'btn link',type:'button',onclick:() => tr.replaceChildren(h('div',{class:'small muted'}, str(x.ataque_t)))},'Traduzir') : null),
           h('div',{class:'tempo','aria-hidden':'true'}, barra)),
         coachEl('think','Escolha a resposta certa antes do tempo acabar.'),
@@ -2470,6 +2578,8 @@ function telaMundo(rForcada){
     poeira(H0.px, H0.py);
     // portal
     if (m.porta && H0.x === m.porta.x && H0.y === m.porta.y && noFeito(r, 3)){ entrarPortal(); return; }
+    // prepara o áudio de quem está perto, para a conversa já começar falando
+    for (const k in m.ent){ const e = m.ent[k]; if (!entAtiva(m, e) || e.audioPronto) continue; if (Math.abs(e.x - H0.x) + Math.abs(e.y - H0.y) <= 5){ const ls = linhasEnt(k).filter(Boolean); if (ls.length){ e.audioPronto = true; ls.forEach(t => prepararAudio(t)); } } }
     // conversa espontânea dos moradores por perto
     for (const k of 'abc$12'){ const e = m.ent[k]; if (!e) continue; const d2 = Math.abs(e.x - H0.x) + Math.abs(e.y - H0.y);
       if (d2 <= 2 && !W.falas.some(f => f.e === e) && (!e.falouEm || W.t - e.falouEm > 25)){ e.falouEm = W.t; const fala = falaCurta(k); if (fala) W.falas.push({e, txt:fala, ate:W.t + 3.5}); } }
@@ -2556,9 +2666,10 @@ function telaMundo(rForcada){
   acao.onclick = () => { if (W.alvoPerto) interagir(W.alvoPerto); };
 
   /* ----- diálogo ----- */
-  const fecharDlg = () => { dlg.hidden = true; dlg.replaceChildren(); W.ocupado = false; pintarHUD(); };
+  const fecharDlg = () => { pararAudio(); dlg.hidden = true; dlg.replaceChildren(); W.ocupado = false; pintarHUD(); };
   W.fecharDlg = fecharDlg;
   const abrirDlg = (quem, partes, acoes) => {
+    pararAudio();
     W.ocupado = true; W.segura = null; W.heroi.rota = [];
     const topo = h('div',{class:'dlg-topo'}, quem.av ? avatarEl(quem.av, 44) : quem.el || null, h('div',{class:'grow'}, h('b',null, quem.nome), quem.papel ? h('small',null, quem.papel) : null),
       h('button',{class:'dlg-x',type:'button','aria-label':'Fechar janela',onclick:fecharDlg}, '×'));
@@ -2605,7 +2716,6 @@ function telaMundo(rForcada){
     if (p){
       const k = r + ':' + p.k, nova = !w.palavras[k];
       abrirDlg({nome:'Você olha ao redor', el:icon('sound')}, [cartaoPalavra(p), nova ? h('p',{class:'small muted'}, 'Palavra nova! Ela entra nas suas revisões.') : null], [btn('Fechar', fecharDlg, true)]);
-      falar(p.alvo);
       if (nova){ w.palavras[k] = 1; addWord({w:p.alvo, t:p.pt}); faiscas(a.x, a.y, '#FDE047'); recompensa(5, 0, 'Palavra descoberta: ' + p.alvo + '.'); }
     }
   }
@@ -2699,6 +2809,17 @@ function telaMundo(rForcada){
     const o = objetivo(r), t = tutorDe(S.profile.target);
     W.falas.push({pet:true, txt:o.alvo ? o.t + '!' : 'Bora explorar?', ate:W.t + 3.5});
     if (o.alvo) toastMundo(t.nome + ': ' + o.t + '. Toque na faixa de cima para eu te levar.');
+  }
+  function linhasEnt(k){
+    const p = packDe(r); if (p.padrao) return [];
+    if (k === '1') return noFeito(r, 0) ? [] : [str(p.npc1.ola)];
+    if (k === '2') return noFeito(r, 2) ? [] : [str(p.npc2.ola)];
+    if (k === 'V') return [str(p.guardiao.ola)];
+    if (k === '$') return [str(p.mercador.ola)];
+    if (k === 'E') return [str(p.inimigo_fala)];
+    if (k === 'C') return [str(p.chefe_fala)];
+    const mo = (p.moradores || [])['abc'.indexOf(k)] || {};
+    return [str(mo.ola), str(mo.pergunta)];
   }
   function falaCurta(k){
     const p = packDe(r), frase = t => { const x = /^.*?[.!?](\s|$)/.exec(str(t)); return x ? x[0].trim() : str(t); };
@@ -3021,6 +3142,7 @@ function gravadorUI(segMax, aoFalar){
   };
   b.onclick = async () => {
     if (modo === 'sr'){
+      pararAudio();
       if (srRec){ try { srRec.stop(); } catch(e){} return; }
       try {
         srRec = new SR(); srRec.lang = LANGS[S.profile.target].tts; srRec.interimResults = false; srRec.maxAlternatives = 1;
@@ -3033,6 +3155,7 @@ function gravadorUI(segMax, aoFalar){
       return;
     }
     if (rec) return parar();
+    pararAudio();
     try { rec = await gravador(); }
     catch(e){ rec = null; st.textContent = e && e.name === 'NotAllowedError' ? 'O microfone está bloqueado. Libere a permissão do microfone para este site nas configurações do navegador.' : 'Não consegui ligar o microfone.'; return; }
     ini = Date.now(); b.classList.add('on'); rot.textContent = 'Gravando... toque para parar'; st.textContent = '';
@@ -3077,6 +3200,7 @@ function telaVoz(r, dados){
     const itens = (Array.isArray(d && d.itens) ? d.itens : []).filter(x => x && str(x.texto));
     if (!itens.length){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'O desafio veio incompleto.'), h('button',{class:'btn sec',type:'button',onclick:() => telaVoz(r)},'Gerar de novo'))); return; }
     const notas = [], pron = [], hist = [];
+    prepararAudio(str(d.fala)); itens.forEach(x => prepararAudio(str(x.texto)));
     let k = 0, atual = itens[0];
     if (tv.k === 'conversa') hist.push({g:true, texto:str(atual.texto)});
     const etapa = aviso => {
@@ -3121,7 +3245,6 @@ function telaVoz(r, dados){
           str(atual.foco) ? h('small',{style:'opacity:.9'}, '💡 ' + str(atual.foco)) : null),
         coachEl('happy', tv.k === 'repetir' ? 'Ouça primeiro, depois repita no mesmo ritmo.' : tv.k === 'discurso' ? 'Não precisa ser perfeito: fale sem parar, com frases simples.' : 'Fale com calma. Uma frase completa já vale.'),
         gravadorUI(tv.seg, aoFalar), out, prox]));
-      if (tv.k === 'repetir' && !aviso) setTimeout(() => { if (box.isConnected) falar(str(atual.texto)); }, 400);
       view.scrollTop = 0;
     };
     const fim = () => {
