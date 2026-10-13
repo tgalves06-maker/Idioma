@@ -375,6 +375,8 @@ nav#tabs{background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop
 .nota-fala{font:800 26px var(--font-display);padding:2px 12px;border-radius:12px}
 .nota-fala.boa{background:#DCFCE7;color:#166534}.nota-fala.media{background:#FEF3C7;color:#92400E}.nota-fala.baixa{background:#FEE2E2;color:#991B1B}
 @media (prefers-reduced-motion: reduce){.acao,.hud-bau,.grava.on,.nivel-up{animation:none}}
+
+#aviso-som{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:999px;background:#F59E0B;color:#1B1F2E;font:700 14px var(--font-ui);box-shadow:0 8px 24px rgba(0,0,0,.3);animation:pulsa 1.6s infinite}
 </style>
 </head>
 <body>
@@ -853,23 +855,35 @@ function falarAparelho(texto, pref){
   } catch(e){ return false; }
 }
 /* ---------- motor de áudio: toca sozinho, em fila, com cache e sem travar ---------- */
-let AC = null, FONTE = null, TELA_ID = 0, FALA_ID = 0, FILA = [], TOCANDO = 0, fimAtual = null;
-const audioPronto = new Map(); // texto + voz -> Promise do WAV
-try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch(e){} // iPhone: toca mesmo no modo silencioso
-function ctxAudio(){ if (!AC){ const C = window.AudioContext || window.webkitAudioContext; if (C) try { AC = new C(); } catch(e){} } return AC; }
-// O primeiro toque na tela libera o som para o resto do uso (exigência do iPhone e do Chrome).
+// Um único player <audio> para tudo: no iPhone ele toca mesmo com a chave de silencioso
+// e, depois de liberado por um toque, pode tocar sozinho pelo resto do uso.
+let TELA_ID = 0, FALA_ID = 0, FILA = [], TOCANDO = 0, fimAtual = null, SOM_LIVRE = false, ULTIMA = null;
+const audioPronto = new Map(); // texto + voz -> Promise da URL do áudio
+function playerAudio(){ if (!PLAYER){ PLAYER = new Audio(); PLAYER.preload = 'auto'; PLAYER.setAttribute('playsinline', ''); } return PLAYER; }
+// Liberação do som: precisa acontecer dentro de um toque do usuário (iPhone e Chrome).
 function destravarAudio(){
-  const a = ctxAudio();
-  if (a){ if (a.state !== 'running') a.resume().catch(() => {}); if (!destravarAudio.ok){ try { const s = a.createBufferSource(); s.buffer = a.createBuffer(1, 1, 22050); s.connect(a.destination); s.start(0); destravarAudio.ok = true; } catch(e){} } }
-  try { if (!PLAYER){ PLAYER = new Audio(); PLAYER.src = SILENCIO; const p = PLAYER.play(); if (p) p.catch(() => {}); } } catch(e){}
+  if (SOM_LIVRE) return;
+  if (PLAYER && !PLAYER.paused && PLAYER.src !== SILENCIO){ SOM_LIVRE = true; return; } // já está tocando: o som está liberado
+  try {
+    const pl = playerAudio(); pl.src = SILENCIO;
+    const p = pl.play(); if (p) p.then(() => { SOM_LIVRE = true; esconderAvisoSom(); }, () => {}); else SOM_LIVRE = true;
+  } catch(e){}
+  try { if ('speechSynthesis' in window && !destravarAudio.voz){ const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); destravarAudio.voz = true; } } catch(e){}
 }
-['touchend','pointerdown','click','keydown'].forEach(t => document.addEventListener(t, destravarAudio, {capture:true, passive:true}));
+['touchend','click','keydown'].forEach(t => document.addEventListener(t, destravarAudio, {capture:true, passive:true}));
+// Se o celular bloquear o som, aparece um botão para liberar e tocar de novo.
+function avisoSom(){
+  if (document.getElementById('aviso-som')) return;
+  const b = h('button',{id:'aviso-som',type:'button',onclick:() => { SOM_LIVRE = false; destravarAudio(); esconderAvisoSom(); const u = ULTIMA; if (u) setTimeout(() => falar(u.texto, u.prefExtra), 120); }}, icon('sound'), 'Toque para ativar o som');
+  document.body.append(b);
+}
+function esconderAvisoSom(){ const b = document.getElementById('aviso-som'); if (b) b.remove(); }
 const autoAudio = () => prefVoz().auto !== false;
 const chaveVoz = (texto, pref) => pref.gemini + '|' + (pref.velocidade < 0.95 ? 1 : 0) + '|' + texto;
 function hashTxt(t){ let x = 5381; for (let i = 0; i < t.length; i++) x = ((x * 33) ^ t.charCodeAt(i)) >>> 0; return x.toString(36) + '-' + t.length; }
 const CACHE_VOZ = 'idioma-voz-v1', urlVoz = k => location.origin + '/__voz/' + hashTxt(k);
-async function lerCacheVoz(k){ try { if (!window.caches) return null; const r = await (await caches.open(CACHE_VOZ)).match(urlVoz(k)); return r ? await r.arrayBuffer() : null; } catch(e){ return null; } }
-function gravarCacheVoz(k, buf){ try { if (window.caches) caches.open(CACHE_VOZ).then(c => c.put(urlVoz(k), new Response(buf, {headers:{'Content-Type':'audio/wav'}}))).catch(() => {}); } catch(e){} }
+async function lerCacheVoz(k){ try { if (!window.caches) return null; const r = await (await caches.open(CACHE_VOZ)).match(urlVoz(k)); return r ? await r.blob() : null; } catch(e){ return null; } }
+function gravarCacheVoz(k, blob){ try { if (window.caches) caches.open(CACHE_VOZ).then(c => c.put(urlVoz(k), new Response(blob, {headers:{'Content-Type':'audio/wav'}}))).catch(() => {}); } catch(e){} }
 let emVoo = 0; const esperando = [];
 function limitar(fn, urgente){
   return new Promise((res, rej) => {
@@ -884,15 +898,15 @@ function prepararAudio(texto, prefExtra, urgente){
   if (pref.motor !== 'gemini' || !GEMINI_VOZ_OK) return Promise.resolve(null);
   const k = chaveVoz(texto, pref);
   if (audioPronto.has(k)) return audioPronto.get(k);
-  const p = lerCacheVoz(k).then(buf => buf || limitar(() => api('tts', {text:texto, voice:pref.gemini, slow: pref.velocidade < 0.95}), urgente)
-    .then(d => wavBlob(d.audio, d.mime).arrayBuffer()).then(b => { gravarCacheVoz(k, b); return b; }));
+  const p = lerCacheVoz(k).then(b => b || limitar(() => api('tts', {text:texto, voice:pref.gemini, slow: pref.velocidade < 0.95}), urgente)
+    .then(d => { const blob = wavBlob(d.audio, d.mime); gravarCacheVoz(k, blob); return blob; }))
+    .then(blob => URL.createObjectURL(blob));
   audioPronto.set(k, p);
   p.catch(e => { audioPronto.delete(k); if (e && (e.code === 'bad_request' || e.code === 'config')) GEMINI_VOZ_OK = false; });
   return p;
 }
 function pararSom(){
-  if (FONTE){ try { FONTE.onended = null; FONTE.stop(); } catch(e){} FONTE = null; }
-  try { if (PLAYER){ PLAYER.onended = null; PLAYER.pause(); } } catch(e){}
+  try { if (PLAYER){ PLAYER.onended = null; PLAYER.onerror = null; PLAYER.pause(); } } catch(e){}
   try { speechSynthesis.cancel(); } catch(e){}
   const f = fimAtual; fimAtual = null; if (f) f();
 }
@@ -912,44 +926,36 @@ function falarAparelho(texto, pref){
     } catch(e){ res(false); }
   });
 }
-function tocarBuffer(buf, pref){
+function tocarUrl(url, pref, texto){
   return new Promise(res => {
-    let feito = false; const fim = () => { if (feito) return; feito = true; if (fimAtual === fim) fimAtual = null; res(true); };
-    const taxa = pref.velocidade < 0.8 ? 0.85 : 1;
-    const elemento = () => {
-      try {
-        if (!PLAYER) PLAYER = new Audio();
-        const url = URL.createObjectURL(new Blob([buf], {type:'audio/wav'}));
-        PLAYER.src = url; PLAYER.playbackRate = taxa; PLAYER.onended = () => { URL.revokeObjectURL(url); fim(); };
-        fimAtual = fim;
-        const p = PLAYER.play(); if (p) p.catch(() => { fimAtual = null; falarAparelho(PLAYER.dataset.texto || '', pref).then(() => res(false)); });
-      } catch(e){ res(false); }
-    };
-    const a = ctxAudio();
-    if (!a || a.state !== 'running') return elemento();
+    let feito = false; const fim = ok => { if (feito) return; feito = true; if (fimAtual === fim) fimAtual = null; res(ok !== false); };
     try {
-      a.decodeAudioData(buf.slice(0), b => {
-        const s = a.createBufferSource(); s.buffer = b; s.playbackRate.value = taxa; s.connect(a.destination);
-        s.onended = () => { if (FONTE === s) FONTE = null; fim(); };
-        FONTE = s; fimAtual = fim; s.start(0);
-        setTimeout(fim, b.duration * 1000 / taxa + 1500);
-      }, () => elemento());
-    } catch(e){ elemento(); }
+      const pl = playerAudio();
+      pl.onended = () => fim(true); pl.onerror = () => fim(false);
+      pl.src = url; pl.playbackRate = pref.velocidade < 0.8 ? 0.85 : 1;
+      fimAtual = fim;
+      const p = pl.play();
+      if (p) p.then(() => { SOM_LIVRE = true; esconderAvisoSom(); }, err => {
+        if (feito) return;
+        if (err && err.name === 'NotAllowedError'){ SOM_LIVRE = false; avisoSom(); }
+        fim(false);
+      });
+      setTimeout(() => fim(true), 20000);
+    } catch(e){ fim(false); }
   });
 }
 // Fala o texto e devolve quando terminar. Se a voz natural demorar, usa a do celular para não deixar em silêncio.
 function falar(texto, prefExtra){
   texto = String(texto || '').trim(); if (!texto) return Promise.resolve(false);
   const pref = Object.assign(prefVoz(), prefExtra || {}), id = ++FALA_ID;
+  ULTIMA = {texto, prefExtra};
   pararSom();
   if (pref.motor !== 'gemini' || !GEMINI_VOZ_OK) return falarAparelho(texto, pref);
-  destravarAudio();
-  if (PLAYER) PLAYER.dataset.texto = texto;
-  const limite = new Promise(res => setTimeout(() => res('tempo'), 6000));
-  return Promise.race([prepararAudio(texto, prefExtra, true), limite]).then(buf => {
+  const limite = new Promise(res => setTimeout(() => res('tempo'), 7000));
+  return Promise.race([prepararAudio(texto, prefExtra, true), limite]).then(url => {
     if (id !== FALA_ID) return false;
-    if (buf === 'tempo' || !buf) return falarAparelho(texto, pref);
-    return tocarBuffer(buf, pref);
+    if (url === 'tempo' || !url) return falarAparelho(texto, pref);
+    return tocarUrl(url, pref, texto);
   }, () => id === FALA_ID ? falarAparelho(texto, pref) : false);
 }
 // Fila de falas automáticas da tela: tocam uma depois da outra.
