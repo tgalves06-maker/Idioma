@@ -377,6 +377,48 @@ nav#tabs{background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop
 @media (prefers-reduced-motion: reduce){.acao,.hud-bau,.grava.on,.nivel-up{animation:none}}
 
 #aviso-som{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:999px;background:#F59E0B;color:#1B1F2E;font:700 14px var(--font-ui);box-shadow:0 8px 24px rgba(0,0,0,.3);animation:pulsa 1.6s infinite}
+
+/* ===== situações ===== */
+.cena-obj{flex-direction:column;align-items:stretch;gap:6px}
+.obj-ir{border:0;border-radius:999px;padding:4px 12px;background:rgba(0,0,0,.14);color:#1B1F2E;font:800 12px var(--font-ui);display:inline-flex;align-items:center;gap:4px}
+.obj-ir.sec{background:rgba(255,255,255,.55)}
+.obj-ir .ic svg{width:15px;height:15px}
+.passos-dots{display:flex;gap:4px}
+.passos-dots i{flex:1;height:4px;border-radius:9px;background:rgba(0,0,0,.15)}
+.passos-dots i.feito{background:#15803D}.passos-dots i.atual{background:#1B1F2E}
+.cena .toast-mundo{top:150px}
+.hud-lugar{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;padding:8px 12px;border-radius:999px;background:rgba(15,20,40,.62);color:#FFFFFF;font:700 13px var(--font-ui)}
+.hud .vidas{background:rgba(15,20,40,.62);border-radius:999px;padding:6px 10px}
+.hud-lista{border:0;border-radius:999px;padding:8px 12px;background:#FFFFFF;color:#1B1F2E;font:700 13px var(--font-ui)}
+.dlg.grande{max-height:86%}
+.ic-grande{font-size:32px;line-height:1;width:44px;text-align:center}
+.dlg-fala.oculta{color:var(--muted);font-style:italic}
+.cardapio{display:grid;gap:6px;padding:12px;border-radius:14px;background:#1F2937;color:#F8FAFC;border:3px solid #8B5A2B}
+.menu-item{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;border:1.5px dashed rgba(248,250,252,.25);background:transparent;color:inherit;font:600 16px var(--font-ui);text-align:left}
+.menu-item[aria-pressed="true"]{background:#FACC15;color:#1B1F2E;border-style:solid}
+.painel-quadro{display:grid;gap:3px;padding:10px;border-radius:12px;background:#0B1220}
+.painel-linha{display:grid;grid-template-columns:1fr 56px 52px;gap:8px;align-items:center;padding:9px 10px;border:0;border-radius:6px;background:#111A2E;color:#FACC15;font:700 14px ui-monospace,Menlo,monospace;text-align:left}
+.painel-linha.cab{background:transparent;color:#94A3B8;font-size:11px;padding-block:2px}
+.painel-linha b{text-align:center}
+button.painel-linha:active{background:#1E2B4A}
+.pg-carteira{display:flex;flex-wrap:wrap;gap:8px}
+.din{border:0;font:800 14px var(--font-ui);color:#1B1F2E;box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.din.nota{min-width:74px;padding:12px 10px;border-radius:8px;background:linear-gradient(135deg,#BBF7D0,#86EFAC)}
+.din.moeda{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FDE68A,#EAB308)}
+.pg-linha{display:flex;justify-content:space-between;align-items:center}
+.pg-total{font:800 22px var(--font-display)}
+.pg-bandeja{display:flex;flex-wrap:wrap;gap:6px;min-height:40px;padding:8px;border-radius:12px;background:var(--sunk)}
+.pg-bandeja .din{transform:scale(.8)}
+.ficha{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:12px;background:#FFFDF5;color:#1B1F2E;border:1px solid #E5DCC3;box-shadow:inset 0 0 0 4px #FFF8E1}
+.ficha-campo{display:flex;flex-direction:column;gap:5px;padding-bottom:10px;border-bottom:1.5px dashed #D6CCB0}
+.ficha .muted{color:#6B6455}
+.ficha .chip{background:#FFFFFF;color:#1B1F2E;border-color:#D6CCB0}
+.ficha .chip[aria-pressed="true"]{background:#1E3A8A;color:#FFFFFF;border-color:#1E3A8A}
+.lista-item{display:flex;gap:10px;align-items:center;padding:10px;border-radius:10px;background:var(--sunk)}
+.lista-item.ok{opacity:.65;text-decoration:line-through}
+.estrelas-fim{display:flex;justify-content:center;gap:6px;font-size:30px;color:var(--line)}
+.estrelas-fim.grande{font-size:44px}
+.estrelas-fim .on{color:#FACC15;text-shadow:0 2px 0 #B45309}
 </style>
 </head>
 <body>
@@ -1795,7 +1837,7 @@ function abrirBau(){
   save(); confete();
   return premio;
 }
-function jogar(r, i){ const tipo = NOS[i]; if (!noLiberado(r, i)) return; if (tipo === 'missao') jogarMissao(r, i); else jogarBatalha(r, i, tipo === 'chefe'); }
+function jogar(r, i){ const tipo = NOS[i]; if (!noLiberado(r, i)) return; if (tipo === 'missao') entrarCena(r, i); else jogarBatalha(r, i, tipo === 'chefe'); }
 function topoJogo(titulo, vidas, max){
   return h('div',{class:'row between'}, h('button',{class:'btn link',type:'button',style:'padding:0',onclick:() => { goTab('inicio'); }},'Mapa'),
     h('b',{class:'small',style:'text-align:center;flex:1'}, titulo || ''), vidas != null ? vidasEl(vidas, max) : moedasEl());
@@ -1941,6 +1983,7 @@ function vitoria(r, i, tipo, info){
   const j = J(), tm = TEMAS[j.tema];
   const ganho = {missao:[30,20], batalha:[40,25], chefe:[100,60]}[tipo];
   const primeira = !noFeito(r, i);
+  if (info && info.estrelas) ganho[0] += info.estrelas * 10;
   j.moedas += ganho[0]; addXP(ganho[1]); const xp = ganharHXP({missao:40, batalha:50, chefe:120}[tipo]); const bonus = touchDay(); if (bonus) addXP(bonus);
   j.feitos[noId(r, i)] = true;
   let item = null;
@@ -1951,6 +1994,8 @@ function vitoria(r, i, tipo, info){
   show('jogo', h('div',{class:'festa'}, festa,
       h('h1',null, tipo === 'chefe' ? 'Chefe derrotado!' : tipo === 'batalha' ? 'Vitória!' : 'Missão cumprida!'),
       h('p',{class:'muted'}, tipo === 'chefe' && info.erro ? 'Você venceu o erro "' + info.erro + '". Ele sai da sua lista de pontos fracos se continuar acertando.' : info.recompensa ? 'Você conseguiu: ' + info.recompensa + '.' : 'Mandou bem, ' + S.profile.name + '.')),
+    info && info.estrelas ? h('div',{class:'estrelas-fim grande'}, [1,2,3].map(x => h('span',{class:x <= info.estrelas ? 'on' : ''}, '★'))) : null,
+    info && info.estrelas ? h('p',{class:'small muted',style:'text-align:center;margin-top:-8px'}, info.estrelas === 3 ? 'Perfeito: sem erros e sem dicas!' : 'Volte depois para tentar as 3 estrelas: menos erros e menos dicas.') : null,
     h('div',{class:'stat'},
       h('div',null, moedasEl2, h('span',null, tm.moeda)),
       h('div',null, h('b',null,'+' + xp), h('span',null,'XP do herói')),
@@ -2002,8 +2047,8 @@ const MUNDO_MAPAS = [
 "#TTT.....,......TTT#",
 "#########GG#########",
 "#T*......,,V.....TT#",
-"#T.......,......c..#",
-"#..f.....,.....f...#",
+"#T.......,...Hhhc..#",
+"#..f.....,...hhh...#",
 "#....2...,.......S.#",
 "#T.......,.......TT#",
 "#~~~~~~~~=~~~~~~~~~#",
@@ -2032,8 +2077,8 @@ const MUNDO_MAPAS = [
 "#TTTT....,....TTTTT#",
 "#############G######",
 "#TTT...V..,,,,..TTT#",
-"#TT..f...,,...f..TT#",
-"#T*....,,....c....T#",
+"#TT..f...,,...HhhTT#",
+"#T*....,,....chhh.T#",
 "#TT...,,..........T#",
 "#T....,...r..2..TTT#",
 "#TT...,.........TTT#",
@@ -2095,9 +2140,9 @@ const MUNDO_MAPAS = [
 "##########GG########",
 "#r.......V,......r.#",
 "#..c......,....rr..#",
-"#.rr......,..2.....#",
-"#.......,,,........#",
-"#T..f...,....*...T.#",
+"#.rr......,..2Hhh..#",
+"#.......,,,...hhh..#",
+"#T..f...,........T*#",
 "#~~~~~~~~=~~~~~~~~~#",
 "#~~~~k~~~E~~~~~~~~~#",
 "#~~~~~~~~,~~~~~~~~~#",
@@ -2189,7 +2234,7 @@ function montarMapa(r){
     else if ('12VCEabc$'.includes(ch)){ ent[ch] = {k:ch, x, y, hx:x, hy:y, px:x, py:y, dir:'s', passo:0, mov:null, espera:2 + Math.random() * 3}; ch = chaoSob(rows, x, y, ch); }
     if (ch === 'P') porta = {x, y};
     if ('TnlrxoSk*G'.includes(ch)) objs.push({c:ch, x, y, base:y + 1});
-    if (ch === 'H') objs.push({c:'H', x, y, base:y + 2});
+    if (ch === 'H'){ const l = (LOCAIS[r] || []).find(z => z.x === x && z.y === y); objs.push({c:'H', x, y, base:y + 2, local:l || null}); }
     t.push(ch);
   }
   return {r, W, H, t, ent, objs, ini, porta};
@@ -2208,7 +2253,7 @@ function promptRegiao(tm, r){
   const L = nomeIdioma(S.profile.target);
   const pessoa = '{"nome": nome próprio, "papel": profissão ou papel em ' + S.profile.native + ' (2 a 4 palavras), "ola": fala curta em ' + L + ', "ola_t": tradução}';
   return 'TAREFA: aventura_regiao\n' + baseAventura(tm, r) + '\n\nCrie os moradores e textos desta região de um mundo aberto que o aluno explora andando. Responda SOMENTE com um objeto JSON:\n' +
-    '{"npc1": ' + pessoa + ' (na fala, apresenta um problema do dia a dia e pede ajuda),\n "npc2": ' + pessoa + ' (mora do outro lado da ponte e também pede ajuda),\n "guardiao": ' + pessoa + ' (guarda o portão e só deixa passar quem fala em voz alta),\n "mercador": ' + pessoa + ' (vende itens),\n' +
+    '{"npc1": ' + pessoa + ' (na fala, pede ajuda ao aluno para ' + CENAS[localDe(r, 0).cena].pedido + '),\n "npc2": ' + pessoa + ' (mora do outro lado da ponte e pede ajuda para ' + CENAS[localDe(r, 2).cena].pedido + '),\n "guardiao": ' + pessoa + ' (guarda o portão e só deixa passar quem fala em voz alta),\n "mercador": ' + pessoa + ' (vende itens),\n' +
     ' "moradores": lista com 3 itens {"nome", "papel", "ola": fala curta em ' + L + ' puxando assunto, "ola_t", "pergunta": pergunta simples em ' + L + ' para o aluno, "pergunta_t", "opcoes": [3 respostas em ' + L + '], "certa": índice da resposta adequada, "reacao": reação curta em ' + L + ' à resposta certa, "reacao_t"},\n' +
     ' "placas": lista com 3 itens {"texto": aviso curto em ' + L + ' do tipo que se lê numa placa de rua, loja ou estação, "texto_t": tradução},\n' +
     ' "inimigo": nome do inimigo que bloqueia a ponte, "inimigo_fala": provocação curta dele em ' + L + ', "inimigo_fala_t": tradução, "chefe_fala": ameaça curta do chefe em ' + L + ', "chefe_fala_t": tradução}\n' +
@@ -2245,9 +2290,10 @@ function avatarEnt(r, k){ return avatarDeSemente(J().tema + r + k + nomeEnt(r, k
 /* ---------- objetivo atual ---------- */
 function objetivo(r){
   const p = packDe(r);
-  if (!noFeito(r, 0)) return {t:'Fale com ' + p.npc1.nome + ', que precisa de ajuda', alvo:'1'};
+  const aceita = i => !!(MW().aceitas || {})[r + '-' + i], lugar = i => { const l = localDe(r, i); return l ? CENAS[l.cena].emoji + ' ' + nomeLugar(l.cena) : ''; };
+  if (!noFeito(r, 0)) return aceita(0) && localDe(r, 0) ? {t:'Entre no lugar da missão: ' + lugar(0), alvo:'L0'} : {t:'Fale com ' + p.npc1.nome + ', que precisa de ajuda', alvo:'1'};
   if (!noFeito(r, 1)) return {t:'Derrote ' + nomeEnt(r, 'E') + ' na ponte', alvo:'E'};
-  if (!noFeito(r, 2)) return {t:'Ajude ' + p.npc2.nome + ' do outro lado do rio', alvo:'2'};
+  if (!noFeito(r, 2)) return aceita(2) && localDe(r, 2) ? {t:'Entre no lugar da missão: ' + lugar(2), alvo:'L2'} : {t:'Ajude ' + p.npc2.nome + ' do outro lado do rio', alvo:'2'};
   if (!vozFeita(r)) return {t:'Fale em voz alta com o guardião ' + p.guardiao.nome, alvo:'V'};
   if (!noFeito(r, 3)) return {t:'Enfrente o chefe depois do portão', alvo:'C'};
   if (r + 1 < MUNDO_MAPAS.length) return {t:'Entre no portal para ' + TEMAS[J().tema].regioes[r + 1], alvo:'P'};
@@ -2407,6 +2453,7 @@ function desenharObj(c, o, sk, t, m){
     c.fillStyle = '#5A3A24'; rr(c, X + W / 2 - 7, Y + 2 * T - 22, 14, 22, 4); c.fill(); c.fillStyle = '#FFD84A'; c.beginPath(); c.arc(X + W / 2 + 4, Y + 2 * T - 11, 1.4, 0, 7); c.fill();
     const noite = MUNDO ? MUNDO.esc > .2 : false;
     c.fillStyle = noite ? 'rgb(' + sk.luz + ')' : '#BFE3F7';
+    if (o.local){ desenharPlacaLocal(c, o, X, Y, W, m); return; }
     for (const wx of [X + 14, X + W - 30]){ c.fillRect(wx, Y + 28, 16, 13); c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(wx + 7, Y + 28, 2, 13); c.fillRect(wx, Y + 34, 16, 1.5); c.fillStyle = noite ? 'rgb(' + sk.luz + ')' : '#BFE3F7'; }
   } else if (o.c === 'n'){
     c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(X + 3, Y + 22, 26, 5);
@@ -2461,6 +2508,19 @@ function desenharObj(c, o, sk, t, m){
   }
 }
 
+function desenharPlacaLocal(c, o, X, Y, W, m){
+  const T = TILE, sp2 = CENAS[o.local.cena], nome = sp2.emoji + ' ' + nomeLugar(o.local.cena), est = estrelasDe(o.local.cena), aberto = noLiberado(m.r, o.local.i);
+  // vitrine no lugar das janelas
+  c.fillStyle = '#BFE3F7'; c.fillRect(X + 10, Y + 26, W - 20, 14); c.fillStyle = 'rgba(255,255,255,.5)'; c.fillRect(X + 14, Y + 28, 6, 10);
+  c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(X + W / 2 - 8, Y + 26, 16, 14);
+  // toldo listrado
+  for (let i = 0; i < 6; i++){ c.fillStyle = i % 2 ? '#FFFFFF' : sp2.tapete; c.fillRect(X + 6 + i * (W - 12) / 6, Y + 18, (W - 12) / 6 + .5, 7); }
+  // placa com o nome no idioma estudado
+  c.font = '800 10px system-ui, "Apple Color Emoji", sans-serif'; const tw = c.measureText(nome).width + 14;
+  c.fillStyle = aberto ? '#0F172A' : '#475569'; rr(c, X + W / 2 - tw / 2, Y - 22, tw, 17, 6); c.fill();
+  c.fillStyle = '#FFFFFF'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(nome, X + W / 2, Y - 13);
+  if (est){ c.font = '700 10px system-ui, sans-serif'; c.fillStyle = '#FACC15'; c.fillText('★'.repeat(est) + '☆'.repeat(3 - est), X + W / 2, Y - 30); }
+}
 /* ---------- estado do mundo na tela ---------- */
 let MUNDO = null;
 function revelar(W, x, y){
@@ -2604,8 +2664,10 @@ function telaMundo(rForcada){
     return true;
   };
   const virarPara = (x, y) => { const H0 = W.heroi; H0.dir = x > H0.x ? 'e' : x < H0.x ? 'w' : y > H0.y ? 's' : 'n'; };
+  const portaLocal = l => ({x:l.x + 1, y:l.y + 2});
   const irAte = k => {
     if (k === 'P'){ if (m.porta) andarAte([m.porta]); return; }
+    if (k === 'L0' || k === 'L2'){ const l = localDe(r, Number(k[1])); if (l){ const pt = portaLocal(l); andarAte([pt], () => { W.heroi.dir = 'n'; interagir({local:l}); }); } return; }
     const e = m.ent[k]; if (!e || !entAtiva(m, e)) return;
     andarAte(vizinhosLivres(m, e.x, e.y), () => { virarPara(e.x, e.y); interagir({ent:e}); }, e, () => irAte(k));
   };
@@ -2623,6 +2685,8 @@ function telaMundo(rForcada){
     if (Math.abs(p.x - Math.round(W.pet.px)) + Math.abs(p.y - Math.round(W.pet.py)) === 0){ dicaPet(); return; }
     const e = entEm(m, p.x, p.y);
     if (e){ irAte(e.k); return; }
+    const lcT = localNoTile(p.x, p.y);
+    if (lcT){ andarAte([portaLocal(lcT)], () => { W.heroi.dir = 'n'; interagir({local:lcT}); }); return; }
     if (solido(m, p.x, p.y)){
       const c = tileEm(m, p.x, p.y);
       andarAte(vizinhosLivres(m, p.x, p.y), () => { virarPara(p.x, p.y); interagir({tile:c, x:p.x, y:p.y}); });
@@ -2658,12 +2722,16 @@ function telaMundo(rForcada){
       const x = H0.x + dx, y = H0.y + dy, e = entEm(m, x, y);
       if (e && pri > 0){ melhor = {ent:e}; pri = 0; }
       const c = tileEm(m, x, y);
+      const lc = !e && (c === 'h' || c === 'H') ? localNoTile(x, y) : null;
+      if (lc && pri > 0){ melhor = {local:lc}; pri = .5; }
       if (!e && 'S*G'.includes(c) && pri > 1){ melhor = {tile:c, x, y}; pri = 1; }
       if (!e && palavraDe(c) && pri > 2){ melhor = {tile:c, x, y}; pri = 2; }
     }
     return melhor;
   };
+  const localNoTile = (x, y) => (LOCAIS[r] || []).find(l => x >= l.x && x < l.x + 3 && y >= l.y && y < l.y + 2) || null;
   const rotuloAcao = a => {
+    if (a.local) return ['flag', 'Entrar'];
     if (a.ent) return a.ent.k === 'E' || a.ent.k === 'C' ? ['swords', 'Enfrentar'] : ['chat', 'Falar'];
     if (a.tile === 'S') return ['book', 'Ler'];
     if (a.tile === '*') return ['chest', 'Abrir'];
@@ -2695,6 +2763,7 @@ function telaMundo(rForcada){
   function interagir(a){
     W.alvoPerto = null; acao.hidden = true;
     if (a.ent) return falarCom(a.ent);
+    if (a.local) return entrarLocal(a.local);
     const c = a.tile;
     if (c === 'S'){
       const i = m.objs.filter(o => o.c === 'S').findIndex(o => o.x === a.x && o.y === a.y), pl = (packDe(r).placas || [])[i];
@@ -2725,6 +2794,16 @@ function telaMundo(rForcada){
       if (nova){ w.palavras[k] = 1; addWord({w:p.alvo, t:p.pt}); faiscas(a.x, a.y, '#FDE047'); recompensa(5, 0, 'Palavra descoberta: ' + p.alvo + '.'); }
     }
   }
+  function entrarLocal(l){
+    const sp2 = CENAS[l.cena], n = l.i === 0 ? packDe(r).npc1 : packDe(r).npc2, est = estrelasDe(l.cena);
+    const quem = {nome:sp2.emoji + ' ' + nomeLugar(l.cena), papel:sp2.nome + ' · nível ' + sp2.nivel, el:h('span',{class:'ic-grande'}, sp2.emoji)};
+    if (!noLiberado(r, l.i)){ abrirDlg(quem, [narra('Ainda está fechado. Siga a história: ' + objetivo(r).t + '.')], [btn('Ok', fecharDlg, true)]); return; }
+    if (!noFeito(r, l.i) && !(MW().aceitas || {})[r + '-' + l.i]){ abrirDlg(quem, [narra('Fale primeiro com ' + n.nome + ': é por causa dele(a) que você vai entrar aqui.')], [btn('Ir até ' + n.nome, () => { fecharDlg(); irAte(l.i === 0 ? '1' : '2'); }), btn('Fechar', fecharDlg, true)]); return; }
+    const feito = noFeito(r, l.i);
+    abrirDlg(quem, [narra(feito ? 'Quer treinar de novo? Cada visita tem falas e situações novas.' : 'Situação: ' + sp2.pedido + '.'), est ? h('div',{class:'estrelas-fim'}, [1,2,3].map(x => h('span',{class:x <= est ? 'on' : ''}, '★'))) : null,
+      h('p',{class:'small muted'}, 'Tudo acontece em ' + nomeIdioma(S.profile.target) + '. Errar tira corações; acertar sem dicas dá 3 estrelas.')],
+      [btn(feito ? 'Treinar de novo' : 'Entrar', () => { fecharDlg(); entrarCena(r, l.i); }), btn('Agora não', fecharDlg, true)]);
+  }
   function cartaoPalavra(p){ return h('div',{class:'palavra-card'}, h('b',{class:'alvo'}, p.alvo), h('span',{class:'muted'}, p.pt), ouvirBtn(p.alvo)); }
 
   function falarCom(e){
@@ -2734,8 +2813,9 @@ function telaMundo(rForcada){
     if (k === '1' || k === '2'){
       const i = k === '1' ? 0 : 2, n = k === '1' ? p.npc1 : p.npc2;
       quem.papel = str(n.papel);
-      if (!noFeito(r, i)) abrirDlg(quem, [falaEl(str(n.ola), str(n.ola_t)), narra(n.nome + ' precisa da sua ajuda. É uma missão em ' + nomeIdioma(S.profile.target) + '.')],
-        [btn('Aceitar a missão', () => { fecharDlg(); salvarPos(); jogarMissao(r, i); }), btn('Agora não', fecharDlg, true)]);
+      const lc = localDe(r, i);
+      if (!noFeito(r, i)) abrirDlg(quem, [falaEl(str(n.ola), str(n.ola_t)), lc ? h('div',{class:'note'}, h('b',null, CENAS[lc.cena].emoji + ' Missão: ' + CENAS[lc.cena].nome), h('div',{class:'small'}, 'Você vai ' + CENAS[lc.cena].pedido + ', tudo em ' + nomeIdioma(S.profile.target) + '.')) : narra(n.nome + ' precisa da sua ajuda.')],
+        [btn('Aceitar a missão', () => { fecharDlg(); if (!lc){ salvarPos(); jogarMissao(r, i); return; } const w2 = MW(); if (!w2.aceitas) w2.aceitas = {}; w2.aceitas[r + '-' + i] = 1; save(); pintarHUD(); toastMundo('Vá até ' + CENAS[lc.cena].emoji + ' ' + nomeLugar(lc.cena) + '!'); setTimeout(() => irAte('L' + i), 400); }), btn('Agora não', fecharDlg, true)]);
       else abrirDlg(quem, [narra(k === '1' ? 'Obrigado pela ajuda! Dizem que ' + nomeEnt(r, 'E') + ' bloqueia a ponte ao norte.' : 'Valeu! O guardião ' + p.guardiao.nome + ' cuida do portão. Ele só abre para quem fala em voz alta.')], [btn('Até mais', fecharDlg, true)]);
       return;
     }
@@ -2977,7 +3057,7 @@ function telaMundo(rForcada){
       balao(tela, X, Y, f.txt, Math.min(1, (f.ate - W.t) * 3));
     }
     // seta para o objetivo fora da tela
-    if (ob.alvo){ const e = ob.alvo === 'P' ? m.porta : m.ent[ob.alvo]; if (e){ const ex = ((e.px != null ? e.px : e.x) + .5) * TILE, ey = ((e.py != null ? e.py : e.y) + .5) * TILE;
+    if (ob.alvo){ const lcA = ob.alvo[0] === 'L' ? localDe(r, Number(ob.alvo[1])) : null; const e = ob.alvo === 'P' ? m.porta : lcA ? portaLocal(lcA) : m.ent[ob.alvo]; if (e){ const ex = ((e.px != null ? e.px : e.x) + .5) * TILE, ey = ((e.py != null ? e.py : e.y) + .5) * TILE;
       if (ex < W.cam.x || ex > W.cam.x + vw || ey < W.cam.y || ey > W.cam.y + vh){
         const cxv = W.cam.x + vw / 2, cyv = W.cam.y + vh / 2, ang = Math.atan2(ey - cyv, ex - cxv);
         const ax = clamp(cxv + Math.cos(ang) * vw, W.cam.x + 26, W.cam.x + vw - 26), ay = clamp(cyv + Math.sin(ang) * vh, W.cam.y + 90, W.cam.y + vh - 110);
@@ -3078,6 +3158,7 @@ function promptAvaliarFala(tv, item, hist){
   const L = nomeIdioma(S.profile.target), N = S.profile.native;
   let tarefa;
   if (tv.k === 'repetir') tarefa = 'O aluno devia repetir em voz alta esta frase: "' + item.texto + '". Compare o que ele disse com a frase; a comunicação mede se ele disse a frase completa.';
+  else if (tv.k === 'situacao') tarefa = 'É uma simulação de situação real (' + item.lugar + '). O aluno devia falar em voz alta para: ' + item.texto + (item.exemplo ? ' (um exemplo possível: "' + item.exemplo + '")' : '') + '. Avalie se a fala cumpre isso de forma natural e educada; outras formas corretas valem tanto quanto o exemplo.';
   else if (tv.k === 'responder') tarefa = 'Ele ouviu a pergunta "' + item.texto + '" e devia responder falando uma frase completa e coerente.';
   else if (tv.k === 'conversa') tarefa = 'É uma conversa falada com o guardião do portão. Até agora:\n' + hist.map(t => (t.g ? 'Guardião: ' : 'Aluno: ') + t.texto).join('\n') + '\nO aluno responde agora à última fala do guardião.';
   else tarefa = (item.extra ? 'O guardião fez a pergunta "' + item.texto + '" e o aluno responde falando.' : 'O aluno devia falar por cerca de 30 segundos sobre: "' + item.texto + '".') + ' Avalie também fluência, vocabulário e coerência.';
@@ -3273,6 +3354,999 @@ function telaVoz(r, dados){
   };
   if (dados) rodar(dados);
   else runAI(box, p.guardiao.nome + ' está preparando o desafio...', () => ai(promptVoz(tm, r, tv, p.guardiao)), rodar);
+}
+
+
+/* ============================== situações da vida real ============================== */
+// Cada missão acontece num lugar de verdade (café, mercado, estação...) que o herói percorre.
+// O lugar é desenhado aqui; o Gemini escreve as falas, preços e textos no nível do aluno;
+// os passos são mini-jogos: diálogo, cardápio, painel, pagar contando dinheiro, ficha, seguir direções e falar.
+const LUGAR_NOME = {
+  cafe:{en:'Café', es:'Cafetería', fr:'Café', it:'Bar', de:'Café', pt:'Café'},
+  mercado:{en:'Supermarket', es:'Supermercado', fr:'Supermarché', it:'Supermercato', de:'Supermarkt', pt:'Supermercado'},
+  estacao:{en:'Train station', es:'Estación de tren', fr:'Gare', it:'Stazione', de:'Bahnhof', pt:'Estação de trem'},
+  hotel:{en:'Hotel', es:'Hotel', fr:'Hôtel', it:'Hotel', de:'Hotel', pt:'Hotel'},
+  aeroporto:{en:'Airport', es:'Aeropuerto', fr:'Aéroport', it:'Aeroporto', de:'Flughafen', pt:'Aeroporto'},
+  cidade:{en:'Bus to downtown', es:'Bus al centro', fr:'Bus centre-ville', it:'Bus per il centro', de:'Bus ins Zentrum', pt:'Ônibus para o centro'},
+  escritorio:{en:'Office', es:'Oficina', fr:'Bureau', it:'Ufficio', de:'Büro', pt:'Escritório'},
+  medico:{en:'Clinic', es:'Clínica', fr:'Clinique', it:'Clinica', de:'Arztpraxis', pt:'Clínica'}
+};
+const ROTULOS = {
+  plataforma:{en:'Platform', es:'Andén', fr:'Quai', it:'Binario', de:'Gleis', pt:'Plataforma'},
+  portao:{en:'Gate', es:'Puerta', fr:'Porte', it:'Gate', de:'Flugsteig', pt:'Portão'},
+  sala:{en:'Room', es:'Sala', fr:'Salle', it:'Sala', de:'Raum', pt:'Sala'},
+  consultorio:{en:'Exam room', es:'Consulta', fr:'Cabinet', it:'Ambulatorio', de:'Zimmer', pt:'Consultório'},
+  lojas:{en:['Bank','Pharmacy','Museum','Post office','Bakery','Bookshop'], es:['Banco','Farmacia','Museo','Correos','Panadería','Librería'], fr:['Banque','Pharmacie','Musée','La Poste','Boulangerie','Librairie'],
+         it:['Banca','Farmacia','Museo','Ufficio postale','Panetteria','Libreria'], de:['Bank','Apotheke','Museum','Post','Bäckerei','Buchhandlung'], pt:['Banco','Farmácia','Museu','Correios','Padaria','Livraria']}
+};
+const rot = (k, lang) => { const t = ROTULOS[k]; return t[lang] || t.en; };
+const DIRECOES = {
+  en:{reto:'Go straight', esq:'turn left', dir:'turn right', depois:'then', ladoE:"It's on your left.", ladoD:"It's on your right.", frente:"It's right in front of you."},
+  es:{reto:'Sigue recto', esq:'gira a la izquierda', dir:'gira a la derecha', depois:'luego', ladoE:'Está a tu izquierda.', ladoD:'Está a tu derecha.', frente:'Está justo enfrente.'},
+  fr:{reto:'Allez tout droit', esq:'tournez à gauche', dir:'tournez à droite', depois:'puis', ladoE:"C'est sur votre gauche.", ladoD:"C'est sur votre droite.", frente:"C'est juste en face."},
+  it:{reto:'Vai dritto', esq:'gira a sinistra', dir:'gira a destra', depois:'poi', ladoE:'È sulla tua sinistra.', ladoD:'È sulla tua destra.', frente:'È proprio di fronte.'},
+  de:{reto:'Geh geradeaus', esq:'bieg links ab', dir:'bieg rechts ab', depois:'dann', ladoE:'Es ist auf der linken Seite.', ladoD:'Es ist auf der rechten Seite.', frente:'Es ist direkt vor dir.'},
+  pt:{reto:'Siga em frente', esq:'vire à esquerda', dir:'vire à direita', depois:'depois', ladoE:'Fica à sua esquerda.', ladoD:'Fica à sua direita.', frente:'Fica bem na sua frente.'}
+};
+const FRASE_PRECO = {en:"That's {v}, please.", es:'Son {v}, por favor.', fr:'Ça fait {v}, s’il vous plaît.', it:'Sono {v}, per favore.', de:'Das macht {v}, bitte.', pt:'Fica {v}, por favor.'};
+const moedaDe = lang => lang === 'en' ? 'USD' : lang === 'pt' ? 'BRL' : 'EUR';
+const DINHEIRO = {USD:[20,10,5,1,.5], EUR:[50,20,10,5,2,1,.5], BRL:[50,20,10,5,2,1,.5]};
+function fmtPreco(v, lang){ try { return new Intl.NumberFormat(LANGS[lang].tts, {style:'currency', currency:moedaDe(lang)}).format(v); } catch(e){ return v.toFixed(2); } }
+const precoOk = v => clamp(Math.round((Number(v) || 0) * 2) / 2, .5, 200);
+Object.assign(PALAVRAS, {
+  mesa:{pt:'mesa', en:'table', es:'la mesa', fr:'la table', it:'il tavolo', de:'der Tisch', p:'a mesa'},
+  cadeira:{pt:'cadeira', en:'chair', es:'la silla', fr:'la chaise', it:'la sedia', de:'der Stuhl', p:'a cadeira'},
+  balcao:{pt:'balcão', en:'counter', es:'el mostrador', fr:'le comptoir', it:'il bancone', de:'die Theke', p:'o balcão'},
+  prateleira:{pt:'prateleira', en:'shelf', es:'el estante', fr:"l'étagère", it:'lo scaffale', de:'das Regal', p:'a prateleira'},
+  cardapio:{pt:'cardápio', en:'menu', es:'el menú', fr:'le menu', it:'il menù', de:'die Speisekarte', p:'o cardápio'},
+  painel:{pt:'painel de partidas', en:'departures board', es:'el panel de salidas', fr:'le tableau des départs', it:'il tabellone delle partenze', de:'die Anzeigetafel', p:'o painel de partidas'},
+  maquina:{pt:'máquina de passagens', en:'ticket machine', es:'la máquina de billetes', fr:'le distributeur de billets', it:'la biglietteria automatica', de:'der Fahrkartenautomat', p:'a máquina de passagens'},
+  planta:{pt:'planta', en:'plant', es:'la planta', fr:'la plante', it:'la pianta', de:'die Pflanze', p:'a planta'},
+  sofa:{pt:'sofá', en:'sofa', es:'el sofá', fr:'le canapé', it:'il divano', de:'das Sofa', p:'o sofá'},
+  trem:{pt:'trem', en:'train', es:'el tren', fr:'le train', it:'il treno', de:'der Zug', p:'o trem'},
+  janela:{pt:'janela', en:'window', es:'la ventana', fr:'la fenêtre', it:'la finestra', de:'das Fenster', p:'a janela'},
+  mala:{pt:'mala', en:'suitcase', es:'la maleta', fr:'la valise', it:'la valigia', de:'der Koffer', p:'a mala'},
+  porta:{pt:'porta', en:'door', es:'la puerta', fr:'la porte', it:'la porta', de:'die Tür', p:'a porta'},
+  caixa_reg:{pt:'caixa registradora', en:'cash register', es:'la caja registradora', fr:'la caisse', it:'la cassa', de:'die Kasse', p:'a caixa registradora'}
+});
+const CENA_PALAVRA = {t:'mesa', u:'cadeira', c:'balcao', p:'prateleira', K:'maquina', T:'planta', v:'sofa', n:'banco', Z:'trem', z:'trem', w:'janela', x:'mala', q:'portao', o:'fonte', l:'poste', h:'casa'};
+function palavraK(k){ const p = PALAVRAS[k]; if (!p) return null; const lang = S.profile.target; return {k, alvo: lang === 'pt' ? p.p : p[lang] || p.en, pt:p.pt}; }
+
+/* ---------- mapas dos lugares ---------- */
+// # parede  w janela  B painel/cardápio  D saída  @ início  1 2 pessoas  d porta/balcão/placa com rótulo
+// c balcão  t mesa  u cadeira  p prateleira  K máquina  T planta  v sofá  n banco  q fita de fila  g detector (abre na hora certa)
+// Z vagão  z porta do trem  _ trilho  h prédio  o fonte  l poste  , tapete ou calçada
+const CENA_MAPAS = {
+cafe: [
+"##BB##ww##ww#T",
+"#T..........T#",
+"#.cccccc.....#",
+"#....1.......#",
+"#............#",
+"#.utu...utu..#",
+"#............#",
+"#.utu...utu2.#",
+"#............#",
+"#T.....@....T#",
+"#######D######"],
+mercado: [
+"################",
+"#pppp.pppp.pppp#",
+"#..............#",
+"#.pp.pp.pp.pp..#",
+"#.pp.pp.pp.pp..#",
+"#..............#",
+"#.pp.pp.pp.pp..#",
+"#.pp.pp.pp.pp..#",
+"#.........2....#",
+"#.cc...cc......#",
+"#..1...........#",
+"#......@.......#",
+"#######D########"],
+estacao: [
+"##BBB##ww##ww#D#",
+"#............@.#",
+"#.ccc.....K....#",
+"#..1...........#",
+"#..............#",
+"#T..n....n...T.#",
+"#..............#",
+"#.d...d...d...d#",
+"#..............#",
+"#.2............#",
+"#.ZzZZZzZZZzZZz#",
+"#______________#",
+"################"],
+hotel: [
+"##d#d##d#d##d#",
+"#............#",
+"#T....,,....T#",
+"#####.,,.#####",
+"#v...,,,,...v#",
+"#....,,,,....#",
+"#.cccccc.....#",
+"#...1........#",
+"#............#",
+"#T....@.....T#",
+"######D#######"],
+aeroporto: [
+"####BBBB######D#",
+"#.............@#",
+"#.cd..cd..cd...#",
+"#..............#",
+"#T............T#",
+"#qqqqqqq.qqqqqq#",
+"#.........2....#",
+"#######g########",
+"#..............#",
+"#.d...d...d...d#",
+"#..............#",
+"#n.n.n..n.n.n..#",
+"#..............#",
+"################"],
+cidade: [
+"##################",
+"#hhhh.hhhh.hhhhh.#",
+"#hhhh.hhhh.hhhhh.#",
+"#hdhh.hhdh.hhdhh.#",
+"#................#",
+"#.l....,,,....l..#",
+"#......,o,.......#",
+"#.n....,,,....n..#",
+"#................#",
+"#hhhh.hhhh..hhhh.#",
+"#hhdh.hdhh..hdhh.#",
+"#................#",
+"#...1........T...#",
+"#T......@........#",
+"##################"],
+escritorio: [
+"##d####d####d#",
+"#............#",
+"#T..........T#",
+"#####.,,.#####",
+"#T...,,,,...T#",
+"#....,,,,....#",
+"#.cccc.......#",
+"#..1.........#",
+"#........v.v.#",
+"#T....@.....T#",
+"######D#######"],
+medico: [
+"#d###d###d###d#",
+"#.............#",
+"#T...........T#",
+"######.,.######",
+"#n.n..,,,..n.n#",
+"#.....,,,.....#",
+"#..cccc.......#",
+"#...1.........#",
+"#n.n.......T..#",
+"#T.....@......#",
+"#######D#######"]
+};
+
+/* ---------- roteiro de cada lugar ---------- */
+const TROCA = (n, sobre) => 'lista com ' + n + ' trocas de fala {"fala": fala do personagem em L, "fala_t": tradução, "opcoes": [3 respostas do aluno em L, só uma adequada e correta], "certa": índice dela, "reacao": resposta curta do personagem em L à resposta certa, "reacao_t": tradução, "dica": em PT, 1 frase dizendo por que a certa é a melhor} (' + sobre + ')';
+const OUVIR = sobre => '{"fala": ' + sobre + ' em L, "fala_t": tradução, "pergunta": pergunta em PT sobre o que foi dito, "opcoes": [3 respostas em PT], "certa": índice}';
+const FICHA = (n, sobre) => 'lista com ' + n + ' campos {"campo": nome do campo em L, "campo_t": tradução, "info": em PT, o dado que o aluno deve usar (' + sobre + '), "opcoes": [3 valores em L], "certa": índice}';
+const CENAS = {
+  cafe:{fimNpc:'1', nome:'Café', emoji:'☕', nivel:'A1', pedido:'ir ao café da vila pedir um lanche e pagar a conta', piso:['#D6B48C','#CDA97F'], padrao:'madeira', parede:'#F3E3CC', tapete:'#B5835A', rotulo:null,
+    npcs:{'1':'garcom', '2':'cliente'},
+    schema:'{"garcom": nome, "cliente": {"nome", "ola": fala curta em L puxando conversa, "ola_t"}, "cardapio": lista com 6 itens {"item": nome em L, "pt": tradução, "preco": número}, "pedido_pt": em PT, descreva o que o aluno quer pedir (2 itens do cardápio) sem dizer os nomes, "pedido_certo": [os 2 índices desses itens], "dialogo": ' + TROCA(3, '1: cumprimentar e pedir uma mesa; 2: fazer o pedido, a opção certa pede exatamente os itens de pedido_certo; 3: o garçom pergunta se deseja mais alguma coisa') + ', "voz": {"tarefa": em PT, o que o aluno deve falar em voz alta: pedir a conta, "exemplo": frase em L}, "fim": {"fala": despedida do garçom em L, "fala_t"}}',
+    passos:[
+      {t:'dialogo', npc:'1', lista:'dialogo', de:0, ate:1, obj:'Cumprimente o garçom e peça uma mesa'},
+      {t:'menu', obj:'Leia o cardápio na parede e escolha o seu pedido'},
+      {t:'dialogo', npc:'1', lista:'dialogo', de:1, ate:3, obj:'Faça o seu pedido ao garçom'},
+      {t:'voz', npc:'1', obj:'Peça a conta falando'},
+      {t:'pagar', npc:'1', obj:'Pague a conta com o valor exato'},
+      {t:'sair', obj:'Saia do café pela porta'}]},
+  mercado:{fimNpc:'1', nome:'Supermercado', emoji:'🛒', nivel:'A1', pedido:'fazer compras no supermercado com uma lista', piso:['#EEF2F7','#E3E8F0'], padrao:'ladrilho', parede:'#DCEBF5', tapete:'#B8C4D6', rotulo:null,
+    npcs:{'1':'caixa', '2':'funcionario'},
+    schema:'{"caixa": nome, "funcionario": nome, "produtos": lista com 10 itens de mercado {"nome": em L (com artigo, se o idioma usa), "pt": tradução, "emoji": 1 emoji do produto, "preco": número}, "lista": [4 índices de produtos para a lista de compras], "dialogo": ' + TROCA(2, '1: o funcionário oferece ajuda; a opção certa pergunta onde fica o produto do último índice da lista; 2: no caixa, o caixa pergunta algo comum como sacola ou forma de pagamento') + ', "fim": {"fala": despedida do caixa em L, "fala_t"}}',
+    passos:[
+      {t:'coletar', n:3, obj:'Pegue nas prateleiras 3 itens da sua lista'},
+      {t:'dialogo', npc:'2', lista:'dialogo', de:0, ate:1, obj:'Pergunte ao funcionário onde fica o último item'},
+      {t:'direcoes', de:'2', obj:'Siga as direções e pegue o último item'},
+      {t:'dialogo', npc:'1', lista:'dialogo', de:1, ate:2, obj:'Vá até o caixa'},
+      {t:'pagar', npc:'1', obj:'Pague as compras com o valor exato'},
+      {t:'sair', obj:'Saia do mercado'}]},
+  estacao:{fimNpc:'2', nome:'Estação de trem', emoji:'🚆', nivel:'A2', pedido:'comprar uma passagem de trem e embarcar no trem certo', piso:['#C9CDD3','#BFC4CB'], padrao:'pedra', parede:'#E4DED3', tapete:'#9AA3AE', rotulo:'placa',
+    npcs:{'1':'bilheteiro', '2':'fiscal'},
+    schema:'{"bilheteiro": nome, "fiscal": nome, "destino": cidade real de um país onde se fala L, "horario": "HH:MM", "painel": lista com 5 partidas {"destino", "horario", "plataforma": 1 a 4} (uma delas é o destino e horário do aluno; as outras com destinos ou horários diferentes), "dialogo": ' + TROCA(3, '1: pedir uma passagem para o destino; 2: ida ou ida e volta; 3: horário ou assento') + ', "preco": número, "voz": {"tarefa": em PT: perguntar ao fiscal se este trem vai para o destino, "exemplo": frase em L}, "fim": {"fala": fala do fiscal em L desejando boa viagem, "fala_t"}}',
+    passos:[
+      {t:'dialogo', npc:'1', lista:'dialogo', de:0, ate:3, obj:'Compre a passagem na bilheteria'},
+      {t:'pagar', npc:'1', obj:'Pague a passagem com o valor exato'},
+      {t:'painel', obj:'Leia o painel de partidas'},
+      {t:'ir', grupo:'d', obj:'Vá até a plataforma do seu trem'},
+      {t:'voz', npc:'2', obj:'Confirme com o fiscal, falando, se é o trem certo'},
+      {t:'embarcar', obj:'Embarque no trem'}]},
+  hotel:{fimNpc:'v:recepcao', nome:'Hotel', emoji:'🏨', nivel:'A2', pedido:'fazer o check-in no hotel e achar o quarto', piso:['#EDE4D6','#E5DACA'], padrao:'ladrilho', parede:'#F1E6D2', tapete:'#B23A48', rotulo:'porta',
+    npcs:{'1':'recepcionista'},
+    schema:'{"recepcionista": nome, "dialogo": ' + TROCA(2, '1: chegar e dizer que tem reserva; 2: perguntar sobre café da manhã ou wi-fi') + ', "ficha": ' + FICHA(3, 'por exemplo: Você vai ficar 3 noites') + ', "quarto": número do quarto com 3 dígitos (texto), "fala_quarto": fala da recepcionista em L dizendo o número do quarto e o andar, "fala_quarto_t", "voz": {"tarefa": em PT: ligar para a recepção e explicar um problema no quarto (diga qual), "exemplo": frase em L}, "fim": {"fala": resposta da recepção em L resolvendo o problema, "fala_t"}}',
+    passos:[
+      {t:'dialogo', npc:'1', lista:'dialogo', de:0, ate:2, obj:'Faça o check-in na recepção'},
+      {t:'ficha', npc:'1', obj:'Preencha a ficha do hotel'},
+      {t:'ouvir_ir', npc:'1', grupo:'d', obj:'Ouça o número do quarto e encontre a porta'},
+      {t:'voz', npc:'v:recepcao', obj:'Ligue para a recepção e explique o problema'}]},
+  aeroporto:{fimNpc:'v:agente', nome:'Aeroporto', emoji:'✈️', nivel:'B1', pedido:'fazer o check-in, passar pela segurança e embarcar no avião', piso:['#E8ECF1','#DFE4EA'], padrao:'ladrilho', parede:'#D9E4EE', tapete:'#2B4C7E', rotulo:'balcao',
+    npcs:{'2':'seguranca'},
+    schema:'{"atendente": nome, "agente": nome, "voo": código de voo como "LA 3021", "destino": cidade, "horario": "HH:MM", "painel": lista com 5 voos {"voo", "destino", "horario", "balcao": 1 a 3} (um deles é o voo do aluno), "dialogo": ' + TROCA(3, 'check-in: passaporte, malas, assento') + ', "seguranca": ' + OUVIR('instruções do agente de segurança') + ', "anuncio": {"fala": anúncio no alto-falante em L dizendo que o voo do aluno mudou para o portão N, "fala_t", "portao": N de 1 a 4}, "voz": {"tarefa": em PT: no portão, falar com o agente de embarque (mostrar o cartão e perguntar algo), "exemplo": frase em L}, "fim": {"fala": agente desejando boa viagem em L, "fala_t"}}',
+    passos:[
+      {t:'painel', obj:'Ache no painel o balcão de check-in do seu voo'},
+      {t:'ir', grupo:'checkin', obj:'Vá até o balcão de check-in certo'},
+      {t:'dialogo', npc:'v:atendente', lista:'dialogo', de:0, ate:3, obj:'Faça o check-in'},
+      {t:'ouvir', npc:'2', dado:'seguranca', abre:true, obj:'Passe pela segurança'},
+      {t:'anuncio_ir', grupo:'portao', obj:'Ouça o anúncio e vá até o portão certo'},
+      {t:'voz', npc:'v:agente', obj:'Fale com o agente do portão'}]},
+  cidade:{fimNpc:'v:farmaceutico', nome:'Centro da cidade', emoji:'🏙️', nivel:'B1', pedido:'achar uma farmácia no centro pedindo informação e comprar um remédio', piso:['#C9C3B8','#C0B9AD'], padrao:'pedra', parede:'#E8DCC8', tapete:'#B9A88C', rotulo:'loja', fora:true,
+    npcs:{'1':'passante'},
+    schema:'{"passante": nome, "farmaceutico": nome, "voz": {"tarefa": em PT: perguntar ao passante onde fica a farmácia, "exemplo": frase em L}, "dialogo": ' + TROCA(2, 'na farmácia: descrever um sintoma comum; responder a uma pergunta do farmacêutico') + ', "remedio": ' + OUVIR('o farmacêutico explicando como tomar o remédio') + ', "preco": número, "fim": {"fala": despedida do farmacêutico em L, "fala_t"}}',
+    passos:[
+      {t:'voz', npc:'1', obj:'Pergunte ao passante, falando, onde fica a farmácia'},
+      {t:'direcoes', de:'1', obj:'Siga as direções até a farmácia'},
+      {t:'dialogo', npc:'v:farmaceutico', lista:'dialogo', de:0, ate:2, obj:'Explique ao farmacêutico o que você sente'},
+      {t:'ouvir', npc:'v:farmaceutico', dado:'remedio', obj:'Entenda como tomar o remédio'},
+      {t:'pagar', npc:'v:farmaceutico', obj:'Pague o remédio com o valor exato'}]},
+  escritorio:{fimNpc:'v:entrevistador', nome:'Escritório', emoji:'💼', nivel:'B2', pedido:'ir a uma entrevista de emprego num escritório', piso:['#D7DEE8','#CED6E2'], padrao:'carpete', parede:'#EEF1F5', tapete:'#4B6584', rotulo:'porta',
+    npcs:{'1':'recepcionista'},
+    schema:'{"recepcionista": nome, "entrevistador": nome, "dialogo": ' + TROCA(2, '1: na recepção, dizer que tem uma entrevista e com quem; 2: a recepcionista pede um documento ou para aguardar') + ', "ficha": ' + FICHA(2, 'dados para o crachá de visitante') + ', "perguntas": lista com 2 perguntas de entrevista em L {"texto", "texto_t"}, "final": ' + TROCA(1, 'o entrevistador pergunta se o aluno tem alguma pergunta') + ', "fim": {"fala": despedida do entrevistador em L, "fala_t"}}',
+    passos:[
+      {t:'dialogo', npc:'1', lista:'dialogo', de:0, ate:2, obj:'Apresente-se na recepção'},
+      {t:'ficha', npc:'1', obj:'Preencha o cadastro de visitante'},
+      {t:'direcoes', de:'1', obj:'Siga as direções até a sala da entrevista'},
+      {t:'voz', npc:'v:entrevistador', pergunta:0, obj:'Responda à entrevista falando'},
+      {t:'voz', npc:'v:entrevistador', pergunta:1, obj:'Responda à segunda pergunta'},
+      {t:'dialogo', npc:'v:entrevistador', lista:'final', de:0, ate:1, obj:'Encerre a entrevista'}]},
+  medico:{fimNpc:'v:medico', nome:'Clínica', emoji:'🩺', nivel:'B2', pedido:'ir a uma consulta médica e entender a receita', piso:['#EAF4F1','#DFEDE9'], padrao:'ladrilho', parede:'#E3F0EC', tapete:'#7BB8A8', rotulo:'porta',
+    npcs:{'1':'recepcionista'},
+    schema:'{"recepcionista": nome, "medico": nome, "dialogo": ' + TROCA(1, 'na recepção, dizer que tem consulta marcada') + ', "ficha": ' + FICHA(2, 'dados do paciente') + ', "dialogo_medico": ' + TROCA(2, 'descrever sintomas e há quanto tempo') + ', "receita": ' + OUVIR('o médico explicando o tratamento') + ', "voz": {"tarefa": em PT: tirar uma dúvida com o médico (por exemplo, se pode trabalhar amanhã), "exemplo": frase em L}, "fim": {"fala": resposta do médico em L, "fala_t"}}',
+    passos:[
+      {t:'dialogo', npc:'1', lista:'dialogo', de:0, ate:1, obj:'Fale com a recepção'},
+      {t:'ficha', npc:'1', obj:'Preencha a ficha do paciente'},
+      {t:'direcoes', de:'1', obj:'Siga as direções até o consultório'},
+      {t:'dialogo', npc:'v:medico', lista:'dialogo_medico', de:0, ate:2, obj:'Explique os sintomas ao médico'},
+      {t:'ouvir', npc:'v:medico', dado:'receita', obj:'Entenda a receita'},
+      {t:'voz', npc:'v:medico', obj:'Tire uma dúvida com o médico falando'}]}
+};
+// Em cada região, as duas missões viram dois lugares do mapa (prédios com placa).
+const LOCAIS = [
+  [{x:2, y:17, cena:'cafe', i:0}, {x:13, y:10, cena:'mercado', i:2}],
+  [{x:10, y:18, cena:'estacao', i:0}, {x:14, y:9, cena:'hotel', i:2}],
+  [{x:2, y:17, cena:'aeroporto', i:0}, {x:12, y:9, cena:'cidade', i:2}],
+  [{x:2, y:17, cena:'escritorio', i:0}, {x:14, y:10, cena:'medico', i:2}]
+];
+const localDe = (r, i) => (LOCAIS[r] || []).find(l => l.i === i);
+const nomeLugar = k => { const n = LUGAR_NOME[k]; return n[S.profile.target] || n.en; };
+const estrelasDe = k => (MW().estrelas || {})[k] || 0;
+
+function promptCena(k, r){
+  const c = CENAS[k], L = nomeIdioma(S.profile.target), tm = TEMAS[J().tema];
+  return 'TAREFA: cena_' + k + '\n' + regras() + '\n\n' + ctx() + '\n\nO aluno está jogando uma simulação de situação real para aprender ' + L + ': ' + c.nome + ' (' + c.pedido + '). Nível ' + S.level + '. ' +
+    'Tudo o que as pessoas dizem fica em ' + L + ' (chamado de L abaixo), natural e no nível do aluno; traduções e explicações em ' + S.profile.native + ' (chamado de PT abaixo). Preços são números com no máximo 2 casas, realistas para o lugar. ' +
+    'Responda SOMENTE com um objeto JSON neste formato:\n' + c.schema + '\nVarie a posição da resposta certa. Sem markdown.';
+}
+// Arruma e completa o que veio do Gemini, para o jogo nunca travar por um campo faltando.
+function prepararCena(k, d){
+  d = d && typeof d === 'object' ? d : {};
+  const arr = (x, n) => (Array.isArray(x) ? x : []).filter(v => v != null && v !== '').slice(0, n || 99);
+  const troca = x => { const q = normQ({p:'', opcoes:x && x.opcoes, certa:x && x.certa}); return q && str(x.fala) ? Object.assign({}, x, {q}) : null; };
+  for (const campo of ['dialogo', 'dialogo_medico', 'final']) if (d[campo]) d[campo] = arr(d[campo]).map(troca).filter(Boolean);
+  if (d.ficha) d.ficha = arr(d.ficha).map(f => { const q = normQ({p:'', opcoes:f && f.opcoes, certa:f && f.certa}); return q && str(f.campo) ? Object.assign({}, f, {q}) : null; }).filter(Boolean);
+  for (const campo of ['seguranca', 'remedio', 'receita']) if (d[campo]){ const q = normQ({p:'', opcoes:d[campo].opcoes, certa:d[campo].certa}); d[campo] = q && str(d[campo].fala) ? Object.assign({}, d[campo], {q}) : null; }
+  if (k === 'cafe'){ d.cardapio = arr(d.cardapio, 6).filter(x => str(x.item)).map(x => Object.assign({}, x, {preco:precoOk(x.preco)})); d.pedido_certo = arr(d.pedido_certo).map(Number).filter(i => i >= 0 && i < d.cardapio.length).slice(0, 2); }
+  if (k === 'mercado'){ d.produtos = arr(d.produtos, 10).filter(x => str(x.nome)).map(x => Object.assign({}, x, {preco:precoOk(x.preco)})); d.lista = [...new Set(arr(d.lista).map(Number).filter(i => i >= 0 && i < d.produtos.length))].slice(0, 4); }
+  if (k === 'estacao' || k === 'aeroporto'){ d.painel = arr(d.painel, 6).filter(x => x && (str(x.destino) || str(x.voo))); }
+  if (d.preco != null) d.preco = precoOk(d.preco);
+  const faltando = {
+    cafe: () => d.cardapio.length >= 4 && d.pedido_certo.length === 2 && d.dialogo.length >= 3 && d.voz,
+    mercado: () => d.produtos.length >= 8 && d.lista.length === 4 && d.dialogo.length >= 2,
+    estacao: () => d.painel.some(p => str(p.destino) === str(d.destino)) && d.dialogo.length >= 3 && d.voz,
+    hotel: () => d.dialogo.length >= 2 && d.ficha && d.ficha.length >= 2 && /^\d{2,4}$/.test(str(d.quarto)) && str(d.fala_quarto) && d.voz,
+    aeroporto: () => d.painel.some(p => str(p.voo) === str(d.voo)) && d.dialogo.length >= 3 && d.seguranca && d.anuncio && d.voz,
+    cidade: () => d.voz && d.dialogo.length >= 2 && d.remedio,
+    escritorio: () => d.dialogo.length >= 2 && d.ficha && d.ficha.length >= 1 && arr(d.perguntas).length >= 2 && d.final && d.final.length >= 1,
+    medico: () => d.dialogo.length >= 1 && d.ficha && d.ficha.length >= 1 && d.dialogo_medico && d.dialogo_medico.length >= 2 && d.receita && d.voz
+  }[k];
+  try { if (!faltando()) throw 0; } catch(e){ throw {code:'invalid_json'}; }
+  return d;
+}
+
+/* ---------- direções geradas a partir do caminho real no mapa ---------- */
+function rotaComPoucasCurvas(livre, de, alvos){
+  // Dijkstra com custo extra para cada curva: o caminho fica parecido com o que uma pessoa explicaria.
+  const D4 = [[0, -1], [1, 0], [0, 1], [-1, 0]], key = (x, y, d) => x + ',' + y + ',' + d, fim = new Set(alvos.map(a => a.x + ',' + a.y));
+  const dist = new Map(), veio = new Map(), fila = [];
+  for (let d = 0; d < 4; d++){ dist.set(key(de.x, de.y, d), 0); fila.push([0, de.x, de.y, d]); }
+  while (fila.length){
+    fila.sort((a, b) => a[0] - b[0]);
+    const [c, x, y, d] = fila.shift();
+    if (c > dist.get(key(x, y, d))) continue;
+    if (fim.has(x + ',' + y) && !(x === de.x && y === de.y)){
+      const passos = []; let k = key(x, y, d);
+      while (veio.has(k)){ const [px, py, pd] = veio.get(k); const [cx, cy] = k.split(',').map(Number); passos.unshift({x:cx, y:cy, d:Number(k.split(',')[2])}); k = key(px, py, pd); }
+      return passos;
+    }
+    D4.forEach(([dx, dy], nd) => {
+      const nx = x + dx, ny = y + dy; if (!livre(nx, ny)) return;
+      const nc = c + 1 + (nd !== d && !(x === de.x && y === de.y) ? 3 : 0), k2 = key(nx, ny, nd);
+      if (nc < (dist.has(k2) ? dist.get(k2) : Infinity)){ dist.set(k2, nc); veio.set(k2, [x, y, d]); fila.push([nc, nx, ny, nd]); }
+    });
+  }
+  return null;
+}
+function textoDirecoes(passos, alvo){
+  const L = DIRECOES[S.profile.target] || DIRECOES.en, D4 = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+  if (!passos || !passos.length) return L.frente;
+  const partes = [L.reto];
+  for (let i = 1; i < passos.length; i++){
+    const a = passos[i - 1].d, b = passos[i].d; if (a === b) continue;
+    const [hx, hy] = D4[a], [nx, ny] = D4[b], cruz = hx * ny - hy * nx;
+    partes.push(cruz > 0 ? L.dir : L.esq);
+  }
+  const ult = passos[passos.length - 1], [hx, hy] = D4[ult.d], vx = alvo.x - ult.x, vy = alvo.y - ult.y, cruz = hx * vy - hy * vx;
+  const frase = partes.slice(0, 4).map((p, i) => i === 0 ? p : (i === partes.length - 1 || i === 3 ? L.depois + ' ' + p : p)).join(', ');
+  return frase + '. ' + (cruz > 0 ? L.ladoD : cruz < 0 ? L.ladoE : L.frente);
+}
+
+/* ---------- desenho do lugar ---------- */
+function desenharPisoCena(m, sp, escala){
+  const cv = document.createElement('canvas'); cv.width = m.W * TILE * escala; cv.height = m.H * TILE * escala;
+  const c = cv.getContext('2d'); c.scale(escala, escala); const T = TILE;
+  for (let y = 0; y < m.H; y++) for (let x = 0; x < m.W; x++){
+    const ch = m.t[y * m.W + x], X = x * T, Y = y * T;
+    c.fillStyle = (x + y) % 2 ? sp.piso[0] : sp.piso[1]; c.fillRect(X, Y, T, T);
+    if (sp.padrao === 'madeira'){ c.fillStyle = 'rgba(90,50,20,.12)'; c.fillRect(X, Y + (x % 2 ? 10 : 22), T, 1.5); c.fillRect(X + (y % 2 ? 6 : 20), Y, 1.5, T); }
+    else if (sp.padrao === 'ladrilho'){ c.strokeStyle = 'rgba(0,0,0,.07)'; c.lineWidth = 1; c.strokeRect(X + .5, Y + .5, T - 1, T - 1); }
+    else if (sp.padrao === 'pedra'){ c.fillStyle = 'rgba(0,0,0,.06)'; c.beginPath(); c.arc(X + 8 + ruido(x, y, 1) * 16, Y + 8 + ruido(x, y, 2) * 16, 5, 0, 7); c.fill(); }
+    else if (sp.padrao === 'carpete'){ c.fillStyle = 'rgba(255,255,255,.08)'; if ((x + y) % 2) c.fillRect(X + 4, Y + 4, T - 8, T - 8); }
+    if (ch === ','){ c.fillStyle = sp.tapete; c.globalAlpha = .55; c.fillRect(X, Y, T, T); c.globalAlpha = 1; }
+    if (ch === 'D'){ c.fillStyle = '#5B6B7F'; c.fillRect(X + 3, Y + 6, T - 6, T - 6); c.fillStyle = '#8FD19E'; c.fillRect(X + 6, Y + T - 6, T - 12, 4); }
+    if (ch === '_'){ c.fillStyle = '#6B7280'; c.fillRect(X, Y, T, T); c.fillStyle = '#4B5563'; for (let i = 0; i < 4; i++) c.fillRect(X + i * 8 + 1, Y + 4, 4, T - 8); c.fillStyle = '#D1D5DB'; c.fillRect(X, Y + 9, T, 3); c.fillRect(X, Y + T - 12, T, 3); }
+    if (ch === '#' || ch === 'w' || ch === 'B' || (ch === 'd' && sp.rotulo === 'porta') || ch === 'h'){
+      const baixo = m.t[(y + 1) * m.W + x], frente = y + 1 < m.H && !'#wBhd'.includes(baixo || '#');
+      if (ch === 'h'){ c.fillStyle = ['#E9C46A','#E76F51','#8AB17D','#A8DADC','#F4A261','#C9ADA7'][(Math.floor(x / 5) + Math.floor(y / 4)) % 6]; c.fillRect(X, Y, T, T); c.fillStyle = 'rgba(0,0,0,.08)'; c.fillRect(X, Y + T - 2, T, 2); if (!'h'.includes(m.t[(y - 1) * m.W + x] || '#')){ c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(X, Y, T, 6); } if (ruido(x, y, 5) < .5 && ch === 'h'){ c.fillStyle = '#BFE3F7'; c.fillRect(X + 9, Y + 9, 14, 12); c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(X + 15, Y + 9, 2, 12); } continue; }
+      c.fillStyle = sp.fora ? '#7B8794' : (frente ? sp.parede : '#4A4E5A'); c.fillRect(X, Y, T, T);
+      if (frente){ c.fillStyle = 'rgba(0,0,0,.12)'; c.fillRect(X, Y + T - 5, T, 5); c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(X, Y, T, 3); }
+      if (ch === 'w'){ c.fillStyle = '#9FD3F5'; c.fillRect(X + 5, Y + 6, T - 10, T - 14); c.fillStyle = 'rgba(255,255,255,.6)'; c.fillRect(X + 8, Y + 8, 4, T - 18); c.strokeStyle = '#FFFFFF'; c.lineWidth = 2; c.strokeRect(X + 5, Y + 6, T - 10, T - 14); }
+    }
+  }
+  return cv;
+}
+// Pessoas extras que só aparecem de enfeite atrás dos balcões
+function desenharCoisa(c, ch, X, Y, C, o){
+  const T = TILE, t = C.t;
+  if (ch === 'c'){
+    c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X, Y + T - 4, T, 5);
+    c.fillStyle = '#8B5A2B'; c.fillRect(X, Y + 6, T, T - 6); c.fillStyle = '#B07A43'; c.fillRect(X, Y + 2, T, 9); c.fillStyle = 'rgba(255,255,255,.2)'; c.fillRect(X, Y + 2, T, 2);
+    if (o.extra === 'caixa'){ c.fillStyle = '#334155'; c.fillRect(X + 8, Y - 6, 16, 10); c.fillStyle = '#22D3EE'; c.fillRect(X + 10, Y - 4, 12, 4); }
+    if (o.extra === 'xicara'){ c.fillStyle = '#FFFFFF'; c.fillRect(X + 10, Y - 2, 8, 6); c.fillStyle = 'rgba(200,200,200,.7)'; c.beginPath(); c.arc(X + 14, Y - 6 - Math.sin(t * 3) * 2, 2, 0, 7); c.fill(); }
+  } else if (ch === 't'){
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(X + 16, Y + 26, 13, 4, 0, 0, 7); c.fill();
+    c.fillStyle = '#6B4226'; c.fillRect(X + 14, Y + 14, 4, 12); c.fillStyle = '#F5EBDD'; c.beginPath(); c.ellipse(X + 16, Y + 12, 14, 8, 0, 0, 7); c.fill(); c.strokeStyle = '#C9A27E'; c.lineWidth = 1.5; c.stroke();
+    if (ruido(o.x, o.y, 3) < .6){ c.fillStyle = '#FFFFFF'; c.fillRect(X + 9, Y + 7, 6, 5); c.fillStyle = '#E76F51'; c.beginPath(); c.arc(X + 21, Y + 11, 3, 0, 7); c.fill(); }
+  } else if (ch === 'u'){
+    c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X + 9, Y + 24, 14, 4);
+    c.fillStyle = '#A0522D'; c.fillRect(X + 9, Y + 6, 14, 6); c.fillRect(X + 9, Y + 14, 14, 5); c.fillRect(X + 10, Y + 19, 3, 8); c.fillRect(X + 19, Y + 19, 3, 8);
+  } else if (ch === 'p'){
+    const prod = o.prod, oculto = o.oculto && !C.flags.reposto;
+    c.fillStyle = '#8B95A5'; c.fillRect(X, Y - 6, T, T + 4); c.fillStyle = '#F3F4F6'; c.fillRect(X + 2, Y - 4, T - 4, T);
+    c.fillStyle = '#9CA3AF'; c.fillRect(X + 2, Y + 6, T - 4, 2); c.fillRect(X + 2, Y + 17, T - 4, 2);
+    if (prod && !oculto){ c.font = '11px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'alphabetic'; c.fillText(prod.emoji || '📦', X + 9, Y + 5); c.fillText(prod.emoji || '📦', X + 23, Y + 5); c.fillText(prod.emoji || '📦', X + 16, Y + 16); c.fillText(prod.emoji || '📦', X + 9, Y + 27); c.fillText(prod.emoji || '📦', X + 23, Y + 27); }
+    else if (oculto){ c.fillStyle = 'rgba(0,0,0,.15)'; c.font = '700 10px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('?', X + 16, Y + 16); }
+  } else if (ch === 'K'){
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(X + 4, Y + 26, 24, 4);
+    c.fillStyle = '#1E3A8A'; rr(c, X + 5, Y - 8, 22, 34, 4); c.fill(); c.fillStyle = '#93C5FD'; c.fillRect(X + 9, Y - 4, 14, 10); c.fillStyle = '#FACC15'; c.fillRect(X + 11, Y + 10, 10, 3);
+  } else if (ch === 'T'){
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(X + 16, Y + 28, 9, 3, 0, 0, 7); c.fill();
+    c.fillStyle = '#B45309'; c.beginPath(); c.moveTo(X + 9, Y + 16); c.lineTo(X + 23, Y + 16); c.lineTo(X + 21, Y + 28); c.lineTo(X + 11, Y + 28); c.fill();
+    const b = Math.sin(t * 1.4 + o.x) * 1.2; c.fillStyle = '#2F8F4A'; c.beginPath(); c.arc(X + 16 + b, Y + 8, 9, 0, 7); c.arc(X + 10 + b, Y + 12, 6, 0, 7); c.arc(X + 22 + b, Y + 12, 6, 0, 7); c.fill();
+  } else if (ch === 'v'){
+    c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X + 2, Y + 24, T - 4, 5);
+    c.fillStyle = '#7C3AED'; rr(c, X + 2, Y + 4, T - 4, 22, 6); c.fill(); c.fillStyle = '#A78BFA'; rr(c, X + 5, Y + 12, T - 10, 10, 4); c.fill();
+  } else if (ch === 'n'){
+    c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X + 3, Y + 22, 26, 5);
+    c.fillStyle = sp(C).fora ? '#8B5A2B' : '#475569'; c.fillRect(X + 3, Y + 12, 26, 4); c.fillRect(X + 3, Y + 18, 26, 4); c.fillStyle = '#1F2937'; c.fillRect(X + 5, Y + 22, 3, 6); c.fillRect(X + 24, Y + 22, 3, 6);
+  } else if (ch === 'q'){
+    c.fillStyle = '#9CA3AF'; c.fillRect(X + 3, Y + 4, 3, 22); c.fillRect(X + 26, Y + 4, 3, 22); c.fillStyle = '#B91C1C'; c.fillRect(X + 4, Y + 8, 24, 3);
+  } else if (ch === 'g'){
+    const aberto = C.flags.portao;
+    c.fillStyle = '#64748B'; c.fillRect(X + 1, Y - 14, 6, T + 12); c.fillRect(X + T - 7, Y - 14, 6, T + 12); c.fillRect(X + 1, Y - 16, T - 2, 6);
+    c.fillStyle = aberto ? '#22C55E' : '#EF4444'; c.beginPath(); c.arc(X + 16, Y - 13, 2.5, 0, 7); c.fill();
+    if (!aberto){ c.fillStyle = 'rgba(239,68,68,.35)'; c.fillRect(X + 7, Y - 8, T - 14, T + 4); }
+  } else if (ch === 'Z' || ch === 'z'){
+    c.fillStyle = '#E5E7EB'; c.fillRect(X, Y - 10, T, T + 8); c.fillStyle = '#DC2626'; c.fillRect(X, Y + 8, T, 5);
+    if (ch === 'Z'){ c.fillStyle = '#1E293B'; c.fillRect(X + 5, Y - 5, T - 10, 10); c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(X + 7, Y - 4, 4, 8); }
+    else { c.fillStyle = '#475569'; c.fillRect(X + 7, Y - 8, T - 14, T + 4); c.fillStyle = '#94A3B8'; c.fillRect(X + 15, Y - 8, 2, T + 4); }
+  } else if (ch === 'o'){
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.ellipse(X + 16, Y + 26, 15, 5, 0, 0, 7); c.fill();
+    c.fillStyle = '#9AA3B2'; c.beginPath(); c.ellipse(X + 16, Y + 20, 15, 8, 0, 0, 7); c.fill(); c.fillStyle = '#3EA7E1'; c.beginPath(); c.ellipse(X + 16, Y + 19, 12, 5.5, 0, 0, 7); c.fill();
+    c.fillStyle = '#9AA3B2'; c.fillRect(X + 14, Y + 4, 4, 15); c.fillStyle = '#9ED8F6'; for (let i = 0; i < 6; i++){ const a = (t * 3 + i) % 1.6 / 1.6, ang = i / 6 * Math.PI * 2; c.globalAlpha = 1 - a; c.beginPath(); c.arc(X + 16 + Math.cos(ang) * a * 10, Y + 4 - Math.sin(a * Math.PI) * 8 + a * 14, 1.6, 0, 7); c.fill(); } c.globalAlpha = 1;
+  } else if (ch === 'l'){
+    c.fillStyle = '#334155'; c.fillRect(X + 14, Y - 6, 4, 34); c.fillRect(X + 9, Y - 12, 14, 4); c.fillStyle = '#FDE68A'; c.fillRect(X + 11, Y - 8, 10, 6);
+  } else if (ch === 'x'){
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(X + 5, Y + 25, 22, 4); c.fillStyle = '#0EA5E9'; rr(c, X + 7, Y + 4, 18, 22, 4); c.fill(); c.fillStyle = '#0369A1'; c.fillRect(X + 13, Y, 6, 5);
+  }
+}
+const sp = C => CENAS[C.k];
+function desenharRotulo(c, o, C){
+  const T = TILE, X = o.x * T, Y = o.y * T, s = CENAS[C.k].rotulo, rotulo = (C.rotulos || [])[o.idx] || '';
+  const placa = (txt, cx, cy, cor) => { c.font = '700 9px system-ui, sans-serif'; const w = Math.max(28, c.measureText(txt).width + 10); c.fillStyle = cor || '#1E3A8A'; rr(c, cx - w / 2, cy - 7, w, 14, 4); c.fill(); c.fillStyle = '#FFFFFF'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, cx, cy + .5); };
+  if (s === 'porta'){
+    c.fillStyle = '#7C4A24'; rr(c, X + 5, Y + 4, T - 10, T - 4, 3); c.fill(); c.fillStyle = '#FFD84A'; c.beginPath(); c.arc(X + T - 10, Y + 18, 1.6, 0, 7); c.fill();
+    if (rotulo) placa(rotulo, X + 16, Y + 2, '#0F172A');
+  } else if (s === 'placa'){
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(X + 13, Y + 26, 8, 3); c.fillStyle = '#475569'; c.fillRect(X + 15, Y - 4, 3, 30);
+    if (rotulo) placa(rotulo, X + 16, Y - 8, '#0B5394');
+  } else if (s === 'balcao'){
+    c.fillStyle = '#334155'; c.fillRect(X, Y + 4, T, T - 4); c.fillStyle = '#64748B'; c.fillRect(X, Y + 2, T, 6);
+    if (o.y < 5) desenharPessoa(c, X + 16, Y + 6, avatarDeSemente('balcao' + o.idx + C.k), {dir:'s', parado:true, t:C.t + o.idx, escala:.8});
+    else { c.fillStyle = '#0F172A'; c.fillRect(X + 4, Y - 14, T - 8, 12); }
+    if (rotulo) placa(rotulo, X + 16, Y - (o.y < 5 ? 26 : 8), '#0F172A');
+  } else if (s === 'loja'){
+    c.fillStyle = '#5A3A24'; rr(c, X + 6, Y + 2, T - 12, T - 2, 3); c.fill(); c.fillStyle = 'rgba(255,255,255,.3)'; c.fillRect(X + 9, Y + 6, T - 18, 8);
+    if (rotulo) placa(rotulo, X + 16, Y - 6, '#7C2D12');
+  }
+}
+function desenharPainel(c, x0, y, n, C){
+  const T = TILE, X = x0 * T, Y = y * T, W2 = n * T;
+  if (C.k === 'cafe'){
+    c.fillStyle = '#1F2937'; rr(c, X + 3, Y + 3, W2 - 6, T - 4, 3); c.fill(); c.strokeStyle = '#8B5A2B'; c.lineWidth = 3; c.stroke();
+    c.fillStyle = '#F8FAFC'; c.font = '700 8px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('MENU', X + W2 / 2, Y + 6);
+    c.fillStyle = 'rgba(248,250,252,.6)'; for (let i = 0; i < 3; i++) c.fillRect(X + 9, Y + 17 + i * 4, W2 - 18 - (i % 2) * 10, 1.5);
+  } else {
+    c.fillStyle = '#0B1220'; rr(c, X + 2, Y + 3, W2 - 4, T - 6, 3); c.fill();
+    for (let i = 0; i < 4; i++){ const pisca = Math.floor(C.t * 2 + i) % 7 === 0; c.fillStyle = pisca ? '#FFFFFF' : '#FACC15'; c.fillRect(X + 7, Y + 7 + i * 5, (W2 - 14) * (.5 + ruido(i, x0, 4) * .5), 2); }
+  }
+}
+
+/* ---------- tela do lugar ---------- */
+let CENA = null;
+window.__jogo = {telaCena: (k, d) => telaCena(k, null, prepararCena(k, d))};
+function entrarCena(r, i, opts){
+  const l = localDe(r, i); if (!l) return jogarMissao(r, i);
+  if (MUNDO && MUNDO.salvarPos) MUNDO.salvarPos();
+  telaCena(l.cena, {r, i}, opts && opts.dados);
+}
+function telaCena(k, missao, dados){
+  pintarTema();
+  const spec = CENAS[k], rows = CENA_MAPAS[k], lang = S.profile.target, j = J();
+  const H = rows.length, Wd = rows[0].length, t = [], ents = {}, objs = [], rotulados = [], trens = [];
+  let ini = {x:1, y:1}, saida = null;
+  for (let y = 0; y < H; y++) for (let x = 0; x < Wd; x++){
+    let ch = rows[y][x];
+    if (ch === '@'){ ini = {x, y}; ch = '.'; }
+    else if (ch === '1' || ch === '2'){ ents[ch] = {k:ch, x, y, px:x, py:y, dir:'s', papel:spec.npcs[ch]}; ch = '.'; }
+    if (ch === 'D') saida = {x, y};
+    if (ch === 'd'){ const o = {c:'d', x, y, idx:rotulados.length, base:y + 1}; rotulados.push(o); objs.push(o); }
+    else if ('ctupKTvnqgZzoLlx'.includes(ch)) objs.push({c:ch, x, y, base:y + 1});
+    if (ch === 'z') trens.push({x, y, idx:trens.length});
+    t.push(ch);
+  }
+  // painéis na parede (B) viram um objeto só
+  const paineis = []; for (let y = 0; y < H; y++){ let x = 0; while (x < Wd){ if (t[y * Wd + x] === 'B'){ let n = 0; while (x + n < Wd && t[y * Wd + x + n] === 'B') n++; paineis.push({x, y, n}); x += n; } else x++; } }
+  // prateleiras: cada bloco de 'p' guarda um produto
+  const blocos = [], visto = new Set();
+  for (let y = 0; y < H; y++) for (let x = 0; x < Wd; x++){ if (t[y * Wd + x] !== 'p' || visto.has(y * Wd + x)) continue; const b = [], f = [[x, y]]; visto.add(y * Wd + x);
+    while (f.length){ const [cx, cy] = f.pop(); b.push({x:cx, y:cy}); for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const nx = cx + dx, ny = cy + dy, kk = ny * Wd + nx; if (nx >= 0 && ny >= 0 && nx < Wd && ny < H && t[kk] === 'p' && !visto.has(kk)){ visto.add(kk); f.push([nx, ny]); } } } blocos.push(b); }
+  const m = {W:Wd, H, t, ents, objs, ini, saida};
+  const C = CENA = {k, spec, m, missao, d:null, passo:0, vidas:vidasMax(), max:vidasMax(), erros:0, dicas:0, vozNotas:[], coletados:[], flags:{}, rotulos:[], certo:{}, t:0, blocos, paineis, trens, rotulados};
+  objs.forEach(o => { if (o.c === 'c'){ const viz = t[o.y * Wd + o.x + 1]; o.extra = k === 'cafe' ? (o.x === 2 ? 'caixa' : o.x === 5 ? 'xicara' : '') : (k === 'mercado' && viz !== 'c') ? 'caixa' : ''; } });
+
+  // ----- elementos da tela -----
+  const cv = h('canvas',{class:'mundo-cv','aria-label':spec.nome + '. Toque num lugar para andar até ele.'});
+  const hud = h('div',{class:'hud'}), obj = h('div',{class:'objetivo cena-obj'}), acao = h('button',{class:'acao',type:'button',hidden:true});
+  const toast = h('div',{class:'toast-mundo',role:'status','aria-live':'polite'}), dlg = h('div',{class:'dlg',hidden:true});
+  const titulo = h('div',{class:'titulo-regiao'}, h('span',{class:'badge'}, spec.nivel), h('b',null, spec.emoji + ' ' + nomeLugar(k)), h('small',null, spec.nome));
+  const dpad = h('div',{class:'dpad'}, [['n','▲'],['w','◀'],['e','▶'],['s','▼']].map(([d, s]) => h('button',{type:'button',class:'d-' + d,'aria-label':{n:'Andar para cima',s:'Andar para baixo',w:'Andar para a esquerda',e:'Andar para a direita'}[d],'data-d':d}, s)));
+  const raiz = h('section',{class:'mundo cena'}, cv, hud, obj, dpad, acao, toast, dlg, titulo);
+  show('jogo', raiz); view.classList.add('mundo-on');
+  const W = {heroi:{x:ini.x, y:ini.y, px:ini.x, py:ini.y, dir:'n', passo:0, mov:null, rota:[], aoChegar:null}, cam:{x:0, y:0, ok:false}, Z:1, dpr:1, segura:null, ocupado:false, parts:[], falas:[]};
+  C.W = W; window.__cena = C;
+  const toastC = txt => { const el = h('div',{class:'toast-item'}, txt); toast.append(el); setTimeout(() => el.classList.add('sai'), 3200); setTimeout(() => el.remove(), 3700); };
+  C.toast = toastC;
+
+  // ----- regras do mapa -----
+  const tile = (x, y) => (x < 0 || y < 0 || x >= Wd || y >= H) ? '#' : t[y * Wd + x];
+  const solidoC = (x, y) => { const c = tile(x, y); if (c === 'g') return !C.flags.portao; return !'.,fD'.includes(c); };
+  const entEmC = (x, y) => { for (const kk in ents){ const e = ents[kk]; if (e.oculto) continue; if (e.x === x && e.y === y) return e; } return null; };
+  const livre = (x, y) => !solidoC(x, y) && !entEmC(x, y);
+  const vizLivres = (x, y) => [[0,1],[0,-1],[1,0],[-1,0]].map(([dx, dy]) => ({x:x + dx, y:y + dy})).filter(p => livre(p.x, p.y));
+  C.livre = livre;
+
+  // ----- HUD -----
+  const pintarHUD = () => {
+    const ps = spec.passos, i = Math.min(C.passo, ps.length - 1), p = ps[i];
+    hud.replaceChildren(...semVazios([
+      h('button',{class:'hud-menu',type:'button','aria-label':'Sair do lugar',onclick:() => sairCena(false)}, '←'),
+      h('span',{class:'hud-lugar'}, spec.emoji + ' ' + spec.nome),
+      h('span',{class:'grow'}),
+      k === 'mercado' && C.d ? h('button',{class:'hud-lista',type:'button',onclick:() => mostrarLista()}, '📝 Lista') : null,
+      vidasEl(C.vidas, C.max)]));
+    const dots = h('span',{class:'passos-dots'}, ps.map((_, n) => h('i',{class:n < C.passo ? 'feito' : n === C.passo ? 'atual' : ''})));
+    const alvoIr = alvoDoPasso(p);
+    obj.replaceChildren(...semVazios([
+      h('div',{class:'row',style:'gap:8px;align-items:center'}, icon('flag'), h('span',{class:'grow'}, !C.d ? 'Preparando a situação...' : objetivoTexto(p)), alvoIr ? h('button',{class:'obj-ir',type:'button',onclick:() => irPara(alvoIr)},'Ir') : null),
+      C.d && C.audioPasso ? h('div',{class:'row',style:'gap:8px'}, (() => { const b = h('button',{class:'obj-ir',type:'button',onclick:() => { pararAudio(); falar(C.audioPasso); }}, icon('sound'), 'Ouvir de novo'); return b; })(),
+        h('button',{class:'obj-ir sec',type:'button',onclick:ev => { C.dicas++; ev.currentTarget.replaceWith(h('small',{class:'alvo'}, C.audioPasso)); }},'Ver texto')) : null,
+      dots]));
+  };
+  C.pintarHUD = pintarHUD;
+  const objetivoTexto = p => {
+    if (!p) return 'Situação concluída!';
+    if (p.t === 'coletar') return p.obj + ' (' + C.coletados.filter(x => x !== C.d.lista[3]).length + '/' + p.n + ')';
+    return p.obj;
+  };
+  // passos com lugar conhecido podem levar o herói até lá; os de achar sozinho (direções, painel) não.
+  const alvoDoPasso = p => {
+    if (!p || !C.d) return null;
+    if (p.npc && !p.npc.startsWith('v:') && ['dialogo','voz','pagar','ficha','ouvir','ouvir_ir'].includes(p.t) && !(p.t === 'ouvir_ir' && C.flags.quartoDito)) return {ent:p.npc};
+    if (p.t === 'direcoes' && !C.flags.direcoesDadas) return {ent:p.de};
+    if (p.t === 'menu' || p.t === 'painel') return {painel:true};
+    if (p.t === 'sair' && saida) return {x:saida.x, y:saida.y};
+    return null;
+  };
+
+  // ----- tamanho e camadas -----
+  let piso = null;
+  const medir = () => {
+    const rect = raiz.getBoundingClientRect(); if (!rect.width) return;
+    W.vw = rect.width; W.vh = rect.height; W.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W.Z = clamp(rect.width / (11 * TILE), .9, 1.6);
+    cv.width = Math.round(W.vw * W.dpr); cv.height = Math.round(W.vh * W.dpr);
+    const esc = W.dpr * W.Z; if (!piso || W.esc !== esc){ W.esc = esc; piso = desenharPisoCena(m, spec, Math.min(esc, 2.5)); }
+  };
+  medir();
+  const ro = window.ResizeObserver ? new ResizeObserver(medir) : null; if (ro) ro.observe(raiz);
+
+  // ----- movimento -----
+  const DIRS = {n:[0, -1], s:[0, 1], e:[1, 0], w:[-1, 0]};
+  const passo = d => { const H0 = W.heroi; H0.dir = d; const nx = H0.x + DIRS[d][0], ny = H0.y + DIRS[d][1]; if (!livre(nx, ny)) return false; H0.mov = {x:nx, y:ny, de:{x:H0.x, y:H0.y}, p:0}; return true; };
+  const chegou = () => {
+    const H0 = W.heroi; H0.x = H0.mov.x; H0.y = H0.mov.y; H0.mov = null;
+    if (saida && H0.x === saida.x && H0.y === saida.y){ H0.rota = []; H0.aoChegar = null; aoSair(); return; }
+    if (H0.rota.length){ const p = H0.rota.shift(); const d = p.x > H0.x ? 'e' : p.x < H0.x ? 'w' : p.y > H0.y ? 's' : 'n'; if (!passo(d)) H0.rota = []; }
+    else if (H0.aoChegar){ const f = H0.aoChegar; H0.aoChegar = null; f(); }
+  };
+  const caminhoC = (de, alvos) => {
+    const chave = (x, y) => y * Wd + x, fim = new Set(alvos.map(a => chave(a.x, a.y)));
+    if (fim.has(chave(de.x, de.y))) return [];
+    const veio = new Map([[chave(de.x, de.y), -1]]), fila = [de];
+    while (fila.length){ const p = fila.shift(); for (const [dx, dy] of [[0,-1],[1,0],[0,1],[-1,0]]){ const nx = p.x + dx, ny = p.y + dy, kk = chave(nx, ny); if (veio.has(kk) || !livre(nx, ny)) continue; veio.set(kk, chave(p.x, p.y));
+      if (fim.has(kk)){ const rota = []; let c = kk; while (c !== chave(de.x, de.y)){ rota.unshift({x:c % Wd, y:Math.floor(c / Wd)}); c = veio.get(c); } return rota; } fila.push({x:nx, y:ny}); } }
+    return null;
+  };
+  const andarAte = (alvos, fim) => {
+    if (W.ocupado) return false;
+    const H0 = W.heroi, rota = caminhoC({x:H0.x, y:H0.y}, alvos);
+    if (!rota){ toastC('Não dá para chegar lá por enquanto.'); return false; }
+    H0.rota = rota; H0.aoChegar = fim || null;
+    if (!H0.mov){ if (!rota.length){ H0.aoChegar = null; if (fim) fim(); } else { const p = H0.rota.shift(); passo(p.x > H0.x ? 'e' : p.x < H0.x ? 'w' : p.y > H0.y ? 's' : 'n'); } }
+    return true;
+  };
+  const virar = (x, y) => { const H0 = W.heroi; H0.dir = x > H0.x ? 'e' : x < H0.x ? 'w' : y > H0.y ? 's' : 'n'; };
+  const irAteTile = (x, y, f) => {
+    if (livre(x, y)) return andarAte([{x, y}], f);
+    return andarAte(vizLivres(x, y), () => { virar(x, y); if (f) f(); });
+  };
+  const irPara = a => {
+    if (a.ent){ const e = ents[a.ent]; if (e) irAteTile(e.x, e.y, () => interagir({ent:e})); return; }
+    if (a.painel){ const pn = paineis[0]; if (pn) irAteTile(pn.x + Math.floor(pn.n / 2), pn.y, () => interagir({painel:pn})); return; }
+    if (a.x != null) andarAte([{x:a.x, y:a.y}]);
+  };
+  C.irPara = irPara; C.irAteTile = (x, y) => irAteTile(x, y, () => interagirTile(x, y));
+
+  // ----- toque, direcional e teclado -----
+  const telaParaTile = (cx, cy) => { const b = cv.getBoundingClientRect(); return {x:Math.floor(((cx - b.left) / W.Z + W.cam.x) / TILE), y:Math.floor(((cy - b.top) / W.Z + W.cam.y) / TILE)}; };
+  C.tileParaTela = (x, y) => { const b = cv.getBoundingClientRect(); return {x:b.left + ((x + .5) * TILE - W.cam.x) * W.Z, y:b.top + ((y + .5) * TILE - W.cam.y) * W.Z}; };
+  const interagirTile = (x, y) => {
+    const e = entEmC(x, y); if (e) return interagir({ent:e});
+    const c = tile(x, y);
+    if (c === 'B'){ const pn = paineis.find(p => y === p.y && x >= p.x && x < p.x + p.n); return interagir({painel:pn}); }
+    if (c === 'd') return interagir({rot:rotulados.find(o => o.x === x && o.y === y)});
+    if (c === 'z') return interagir({trem:trens.find(o => o.x === x && o.y === y)});
+    if (c === 'p') return interagir({prat:blocos.findIndex(b => b.some(q => q.x === x && q.y === y))});
+    return interagir({tile:c, x, y});
+  };
+  cv.addEventListener('pointerdown', ev => {
+    if (W.ocupado || !dlg.hidden) return;
+    const p = telaParaTile(ev.clientX, ev.clientY); W.toque = {x:p.x, y:p.y, t:C.t};
+    if (livre(p.x, p.y)) andarAte([{x:p.x, y:p.y}]);
+    else irAteTile(p.x, p.y, () => interagirTile(p.x, p.y));
+  });
+  dpad.querySelectorAll('button').forEach(b => {
+    const d = b.dataset.d;
+    b.addEventListener('pointerdown', ev => { ev.preventDefault(); if (W.ocupado || !dlg.hidden) return; W.heroi.rota = []; W.heroi.aoChegar = null; W.segura = d; if (!W.heroi.mov) passo(d); });
+    ['pointerup','pointerleave','pointercancel'].forEach(tt => b.addEventListener(tt, () => { if (W.segura === d) W.segura = null; }));
+  });
+  const teclas = {ArrowUp:'n', ArrowDown:'s', ArrowLeft:'w', ArrowRight:'e'};
+  const kd = ev => {
+    if (!raiz.isConnected) return document.removeEventListener('keydown', kd);
+    if (/INPUT|TEXTAREA/.test((ev.target && ev.target.tagName) || '')) return;
+    if (!dlg.hidden) return;
+    if (teclas[ev.key]){ ev.preventDefault(); W.heroi.rota = []; W.segura = teclas[ev.key]; if (!W.heroi.mov) passo(teclas[ev.key]); }
+    else if ((ev.key === ' ' || ev.key === 'Enter') && W.alvoPerto){ ev.preventDefault(); interagir(W.alvoPerto); }
+  };
+  const ku = ev => { if (teclas[ev.key] === W.segura) W.segura = null; };
+  document.addEventListener('keydown', kd); document.addEventListener('keyup', ku);
+  const procurarPerto = () => {
+    const H0 = W.heroi; if (H0.mov) return null;
+    for (const [dx, dy] of [DIRS[H0.dir]].concat(Object.values(DIRS))){
+      const x = H0.x + dx, y = H0.y + dy, e = entEmC(x, y); if (e) return {ent:e};
+      const c = tile(x, y);
+      if (c === 'B') return {painel:paineis.find(p => y === p.y && x >= p.x && x < p.x + p.n)};
+      if (c === 'd') return {rot:rotulados.find(o => o.x === x && o.y === y)};
+      if (c === 'z') return {trem:trens.find(o => o.x === x && o.y === y)};
+      if (c === 'p') return {prat:blocos.findIndex(b => b.some(q => q.x === x && q.y === y))};
+    }
+    for (const [dx, dy] of Object.values(DIRS)){ const c = tile(H0.x + dx, H0.y + dy); if (CENA_PALAVRA[c]) return {tile:c, x:H0.x + dx, y:H0.y + dy}; }
+    return null;
+  };
+  const rotuloAcao = a => a.ent ? ['chat','Falar'] : a.painel ? ['book','Ler'] : a.rot ? ['flag', spec.rotulo === 'porta' || spec.rotulo === 'loja' ? 'Entrar' : 'Ir aqui'] : a.trem ? ['flag','Embarcar'] : a.prat != null ? ['chest','Ver'] : ['sound','Olhar'];
+  acao.onclick = () => { if (W.alvoPerto) interagir(W.alvoPerto); };
+
+  // ----- janela de conversa -----
+  const fecharDlg = () => { pararAudio(); dlg.hidden = true; dlg.classList.remove('grande'); dlg.replaceChildren(); W.ocupado = false; pintarHUD(); };
+  const abrirDlg = (quem, partes, acoes, grande) => {
+    pararAudio(); W.ocupado = true; W.segura = null; W.heroi.rota = [];
+    const topo = h('div',{class:'dlg-topo'}, quem.av ? avatarEl(quem.av, 44) : quem.el || null, h('div',{class:'grow'}, h('b',null, quem.nome), quem.papel ? h('small',null, quem.papel) : null),
+      quem.semFechar ? null : h('button',{class:'dlg-x',type:'button','aria-label':'Fechar janela',onclick:fecharDlg}, '×'));
+    dlg.classList.toggle('grande', !!grande);
+    dlg.replaceChildren(...semVazios([topo, partes, h('div',{class:'dlg-acoes'}, acoes || [])]));
+    dlg.hidden = false; dlg.scrollTop = 0;
+  };
+  C.fecharDlg = fecharDlg;
+  const falaEl = (txt, trad, oculta) => {
+    const p = h('p',{class:'alvo dlg-fala'}), tr = h('p',{class:'small muted',hidden:true}, trad || '');
+    if (oculta){ p.textContent = '🔊 Ouça com atenção...'; p.classList.add('oculta'); }
+    else { let i = 0; const digita = () => { if (!p.isConnected && i) return; p.textContent = txt.slice(0, i); if (i++ < txt.length) setTimeout(digita, 16); }; digita(); }
+    return h('div',{class:'stack tight'}, p, h('div',{class:'row'}, ouvirBtn(txt),
+      oculta ? h('button',{class:'btn link',type:'button',onclick:ev => { C.dicas++; p.textContent = txt; p.classList.remove('oculta'); ev.currentTarget.remove(); }},'Ver texto') : null,
+      trad ? h('button',{class:'btn link',type:'button',onclick:() => { tr.hidden = !tr.hidden; if (!tr.hidden) C.dicas += .5; }},'Traduzir') : null), tr);
+  };
+  const narra = txt => h('p',{class:'dlg-narra'}, txt);
+  const btn = (txt, f, sec) => h('button',{class:'btn' + (sec ? ' sec' : ''),type:'button',onclick:f}, txt);
+  const nomeNpc = papel => { const d = C.d || {}; const n = {garcom:d.garcom, cliente:d.cliente && d.cliente.nome, caixa:d.caixa, funcionario:d.funcionario, bilheteiro:d.bilheteiro, fiscal:d.fiscal, recepcionista:d.recepcionista, seguranca:d.agente ? 'Segurança' : null,
+    atendente:d.atendente, agente:d.agente, passante:d.passante, farmaceutico:d.farmaceutico, entrevistador:d.entrevistador, medico:d.medico, recepcao:'Recepção'}[papel]; return str(n) || ({garcom:'Garçom', cliente:'Cliente', caixa:'Caixa', funcionario:'Funcionário', bilheteiro:'Bilheteria', fiscal:'Fiscal', recepcionista:'Recepção', seguranca:'Segurança', atendente:'Atendente', agente:'Agente', passante:'Passante', farmaceutico:'Farmacêutico', entrevistador:'Entrevistador', medico:'Médico', recepcao:'Recepção'}[papel] || 'Pessoa'); };
+  const PAPEIS = {garcom:'garçom', cliente:'cliente', caixa:'caixa', funcionario:'funcionário', bilheteiro:'bilheteria', fiscal:'fiscal da plataforma', recepcionista:'recepção', seguranca:'segurança', atendente:'check-in', agente:'portão de embarque', passante:'pessoa na rua', farmaceutico:'farmácia', entrevistador:'entrevista', medico:'consultório', recepcao:'telefone do quarto'};
+  const quemNpc = npc => { const papel = npc.startsWith('v:') ? npc.slice(2) : (ents[npc] && ents[npc].papel) || npc; return {nome:nomeNpc(papel), papel:PAPEIS[papel], av:avatarDeSemente(k + papel + nomeNpc(papel))}; };
+
+  // ----- erros, acertos e fim -----
+  const errou = (msg) => {
+    C.vidas--; C.erros++; reagirC(false); pintarHUD();
+    if (msg) toastC(msg);
+    if (C.vidas <= 0){ setTimeout(() => { fecharDlg(); derrota(() => telaCena(k, missao, C.d)); }, 900); return true; }
+    return false;
+  };
+  const reagirC = ok => { const el = raiz.querySelector('.hud .vidas'); if (!ok && el){ el.classList.remove('chacoalha'); void el.offsetWidth; el.classList.add('chacoalha'); } };
+  const avancar = () => {
+    C.passo++; C.audioPasso = null; save();
+    if (C.passo >= spec.passos.length) return concluir();
+    pintarHUD(); iniciarPasso();
+  };
+  C.avancar = avancar;
+  // passos que começam sozinhos (pessoas que não estão no mapa, anúncios)
+  const iniciarPasso = () => {
+    const p = spec.passos[C.passo]; if (!p || !C.d) return;
+    if (p.t === 'anuncio_ir'){ C.audioPasso = str(C.d.anuncio.fala); pintarHUD(); setTimeout(() => { toastC('📢 Atenção: anúncio no aeroporto'); autoFalar(C.audioPasso); }, 600); return; }
+    if (p.npc && p.npc.startsWith('v:')) setTimeout(() => rodarPasso(p, null), 450);
+  };
+  const concluir = () => {
+    const vozMedia = C.vozNotas.length ? C.vozNotas.reduce((a, b) => a + b, 0) / C.vozNotas.length : 80;
+    const est = C.erros === 0 && C.dicas <= 1 && vozMedia >= 70 ? 3 : C.erros <= 1 && vozMedia >= 50 ? 2 : 1;
+    const w = MW(); if (!w.estrelas) w.estrelas = {}; const antes = w.estrelas[k] || 0; w.estrelas[k] = Math.max(antes, est); save();
+    skill('conversa', 60 + est * 12); skill('vocabulario', 55 + est * 12);
+    const fimTxt = C.d.fim && str(C.d.fim.fala);
+    const terminar = () => { fecharDlg(); if (missao) vitoria(missao.r, missao.i, 'missao', {recompensa: spec.emoji + ' ' + spec.nome + ' concluído', estrelas:est, melhorou: est > antes && antes > 0}); else goTab('inicio'); };
+    if (fimTxt){ const q = quemNpc(spec.fimNpc || '1'); abrirDlg(Object.assign(q, {semFechar:true}), [falaEl(fimTxt, str(C.d.fim.fala_t)), h('div',{class:'estrelas-fim'}, [1,2,3].map(n => h('span',{class:n <= est ? 'on' : ''}, '★')))], [btn('Concluir', terminar)]); confete(); }
+    else { confete(); setTimeout(terminar, 400); }
+  };
+  const sairCena = confirmar => {
+    if (!confirmar && C.passo > 0 && C.passo < spec.passos.length){
+      abrirDlg({nome:'Sair agora?', el:icon('flag')}, [narra('Você perde o progresso desta situação.')], [btn('Continuar aqui', fecharDlg), btn('Sair', () => { fecharDlg(); goTab('inicio'); }, true)]); return;
+    }
+    goTab('inicio');
+  };
+  const aoSair = () => { const p = spec.passos[C.passo]; if (p && p.t === 'sair') return avancar(); sairCena(false); };
+
+  // ----- mini-jogos -----
+  function rodarPasso(p, alvo){
+    if (p.t === 'dialogo') return jogoDialogo(p);
+    if (p.t === 'voz') return jogoVoz(p);
+    if (p.t === 'pagar') return jogoPagar(p);
+    if (p.t === 'ficha') return jogoFicha(p);
+    if (p.t === 'ouvir') return jogoOuvir(p);
+    if (p.t === 'ouvir_ir') return jogoOuvirQuarto(p);
+    if (p.t === 'menu') return jogoMenu(p);
+    if (p.t === 'painel') return jogoPainel(p);
+  }
+  function jogoDialogo(p){
+    const lista = (C.d[p.lista] || []).slice(p.de, p.ate), quem = quemNpc(p.npc);
+    let n = 0;
+    const troca = () => {
+      const x = lista[n]; if (!x) { fecharDlg(); return avancar(); }
+      const fb = h('div'); let tentou = false;
+      const ops = x.q.opcoes.map((o, oi) => h('button',{class:'opt alvo',type:'button',onclick:ev => {
+        const b = ev.currentTarget;
+        if (oi === x.q.certa){
+          ops.forEach(z => { z.disabled = true; }); b.classList.add('ok'); skill('conversa', tentou ? 55 : 85);
+          fb.replaceChildren(falaEl(str(x.reacao) || '🙂', str(x.reacao_t)));
+          dlg.querySelector('.dlg-acoes').replaceChildren(btn(n + 1 < lista.length ? 'Continuar' : 'Pronto', () => { n++; troca(); }));
+        } else {
+          tentou = true; b.disabled = true; b.classList.add('no');
+          fb.replaceChildren(h('div',{class:'note soft small'}, '💡 ' + (str(x.dica) || 'Essa não é a resposta mais adequada. Tente outra.')));
+          errou();
+        }
+      }}, o));
+      abrirDlg(Object.assign({}, quem, {semFechar:true}), [falaEl(str(x.fala), str(x.fala_t)), h('span',{class:'small muted'}, 'Escolha a sua resposta:'), h('div',{class:'stack tight'}, ops), fb], []);
+    };
+    troca();
+  }
+  function jogoVoz(p){
+    const quem = quemNpc(p.npc), out = h('div'), pr = p.pergunta != null ? (C.d.perguntas || [])[p.pergunta] : null;
+    const v = C.d.voz || {}, tarefa = pr ? 'Responda falando, com 2 ou 3 frases.' : str(v.tarefa) || p.obj, exemplo = pr ? '' : str(v.exemplo);
+    const item = pr ? {texto:str(pr.texto)} : {texto:tarefa + (exemplo ? ' (exemplo do que dizer: "' + exemplo + '")' : '')};
+        const ex = h('p',{class:'small alvo',hidden:true}, 'Exemplo: ' + exemplo);
+    const partes = [pr ? falaEl(str(pr.texto), str(pr.texto_t)) : null, h('div',{class:'note'}, h('b',null,'🎤 Fale em voz alta'), h('div',{class:'small'}, tarefa)),
+      exemplo ? h('button',{class:'btn link',type:'button',onclick:ev => { C.dicas++; ex.hidden = false; ev.currentTarget.remove(); }},'Ver um exemplo') : null, ex,
+      gravadorUI(pr ? 30 : 15, fala => {
+        out.replaceChildren(loadingEl('Ouvindo a sua voz...'));
+        const prompt = pr ? promptAvaliarFala(VOZ_TIPOS[1], {texto:str(pr.texto)}, []) : promptAvaliarFala({k:'situacao'}, {texto:tarefa, lugar:spec.nome, exemplo}, []);
+        avaliarFala(fala, prompt).then(res => {
+          const nota = clamp(Math.round(Number(res && res.nota) || 0), 0, 100);
+          registrarFala(res);
+          out.replaceChildren(resultadoFala(res));
+          if (nota >= 50){ C.vozNotas.push(nota); dlg.querySelector('.dlg-acoes').replaceChildren(btn('Continuar', () => { fecharDlg(); avancar(); })); }
+          else dlg.querySelector('.dlg-acoes').replaceChildren(h('p',{class:'small muted'},'Grave de novo: é preciso se fazer entender para seguir.'));
+        }, e => out.replaceChildren(h('div',{class:'note soft'}, e && e.code === 'sem_ouvir' ? 'O servidor ainda não ouve áudio. Grave de novo: vou usar o reconhecimento de voz do celular.' : aiMsg(e))));
+      }), out];
+    abrirDlg(quem, partes, [], true);
+  }
+  function valorPagar(){
+    const d = C.d;
+    if (k === 'cafe') return d.pedido_certo.reduce((a, i) => a + d.cardapio[i].preco, 0);
+    if (k === 'mercado') return d.lista.reduce((a, i) => a + d.produtos[i].preco, 0);
+    return d.preco || 10;
+  }
+  function jogoPagar(p){
+    const quem = quemNpc(p.npc), valor = Math.round(valorPagar() * 100) / 100, frase = (FRASE_PRECO[lang] || FRASE_PRECO.en).replace('{v}', fmtPreco(valor, lang));
+    const moeda = moedaDe(lang), notas = DINHEIRO[moeda];
+    let tentativas = 0, bandeja = [];
+    const soma = () => Math.round(bandeja.reduce((a, b) => a + b, 0) * 100) / 100;
+    const total = h('b',{class:'pg-total'}), tray = h('div',{class:'pg-bandeja'}), fb = h('div');
+    const pintar = () => { total.textContent = fmtPreco(soma(), lang); tray.replaceChildren(...bandeja.map((v, i) => h('button',{class:'din ' + (v >= 5 ? 'nota' : 'moeda'),type:'button','aria-label':'Tirar ' + fmtPreco(v, lang),onclick:() => { bandeja.splice(i, 1); pintar(); }}, fmtPreco(v, lang)))); };
+    const carteira = h('div',{class:'pg-carteira'}, notas.map(v => h('button',{class:'din ' + (v >= 5 ? 'nota' : 'moeda'),type:'button',onclick:() => { bandeja.push(v); pintar(); }}, fmtPreco(v, lang))));
+    const fala = falaEl(frase, null, true);
+    abrirDlg(Object.assign({}, quem, {semFechar:true}), [fala, h('p',{class:'small'}, '💰 Ouça o valor e toque nas notas e moedas para pagar o valor exato.'), carteira, h('div',{class:'pg-linha'}, h('span',{class:'small muted'},'Você está dando:'), total), tray, fb],
+      [btn('Limpar', () => { bandeja = []; pintar(); }, true), btn('Pagar', () => {
+        if (!bandeja.length) return;
+        if (Math.abs(soma() - valor) < .001){ skill('vocabulario', tentativas ? 60 : 90); fb.replaceChildren(h('div',{class:'note small'}, '✅ Valor certo!')); setTimeout(() => { fecharDlg(); avancar(); }, 700); return; }
+        tentativas++;
+        fb.replaceChildren(h('div',{class:'note soft small'}, soma() > valor ? 'É mais do que o valor. Ouça de novo e pague o valor exato.' : 'Falta dinheiro. Ouça de novo o valor.'));
+        if (tentativas >= 2){ const pf = fala.querySelector('.dlg-fala'); pf.textContent = frase; pf.classList.remove('oculta'); }
+        if (!errou()) { pararAudio(); falar(frase); }
+      })]);
+    pintar();
+  }
+  function jogoFicha(p){
+    const quem = quemNpc(p.npc), campos = C.d.ficha || [], esc = campos.map(() => -1), fb = h('div');
+    const linhas = campos.map((f, n) => {
+      const ops = f.q.opcoes.map((o, oi) => h('button',{class:'chip alvo',type:'button','aria-pressed':'false',onclick:ev => { esc[n] = oi; ev.currentTarget.parentNode.querySelectorAll('.chip').forEach((b, bi) => b.setAttribute('aria-pressed', String(bi === oi))); }}, o));
+      const tr = h('span',{class:'small muted',hidden:true}, ' (' + str(f.campo_t) + ')');
+      return h('div',{class:'ficha-campo'}, h('div',{class:'row',style:'gap:6px;align-items:baseline'}, h('b',{class:'alvo'}, str(f.campo)), tr, h('button',{class:'btn link',type:'button',style:'padding:0',onclick:() => { tr.hidden = !tr.hidden; }},'?')),
+        h('small',{class:'muted'}, 'ℹ️ ' + str(f.info)), h('div',{class:'chips'}, ops));
+    });
+    abrirDlg(Object.assign({}, quem, {semFechar:true}), [h('div',{class:'ficha'}, h('b',null,'📋 Ficha'), linhas), fb],
+      [btn('Entregar a ficha', () => {
+        if (esc.some(x => x < 0)){ fb.replaceChildren(h('p',{class:'small'},'Preencha todos os campos.')); return; }
+        const erradas = campos.map((f, n) => esc[n] === f.q.certa ? -1 : n).filter(n => n >= 0);
+        if (!erradas.length){ skill('escrita', 85); toastC('Ficha certinha!'); fecharDlg(); return avancar(); }
+        fb.replaceChildren(h('div',{class:'note soft small'}, 'Tem ' + erradas.length + (erradas.length > 1 ? ' campos errados' : ' campo errado') + ': confira ' + erradas.map(n => '"' + str(campos[n].campo) + '"').join(', ') + '.'));
+        errou();
+      })], true);
+  }
+  function jogoOuvir(p){
+    const quem = quemNpc(p.npc), x = C.d[p.dado], fb = h('div');
+    const ops = x.q.opcoes.map((o, oi) => h('button',{class:'opt',type:'button',onclick:ev => {
+      if (oi === x.q.certa){ ops.forEach(z => { z.disabled = true; }); ev.currentTarget.classList.add('ok'); skill('leitura', 80);
+        fb.replaceChildren(h('div',{class:'note small'}, '✅ Entendeu certinho.' + (str(x.fala_t) ? ' Tradução: ' + str(x.fala_t) : '')));
+        if (p.abre){ C.flags.portao = true; toastC('O detector liberou a passagem.'); }
+        dlg.querySelector('.dlg-acoes').replaceChildren(btn('Continuar', () => { fecharDlg(); avancar(); }));
+      } else { ev.currentTarget.disabled = true; ev.currentTarget.classList.add('no'); fb.replaceChildren(h('div',{class:'note soft small'}, 'Não foi isso. Ouça de novo.')); if (!errou()){ pararAudio(); falar(str(x.fala)); } }
+    }}, o));
+    abrirDlg(Object.assign({}, quem, {semFechar:true}), [falaEl(str(x.fala), null, true), h('b',null, str(x.pergunta)), h('div',{class:'stack tight'}, ops), fb], []);
+  }
+  function jogoOuvirQuarto(p){
+    const quem = quemNpc(p.npc), fala = str(C.d.fala_quarto);
+    C.flags.quartoDito = true; C.audioPasso = fala;
+    abrirDlg(quem, [falaEl(fala, null, true), narra('Guarde o número do quarto e encontre a porta no corredor. Se esquecer, toque em "Ouvir de novo" na faixa amarela.')], [btn('Ir procurar', fecharDlg)]);
+  }
+  function jogoMenu(p){
+    const d = C.d, esc = new Set(), fb = h('div');
+    const itens = d.cardapio.map((x, i) => h('button',{class:'menu-item',type:'button','aria-pressed':'false',onclick:ev => { if (esc.has(i)) esc.delete(i); else { if (esc.size >= 2) return; esc.add(i); } ev.currentTarget.setAttribute('aria-pressed', String(esc.has(i))); }},
+      h('span',{class:'alvo'}, str(x.item)), h('b',null, fmtPreco(x.preco, lang))));
+    abrirDlg({nome:'Cardápio', el:h('span',{class:'ic-grande'},'📜')}, [h('div',{class:'note'}, h('b',null,'Seu pedido: '), str(d.pedido_pt)), h('span',{class:'small muted'},'Escolha 2 itens do cardápio:'), h('div',{class:'cardapio'}, itens), fb],
+      [btn('Escolher', () => {
+        if (esc.size !== 2){ fb.replaceChildren(h('p',{class:'small'},'Escolha 2 itens.')); return; }
+        const ok = d.pedido_certo.every(i => esc.has(i));
+        if (ok){ skill('leitura', 85); toastC('Boa escolha! Agora faça o pedido ao garçom.'); fecharDlg(); return avancar(); }
+        fb.replaceChildren(h('div',{class:'note soft small'}, 'Não é bem isso. Releia o pedido: ' + d.pedido_certo.length + ' itens combinam com ele. Dica: ' + d.cardapio.map(x => str(x.item) + ' = ' + str(x.pt)).slice(0, 3).join('; ') + '...'));
+        errou();
+      }), btn('Fechar', fecharDlg, true)], true);
+  }
+  function jogoPainel(p){
+    const d = C.d, est = k === 'estacao', fb = h('div');
+    const linhas = d.painel.map((x, i) => h('button',{class:'painel-linha',type:'button',onclick:() => escolher(i)},
+      h('span',null, est ? str(x.destino) : str(x.voo) + ' · ' + str(x.destino)), h('span',null, str(x.horario)), h('b',null, est ? str(x.plataforma) : str(x.balcao))));
+    const meu = est ? d.painel.findIndex(x => str(x.destino) === str(d.destino)) : d.painel.findIndex(x => str(x.voo) === str(d.voo));
+    const pergunta = est ? 'Seu trem: para ' + str(d.destino) + ' às ' + str(d.horario) + '. Toque na linha do seu trem.' : 'Seu voo: ' + str(d.voo) + ' para ' + str(d.destino) + '. Toque na linha do seu voo.';
+    function escolher(i){
+      const x = d.painel[i], certo = est ? str(x.destino) === str(d.destino) && str(x.horario) === str(d.horario) : str(x.voo) === str(d.voo);
+      if (certo || i === meu){ skill('leitura', 85); C.certo.alvo = clamp(Number(est ? x.plataforma : x.balcao) || 1, 1, est ? 4 : 3) - 1; toastC(est ? 'Seu trem sai da ' + C.rotulos[C.certo.alvo] + '.' : 'Seu check-in é no balcão ' + (C.certo.alvo + 1) + '.'); fecharDlg(); return avancar(); }
+      fb.replaceChildren(h('div',{class:'note soft small'}, 'Essa linha não é a sua. Confira destino e horário.')); errou();
+    }
+    abrirDlg({nome: est ? 'Partidas' : 'Departures', el:h('span',{class:'ic-grande'}, est ? '🚆' : '✈️')}, [h('div',{class:'note'}, pergunta),
+      h('div',{class:'painel-quadro'}, h('div',{class:'painel-linha cab'}, h('span',null, est ? 'Destino' : 'Voo · Destino'), h('span',null,'Hora'), h('b',null, est ? 'Plat.' : 'Balcão')), linhas), fb], [btn('Fechar', fecharDlg, true)], true);
+  }
+  function mostrarLista(){
+    const d = C.d;
+    abrirDlg({nome:'Lista de compras', el:h('span',{class:'ic-grande'},'📝')}, [h('div',{class:'stack tight'}, d.lista.map((i, n) => { const x = d.produtos[i], tem = C.coletados.includes(i);
+      return h('div',{class:'lista-item' + (tem ? ' ok' : '')}, h('span',null, tem ? '✅' : '⬜'), h('span',{class:'alvo grow'}, str(x.nome)), n === 3 && !C.flags.reposto ? h('small',{class:'muted'},'(pergunte ao funcionário)') : null); }))],
+      [btn('Fechar', fecharDlg, true)]);
+  }
+
+  // ----- tocar nas coisas -----
+  function interagir(a){
+    W.alvoPerto = null; acao.hidden = true;
+    const p = spec.passos[C.passo];
+    if (!C.d){ toastC('Espere um instante: a situação está sendo preparada.'); return; }
+    if (a.ent){
+      const e = a.ent;
+      e.dir = W.heroi.x > e.x ? 'e' : W.heroi.x < e.x ? 'w' : W.heroi.y > e.y ? 's' : 'n';
+      if (p && p.npc === e.k && ['dialogo','voz','pagar','ficha','ouvir','ouvir_ir'].includes(p.t)) return rodarPasso(p);
+      if (p && p.t === 'direcoes' && p.de === e.k && !C.flags.direcoesDadas) return darDirecoes(p);
+      if (p && p.t === 'direcoes' && p.de === e.k) return darDirecoes(p, true);
+      if (e.papel === 'cliente' && C.d.cliente){ abrirDlg(quemNpc('2'), [falaEl(str(C.d.cliente.ola), str(C.d.cliente.ola_t))], [btn('Tchau', fecharDlg, true)]); return; }
+      abrirDlg(quemNpc(e.k), [narra(p ? 'Agora: ' + objetivoTexto(p) + '.' : 'Obrigado pela visita!')], [btn('Ok', fecharDlg, true)]);
+      return;
+    }
+    if (a.painel){
+      if (p && (p.t === 'menu' || p.t === 'painel')) return rodarPasso(p);
+      if (k === 'cafe') return abrirDlg({nome:'Cardápio', el:h('span',{class:'ic-grande'},'📜')}, [h('div',{class:'cardapio'}, C.d.cardapio.map(x => h('div',{class:'menu-item'}, h('span',{class:'alvo'}, str(x.item)), h('b',null, fmtPreco(x.preco, lang)))))], [btn('Fechar', fecharDlg, true)]);
+      if (C.d.painel) return abrirDlg({nome:'Painel', el:h('span',{class:'ic-grande'},'🕒')}, [h('div',{class:'painel-quadro'}, C.d.painel.map(x => h('div',{class:'painel-linha'}, h('span',null, str(x.voo || '') + ' ' + str(x.destino)), h('span',null, str(x.horario)), h('b',null, str(x.plataforma || x.balcao)))))], [btn('Fechar', fecharDlg, true)]);
+      return;
+    }
+    if (a.rot){
+      const o = a.rot, grupo = grupoDe(o);
+      if (p && ['ir','anuncio_ir','ouvir_ir','direcoes'].includes(p.t) && grupoAlvo(p) === grupo){
+        if (p.t === 'ouvir_ir' && !C.flags.quartoDito){ toastC('Primeiro pegue o número do quarto na recepção.'); return; }
+        if (p.t === 'direcoes' && !C.flags.direcoesDadas){ toastC('Primeiro peça informação.'); return; }
+        const certo = idxNoGrupo(o) === C.certo.alvo;
+        if (certo){ C.flags.direcoesDadas = false; toastC('✅ É aqui!'); faiscasC(o.x, o.y); C.audioPasso = null; return avancar(); }
+        errou('Não é aqui. ' + (p.t === 'direcoes' ? 'Ouça as direções de novo.' : p.t === 'ouvir_ir' ? 'Ouça o número de novo.' : 'Confira de novo.'));
+        return;
+      }
+      toastC(C.rotulos[o.idx] || '');
+      return;
+    }
+    if (a.trem){
+      if (p && p.t === 'embarcar'){ if (a.trem.idx === C.certo.alvo){ toastC('Boa viagem!'); return avancar(); } errou('Esse trem não vai para ' + str(C.d.destino) + '. Confira a plataforma.'); return; }
+      toastC(nomeLugar('estacao')); return;
+    }
+    if (a.prat != null && k === 'mercado'){
+      const b = C.blocos[a.prat], prodI = C.prodDoBloco[a.prat], x = C.d.produtos[prodI];
+      if (prodI == null || !x) return;
+      if (b.oculto && !C.flags.reposto){ abrirDlg({nome:'Prateleira vazia', el:h('span',{class:'ic-grande'},'📦')}, [narra('Esta prateleira está vazia. Talvez um funcionário saiba onde achar o que você procura.')], [btn('Fechar', fecharDlg, true)]); return; }
+      const naLista = C.d.lista.includes(prodI), ja = C.coletados.includes(prodI);
+      abrirDlg({nome:str(x.nome), el:h('span',{class:'ic-grande'}, x.emoji || '📦')}, [h('div',{class:'palavra-card'}, h('b',{class:'alvo'}, str(x.nome)), h('span',{class:'muted'}, fmtPreco(x.preco, lang)), ouvirBtn(str(x.nome)))],
+        [ja ? narra('Já está no seu carrinho.') : btn('Pôr no carrinho', () => {
+          if (!naLista){ fecharDlg(); errou('Isso não está na sua lista.'); return; }
+          if (p && p.t === 'coletar' && prodI === C.d.lista[3]){ fecharDlg(); toastC('Esse você vai buscar depois de falar com o funcionário.'); return; }
+          C.coletados.push(prodI); addWord({w:str(x.nome), t:str(x.pt)}); fecharDlg(); toastC('🛒 ' + str(x.nome) + ' no carrinho!'); faiscasC(b[0].x, b[0].y);
+          if (p && p.t === 'coletar' && C.coletados.filter(z => z !== C.d.lista[3]).length >= p.n) return avancar();
+          if (p && p.t === 'direcoes' && prodI === C.d.lista[3]) return avancar();
+          pintarHUD();
+        }), btn('Deixar', fecharDlg, true)]);
+      return;
+    }
+    const pk = CENA_PALAVRA[a.tile];
+    if (pk){ const pw = palavraK(pk); if (pw){ abrirDlg({nome:'Você olha ao redor', el:icon('sound')}, [h('div',{class:'palavra-card'}, h('b',{class:'alvo'}, pw.alvo), h('span',{class:'muted'}, pw.pt), ouvirBtn(pw.alvo))], [btn('Fechar', fecharDlg, true)]); const w = MW(); if (!w.palavras[k + ':' + pk]){ w.palavras[k + ':' + pk] = 1; addWord({w:pw.alvo, t:pw.pt}); ganharHXP(5); save(); } } }
+  }
+  C.interagir = interagir;
+  const grupoDe = o => k === 'aeroporto' ? (o.y < 5 ? 'checkin' : 'portao') : 'd';
+  const grupoAlvo = p => p.grupo || 'd';
+  const idxNoGrupo = o => rotulados.filter(z => grupoDe(z) === grupoDe(o)).indexOf(o);
+  function darDirecoes(p, repetir){
+    const e = ents[p.de], alvo = C.alvoDirecoes; if (!e || !alvo) return;
+    if (!C.textoDirecoes){
+      const parte = vizLivres(e.x, e.y)[0] || {x:e.x, y:e.y};
+      const passos = rotaComPoucasCurvas((x, y) => livre(x, y) || (x === e.x && y === e.y), parte, vizLivres(alvo.x, alvo.y));
+      C.textoDirecoes = textoDirecoes(passos, alvo);
+    }
+    C.flags.direcoesDadas = true; C.audioPasso = C.textoDirecoes;
+    if (k === 'mercado') C.flags.reposto = true;
+    const quem = quemNpc(e.k);
+    abrirDlg(quem, [falaEl(C.textoDirecoes, null, true), narra(repetir ? 'Siga as direções a partir daqui de onde eu estou.' : 'Ouça as direções e siga a partir daqui. Se esquecer, toque em "Ouvir de novo" na faixa amarela.')], [btn('Entendi', fecharDlg)]);
+    pintarHUD();
+  }
+  function faiscasC(x, y){ for (let i = 0; i < 14; i++){ const a = Math.random() * 6.28, v = 30 + Math.random() * 40; W.parts.push({x:(x + .5) * TILE, y:(y + .5) * TILE, vx:Math.cos(a) * v, vy:Math.sin(a) * v - 20, vida:.9, max:.9}); } }
+
+  // ----- conteúdo da situação -----
+  function aplicarDados(d){
+    C.d = d;
+    // rótulos e respostas certas de cada lugar
+    if (k === 'estacao'){ C.rotulos = rotulados.map((o, i) => rot('plataforma', lang) + ' ' + (i + 1)); const row = d.painel.find(x => str(x.destino) === str(d.destino)); C.certo.alvo = clamp(Number(row && row.plataforma) || 1, 1, 4) - 1; }
+    if (k === 'hotel'){ const q = str(d.quarto), n = Number(q), outros = [...new Set([q.split('').reverse().join(''), String(n + 10), String(n - 10 > 99 ? n - 10 : n + 20), q[0] + q[2] + q[1], String(n + 1)])].filter(z => z !== q && /^\d+$/.test(z)).slice(0, rotulados.length - 1);
+      while (outros.length < rotulados.length - 1) outros.push(String(n + 100 * (outros.length + 1)));
+      const pos = Math.floor(ruido(n, 3, 7) * rotulados.length); outros.splice(pos, 0, q); C.rotulos = outros; C.certo.alvo = pos; }
+    if (k === 'aeroporto'){ const chk = rotulados.filter(o => grupoDe(o) === 'checkin'), gts = rotulados.filter(o => grupoDe(o) === 'portao');
+      C.rotulos = rotulados.map(o => grupoDe(o) === 'checkin' ? 'Check-in ' + (chk.indexOf(o) + 1) : rot('portao', lang) + ' ' + (gts.indexOf(o) + 1));
+      const row = d.painel.find(x => str(x.voo) === str(d.voo)); C.certo.alvo = clamp(Number(row && row.balcao) || 1, 1, 3) - 1; C.certo.portao = clamp(Number(d.anuncio.portao) || 1, 1, 4) - 1; }
+    if (k === 'cidade'){ const lojas = rot('lojas', lang); C.rotulos = rotulados.map((o, i) => lojas[i % lojas.length]); const fi = rotulados.findIndex((o, i) => i % lojas.length === 1); C.certo.alvo = fi; C.alvoDirecoes = rotulados[fi]; }
+    if (k === 'escritorio' || k === 'medico'){ const nome = rot(k === 'escritorio' ? 'sala' : 'consultorio', lang); C.rotulos = rotulados.map((o, i) => nome + ' ' + (i + 1)); C.certo.alvo = 1 + Math.floor(Math.random() * (rotulados.length - 1)); C.alvoDirecoes = rotulados[C.certo.alvo]; }
+    if (k === 'mercado'){
+      // cada bloco de prateleira recebe um produto; o último da lista fica no bloco mais longe e só aparece depois de perguntar
+      const longe = C.blocos.map((b, i) => ({i, dist:Math.abs(b[0].x - ini.x) + Math.abs(b[0].y - ini.y)})).sort((a, b) => b.dist - a.dist)[0].i;
+      C.prodDoBloco = {}; const outros = d.produtos.map((_, i) => i).filter(i => i !== d.lista[3]);
+      let n = 0; C.blocos.forEach((b, bi) => { if (bi === longe){ C.prodDoBloco[bi] = d.lista[3]; b.oculto = true; } else C.prodDoBloco[bi] = outros[n++ % outros.length]; });
+      C.blocos.forEach((b, bi) => b.forEach(q => { const o = objs.find(z => z.x === q.x && z.y === q.y); if (o){ o.prod = d.produtos[C.prodDoBloco[bi]]; o.oculto = !!b.oculto; } }));
+      const alvoB = C.blocos[longe]; C.alvoDirecoes = alvoB[alvoB.length - 1];
+    }
+    if (k === 'aeroporto') C.grupoPortao = true;
+    rotulados.forEach((o, i) => { o.rotulo = C.rotulos[i]; });
+    // o fiscal espera na plataforma certa
+    if (k === 'estacao' && ents['2']){ const pl = rotulados[C.certo.alvo]; ents['2'].x = ents['2'].px = pl.x + (pl.x + 1 < Wd - 1 ? 1 : -1); ents['2'].y = ents['2'].py = pl.y + 1; }
+    pintarHUD(); iniciarPasso();
+  }
+  // no aeroporto, o passo do portão usa outra resposta certa
+  C.ajustarAlvo = () => { const p = spec.passos[C.passo]; if (k === 'aeroporto' && p && p.t === 'anuncio_ir') C.certo.alvo = C.certo.portao; };
+
+  // ----- desenho de cada quadro -----
+  const ctxC = cv.getContext('2d');
+  let ultimo = performance.now();
+  function quadro(agora){
+    if (!raiz.isConnected){ if (ro) ro.disconnect(); document.removeEventListener('keydown', kd); document.removeEventListener('keyup', ku); if (CENA === C) CENA = null; return; }
+    const dt = Math.min(.05, (agora - ultimo) / 1000); ultimo = agora; C.t += dt;
+    const H0 = W.heroi;
+    if (H0.mov){ H0.mov.p += dt * 5.2; H0.passo += dt * 16; if (H0.mov.p >= 1){ H0.px = H0.mov.x; H0.py = H0.mov.y; chegou(); if (!H0.mov && W.segura && dlg.hidden && !W.ocupado) passo(W.segura); } }
+    if (H0.mov){ H0.px = H0.mov.de.x + (H0.mov.x - H0.mov.de.x) * H0.mov.p; H0.py = H0.mov.de.y + (H0.mov.y - H0.mov.de.y) * H0.mov.p; }
+    else if (W.segura && dlg.hidden && !W.ocupado) passo(W.segura);
+    const vw = W.vw / W.Z, vh = W.vh / W.Z;
+    const cx = clamp((H0.px + .5) * TILE - vw / 2, Math.min(0, (m.W * TILE - vw) / 2), Math.max((m.W * TILE - vw) / 2, m.W * TILE - vw)), cy = clamp((H0.py + .5) * TILE - vh / 2 + 40, -120, Math.max(0, m.H * TILE - vh + 90));
+    if (!W.cam.ok){ W.cam.x = cx; W.cam.y = cy; W.cam.ok = true; } else { W.cam.x += (cx - W.cam.x) * Math.min(1, dt * 6); W.cam.y += (cy - W.cam.y) * Math.min(1, dt * 6); }
+    C.ajustarAlvo();
+    const perto = !W.ocupado && dlg.hidden ? procurarPerto() : null;
+    const chaveP = perto ? JSON.stringify(Object.keys(perto)) + (perto.ent ? perto.ent.k : '') + (perto.rot ? perto.rot.idx : '') + (perto.x != null ? perto.x + ',' + perto.y : '') + (perto.prat != null ? perto.prat : '') : '';
+    if (chaveP !== W.chavePerto){ W.chavePerto = chaveP; W.alvoPerto = perto; if (perto){ const [ic, tx] = rotuloAcao(perto); acao.replaceChildren(icon(ic), h('span',null, tx)); acao.hidden = false; } else acao.hidden = true; }
+    const s = W.dpr * W.Z;
+    ctxC.setTransform(1, 0, 0, 1, 0, 0); ctxC.fillStyle = spec.fora ? '#8FBF7A' : '#2A2F3D'; ctxC.fillRect(0, 0, cv.width, cv.height);
+    ctxC.setTransform(s, 0, 0, s, -W.cam.x * s, -W.cam.y * s);
+    ctxC.drawImage(piso, 0, 0, m.W * TILE, m.H * TILE);
+    paineis.forEach(pn => desenharPainel(ctxC, pn.x, pn.y, pn.n, C));
+    if (W.toque && C.t - W.toque.t < .6){ const a = (C.t - W.toque.t) / .6; ctxC.strokeStyle = 'rgba(255,255,255,' + (1 - a) + ')'; ctxC.lineWidth = 2; ctxC.beginPath(); ctxC.ellipse((W.toque.x + .5) * TILE, (W.toque.y + .8) * TILE, 6 + a * 8, 3 + a * 4, 0, 0, 7); ctxC.stroke(); }
+    const lista = [];
+    objs.forEach(o => lista.push({b:o.base, f:() => o.c === 'd' ? desenharRotulo(ctxC, o, C) : desenharCoisa(ctxC, o.c, o.x * TILE, o.y * TILE, C, o)}));
+    for (const kk in ents){ const e = ents[kk]; lista.push({b:e.py + 1, f:() => { desenharPessoa(ctxC, (e.px + .5) * TILE, (e.py + 1) * TILE - 3, avatarDeSemente(k + e.papel + nomeNpc(e.papel)), {dir:e.dir, parado:true, t:C.t + e.x, item:e.papel === 'fiscal' || e.papel === 'seguranca' ? 'detetive' : ''}); }}); }
+    lista.push({b:H0.py + 1.01, f:() => desenharPessoa(ctxC, (H0.px + .5) * TILE, (H0.py + 1) * TILE - 3, meuAvatar(), {dir:H0.dir, passo:H0.mov ? H0.passo : 0, item:(S.profile.avatar || {}).item, parado:!H0.mov, t:C.t})});
+    lista.sort((a, b) => a.b - b.b).forEach(o => o.f());
+    // marcador "!" em quem você precisa procurar
+    const p = spec.passos[C.passo], alvoE = p && C.d ? (p.npc && ents[p.npc] ? ents[p.npc] : p.t === 'direcoes' && !C.flags.direcoesDadas ? ents[p.de] : null) : null;
+    if (alvoE){ const X = (alvoE.px + .5) * TILE, Y = (alvoE.py + 1) * TILE - 52, b = Math.sin(C.t * 5) * 2.5; ctxC.fillStyle = '#FACC15'; ctxC.strokeStyle = 'rgba(0,0,0,.35)'; ctxC.lineWidth = 1.5; ctxC.beginPath(); ctxC.arc(X, Y + b, 8, 0, 7); ctxC.fill(); ctxC.stroke(); ctxC.fillStyle = INK; ctxC.font = '800 12px system-ui, sans-serif'; ctxC.textAlign = 'center'; ctxC.textBaseline = 'middle'; ctxC.fillText('!', X, Y + .5 + b); }
+    if (p && C.d && (p.t === 'menu' || p.t === 'painel') && paineis[0]){ const pn = paineis[0], X = (pn.x + pn.n / 2) * TILE, Y = pn.y * TILE + 44 + Math.sin(C.t * 5) * 3; ctxC.fillStyle = '#FACC15'; ctxC.beginPath(); ctxC.moveTo(X, Y - 8); ctxC.lineTo(X - 7, Y + 3); ctxC.lineTo(X + 7, Y + 3); ctxC.fill(); }
+    for (let i = W.parts.length - 1; i >= 0; i--){ const q = W.parts[i]; q.vida -= dt; if (q.vida <= 0){ W.parts.splice(i, 1); continue; } q.x += q.vx * dt; q.y += q.vy * dt; q.vy += 80 * dt; ctxC.globalAlpha = q.vida / q.max; ctxC.fillStyle = '#FACC15'; ctxC.fillRect(q.x - 1.5, q.y - 1.5, 3, 3); ctxC.globalAlpha = 1; }
+    requestAnimationFrame(quadro);
+  }
+  requestAnimationFrame(quadro);
+  setTimeout(() => titulo.classList.add('some'), 1800);
+  pintarHUD();
+  const carregar = () => {
+    if (dados){ aplicarDados(dados); return; }
+    ai(promptCena(k, missao ? missao.r : 0)).then(d => prepararCena(k, d)).then(d => { if (raiz.isConnected) aplicarDados(d); }, e => {
+      if (!raiz.isConnected) return;
+      abrirDlg({nome:'Ops', el:icon('flag')}, [narra(e && e.code === 'invalid_json' ? 'A situação veio incompleta.' : aiMsg(e))], [btn('Tentar de novo', () => { fecharDlg(); carregar(); }), btn('Voltar ao mapa', () => goTab('inicio'), true)]);
+    });
+  };
+  carregar();
 }
 
 /* ============================== partida ============================== */
