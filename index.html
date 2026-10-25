@@ -419,6 +419,21 @@ button.painel-linha:active{background:#1E2B4A}
 .estrelas-fim{display:flex;justify-content:center;gap:6px;font-size:30px;color:var(--line)}
 .estrelas-fim.grande{font-size:44px}
 .estrelas-fim .on{color:#FACC15;text-shadow:0 2px 0 #B45309}
+
+/* ===== progresso: caminho até o próximo nível ===== */
+.anel.grande i{width:96px;height:96px}
+.anel.grande i::after{width:76px;height:76px;font-size:22px;font-weight:800}
+.caminho .bar{height:12px}
+.barras14{position:relative;display:grid;grid-template-columns:repeat(14,1fr);gap:4px;align-items:end;height:120px;padding-top:14px}
+.b14{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}
+.b14 i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:var(--accent);opacity:.8}
+.b14.hoje i{opacity:1;background:var(--orange,#F0782F)}
+.b14 small{font-size:10px;color:var(--muted)}
+.b14 .v{font-size:9px;color:var(--muted);min-height:11px}
+.meta-linha{position:absolute;left:0;right:0;border-top:2px dashed var(--line);margin-bottom:18px;pointer-events:none}
+.skill .delta{font-size:11px;font-weight:800;margin-left:6px}
+.skill .delta.sobe{color:#15803D}.skill .delta.desce{color:#B91C1C}
+details summary{cursor:pointer;font-weight:600}
 </style>
 </head>
 <body>
@@ -1609,15 +1624,165 @@ function telaAprender(){
 }
 
 /* ============================== progresso ============================== */
+/* ============================== tempo de estudo e caminho até o próximo nível ============================== */
+// Conta o tempo de uso ativo do app (com a tela aberta e tocada no último minuto).
+// Na primeira vez, estima o tempo já estudado a partir das missões, conversas e aventuras feitas.
+function T0(){
+  if (!S.tempo){
+    const min = (S.log || []).reduce((a, l) => a + (Number(l.min) || 0), 0) + Math.round((S.convo.turns || 0) * .75) + (S.jogo ? Object.keys(S.jogo.feitos || {}).length * 7 : 0);
+    S.tempo = {d:{}, total:min * 60, nivel:{lv:S.level, seg:min * 60, desde:today()}, semente:min};
+  }
+  if (S.tempo.nivel.lv !== S.level) S.tempo.nivel = {lv:S.level, seg:0, desde:today()};
+  return S.tempo;
+}
+let ultimaAcao = Date.now(), tickTempo = 0;
+['pointerdown','keydown','touchstart'].forEach(t => document.addEventListener(t, () => { ultimaAcao = Date.now(); }, {capture:true, passive:true}));
+setInterval(() => {
+  if (!TOKEN || !S.profile || !S.level || document.hidden || Date.now() - ultimaAcao > 60000 || ['welcome','onb'].includes(ui.screen)) return;
+  const t = T0(), d = today(); t.d[d] = (t.d[d] || 0) + 10; t.total += 10; t.nivel.seg += 10;
+  const ks = Object.keys(t.d); if (ks.length > 120) ks.sort().slice(0, ks.length - 120).forEach(k => delete t.d[k]);
+  if (++tickTempo % 6 === 0){ S.updatedAt = Date.now(); writeLocal(); dirty = true; }
+}, 10000);
+const minutosDia = d => Math.round(((T0().d[d]) || 0) / 60);
+function progressoNivel(){
+  const i = lv(); if (i < 0) return null;
+  const p = S.profile, f = p.native === 'Português' ? LANGS[p.target].f : 1;
+  const prox = LEVELS[i + 1] || null, H = Math.round((HORAS[S.level] || 200) * f), t = T0(), horas = t.nivel.seg / 3600;
+  const vals = ['conversa','leitura','escrita','vocabulario','gramatica'].map(k => S.skills[k]).filter(v => v != null);
+  const dom = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
+  const pPrat = Math.min(1, horas / H), pDom = Math.min(1, dom / 75);
+  let seg14 = 0; for (let k = 0; k < 14; k++) seg14 += t.d[addDays(today(), -k)] || 0;
+  const resto = Math.max(0, H - horas);
+  return {prox, H, horas, dom, pPrat, pDom, pct:Math.round((pPrat * .7 + pDom * .3 * Math.min(1, .25 + pPrat * 1.5)) * 100), resto, ritmo:seg14 / 14 / 60,
+    dias: min => min > 0 ? Math.ceil(resto * 60 / min) : null, pronto: pPrat >= .85 && dom >= 70};
+}
+function duracaoTxt(dias){
+  if (dias == null) return '—';
+  if (dias <= 10) return 'cerca de ' + dias + (dias === 1 ? ' dia' : ' dias');
+  if (dias < 60) return 'cerca de ' + Math.round(dias / 7) + ' semanas';
+  const m = Math.round(dias / 30);
+  if (m <= 18) return 'cerca de ' + m + ' meses';
+  return 'cerca de ' + (Math.round(m / 6) / 2).toString().replace('.', ',') + ' anos';
+}
+const dataTxt = dias => new Date(Date.now() + dias * 864e5).toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+const horasTxt = hh => hh < 1 ? Math.round(hh * 60) + ' min' : (Math.round(hh * 10) / 10).toString().replace('.', ',') + ' h';
+// Uma foto das habilidades por semana, para mostrar a evolução
+function fotoSemanal(){
+  if (!S.hist) S.hist = [];
+  const w = weekId(), ult = S.hist[S.hist.length - 1];
+  const foto = {w, d:today(), skills:Object.assign({}, S.skills), xp:S.xp, vocab:S.vocab.length, level:S.level};
+  if (!ult || ult.w !== w){ S.hist.push(foto); if (S.hist.length > 60) S.hist.splice(1, 1); save(); }
+  else S.hist[S.hist.length - 1] = Object.assign(foto, {d:ult.d});
+}
+function cartaoCaminho(){
+  const pr = progressoNivel(), p = S.profile;
+  if (!pr) return null;
+  if (!pr.prox) return h('section',{class:'card stack tight'}, h('b',null,'Você está no nível mais alto (' + S.level + ').'), h('p',{class:'muted small'},'Continue praticando para manter e refinar.'));
+  const anel = h('i',{'data-v':pr.pct + '%',style:'--c:var(--accent)'}); requestAnimationFrame(() => requestAnimationFrame(() => anel.style.setProperty('--p', pr.pct)));
+  const prev = h('div',{class:'stack tight'});
+  const simular = min => {
+    const dReal = pr.dias(pr.ritmo), dMin = pr.dias(min);
+    prev.replaceChildren(
+      pr.ritmo >= 1 ? h('p',null, '📈 No seu ritmo real dos últimos 14 dias (', h('b',null, Math.round(pr.ritmo) + ' min/dia'), '): ', h('b',null, duracaoTxt(dReal)), dReal ? ' (por volta de ' + dataTxt(dReal) + ')' : '', '.')
+        : h('p',null,'📈 Ainda não deu para medir o seu ritmo: estude alguns dias e eu calculo com o seu tempo real.'),
+      h('p',null, '🎯 Estudando ', h('b',null, min + ' min por dia'), ': ', h('b',null, duracaoTxt(dMin)), dMin ? ' (por volta de ' + dataTxt(dMin) + ')' : '', '.'));
+  };
+  const chips = chipSet([5,10,15,20,30,45].map(v => [v, v + ' min']), p.minutes, false, v => simular(v));
+  simular(p.minutes);
+  const barra = (rot, pct, txt) => h('div',{class:'stack tight'}, h('div',{class:'row between'}, h('span',{class:'small'}, rot), h('b',{class:'small'}, txt)), h('div',{class:'bar good'}, h('i',{style:'width:' + Math.round(pct * 100) + '%'})));
+  const provaHoje = S.provaEm && dayDiff(S.provaEm, today()) < 3;
+  return h('section',{class:'card stack caminho'},
+    h('div',{class:'row',style:'gap:16px;align-items:center'}, h('div',{class:'anel grande'}, anel),
+      h('div',{class:'grow stack tight'}, h('span',{class:'eyebrow'}, 'Rumo ao ' + pr.prox), h('b',{style:'font-size:18px'}, 'Você já fez ' + pr.pct + '% do caminho do ' + S.level + ' ao ' + pr.prox),
+        h('span',{class:'small muted'}, 'Faltam cerca de ' + horasTxt(pr.resto) + ' de prática.'))),
+    barra('⏱️ Prática no ' + S.level, pr.pPrat, horasTxt(pr.horas) + ' de ~' + pr.H + ' h'),
+    barra('🧠 Domínio (média das habilidades)', pr.pDom, pr.dom + (pr.dom >= 75 ? ' ✓ meta 75' : ' de 75')),
+    h('div',{class:'note soft stack tight'}, h('b',null,'Quanto tempo falta?'), prev, h('span',{class:'small muted'},'Simule outro tempo por dia:'), chips),
+    pr.pronto && !provaHoje ? h('button',{class:'btn',type:'button',onclick:() => telaProva()}, '🏅 Fazer a prova para o ' + pr.prox)
+      : h('div',{class:'stack tight'}, h('p',{class:'small muted'}, provaHoje ? 'Você fez a prova recentemente. Pode tentar de novo em ' + (3 - dayDiff(S.provaEm, today())) + ' dia(s).' : 'A prova para o ' + pr.prox + ' libera com 85% da prática e domínio 70. Se já se sentir pronto, pode tentar antes.'),
+        provaHoje ? null : h('button',{class:'btn link',type:'button',style:'align-self:flex-start;padding:0',onclick:() => telaProva()},'Tentar a prova agora')),
+    h('details',{class:'small muted'}, h('summary',null,'Como isso é calculado'),
+      h('p',null,'A prática é o tempo em que você usa o app de verdade (com a tela ativa). Para ir do ' + S.level + ' ao ' + pr.prox + ', a referência é de cerca de ' + pr.H + ' horas de estudo guiado' + (p.native === 'Português' && LANGS[p.target].f < 1 ? ', já com o desconto para quem fala português' : '') + '. O domínio é a média das suas notas nas habilidades. O progresso junta os dois: a prática pesa 70% e o domínio 30% (o domínio vai contando mais conforme a prática avança). Você só sobe de nível passando na prova.')));
+}
+function cartaoEstudo(){
+  const t = T0(), p = S.profile, dias = Array.from({length:14}, (_, k) => addDays(today(), k - 13));
+  const vals = dias.map(minutosDia), max = Math.max(p.minutes * 1.4, ...vals, 1);
+  const semana = dias.slice(-7).reduce((a, d) => a + minutosDia(d), 0), meta = p.minutes * 7;
+  const SEM = ['D','S','T','Q','Q','S','S'];
+  return h('section',{class:'card stack tight'},
+    h('div',{class:'row between'}, h('span',{class:'eyebrow'},'Seu estudo'), h('span',{class:'small muted'}, 'Total: ' + horasTxt(t.total / 3600))),
+    h('div',{class:'barras14','aria-label':'Minutos estudados nos últimos 14 dias'},
+      h('i',{class:'meta-linha',style:'bottom:' + Math.round(p.minutes / max * 100) + '%'}),
+      dias.map((d, k) => h('div',{class:'b14' + (d === today() ? ' hoje' : '')}, h('span',{class:'v'}, vals[k] ? String(vals[k]) : ''), h('i',{style:'height:' + Math.max(vals[k] ? 4 : 0, Math.round(vals[k] / max * 100)) + '%'}), h('small',null, SEM[new Date(d + 'T12:00:00').getDay()])))),
+    h('p',{class:'small'}, 'Esta semana: ', h('b',null, semana + ' min'), ' de ' + meta + ' min da sua meta (' + p.minutes + ' min por dia).'),
+    t.semente && !Object.keys(t.d).length ? h('p',{class:'small muted'},'O tempo anterior a hoje foi estimado pelas suas missões e conversas. Daqui pra frente eu conto o tempo real.') : null);
+}
+function cartaoEvolucao(){
+  const hs = S.hist || [], prim = hs[0];
+  const delta = k => { if (!prim || prim.skills[k] == null || S.skills[k] == null || hs.length < 2) return null; return S.skills[k] - prim.skills[k]; };
+  return h('section',{class:'stack'}, h('h3',null,'Habilidades'),
+    Object.keys(SKILLS).map(k => { const el = barraSkill(k), dl = delta(k); if (dl) el.querySelector('b').append(h('small',{class:'delta ' + (dl > 0 ? 'sobe' : 'desce')}, (dl > 0 ? '+' : '') + dl)); return el; }),
+    prim && hs.length >= 2 ? h('p',{class:'small muted'}, 'Comparado com ' + new Date(prim.d + 'T12:00:00').toLocaleDateString('pt-BR', {day:'numeric', month:'short'}) + ': ' + (S.vocab.length - prim.vocab) + ' palavras novas e ' + (S.xp - prim.xp) + ' XP.') : h('p',{class:'small muted'},'A partir da semana que vem aparece aqui quanto cada habilidade subiu.'));
+}
+/* ---------- prova de subida de nível ---------- */
+function promptProva(prox){
+  const L = nomeIdioma(S.profile.target);
+  return 'TAREFA: prova_nivel\n' + regras() + '\n\n' + ctx() + '\n\nCrie uma prova curta para verificar se o aluno já domina o nível ' + prox + ' (CEFR) em ' + L + '. Responda SOMENTE com um objeto JSON: {"questoes": lista com 10 itens {"p": enunciado curto (lacuna, pergunta ou frase para interpretar) em ' + L + ', "opcoes": [4 opções], "certa": índice, "habilidade": "gramatica" ou "vocabulario" ou "leitura"}, "escrita": {"tarefa": instrução em ' + S.profile.native + ' pedindo 2 ou 3 frases em ' + L + ' que exijam estruturas do nível ' + prox + '}}. Questões no nível ' + prox + ', variadas, com situações da vida real. Sem markdown.';
+}
+function promptAvaliarProva(prox, tarefa, texto){
+  return 'TAREFA: avaliar_prova\n' + regras() + '\n\nTarefa da prova (nível ' + prox + '): ' + tarefa + '\nResposta do aluno:\n"' + texto + '"\n\nResponda SOMENTE com um objeto JSON: {"nota": 0 a 100, considerando se o texto mostra domínio do nível ' + prox + ', "comentario": 1 ou 2 frases em ' + S.profile.native + ' com o principal acerto e o principal ponto a melhorar, "melhor": versão corrigida e natural}. Sem markdown.';
+}
+function telaProva(){
+  const pr = progressoNivel(); if (!pr || !pr.prox) return goTab('progresso');
+  const prox = pr.prox, box = h('div',{class:'stack'});
+  show('test', h('span',{class:'eyebrow'},'Prova de nível'), h('h1',null, S.level + ' → ' + prox), coachEl('neutral','São 10 questões e uma escrita curta. Para subir, você precisa de 70 pontos.'), box);
+  runAI(box, 'Preparando a sua prova...', () => ai(promptProva(prox)), d => {
+    const qs = (Array.isArray(d && d.questoes) ? d.questoes : []).map(q => Object.assign(normQ(q) || {}, {hab:str(q && q.habilidade)})).filter(q => q.p && q.opcoes).slice(0, 10);
+    const tarefa = str(d && d.escrita && d.escrita.tarefa) || 'Escreva 2 ou 3 frases sobre seus planos para o próximo ano.';
+    if (qs.length < 6){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A prova veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:telaProva},'Gerar de novo'))); return; }
+    let k = 0, acertos = 0;
+    const pergunta = () => {
+      if (k >= qs.length) return escrita();
+      const q = qs[k], prox2 = h('div');
+      box.replaceChildren(h('div',{class:'steps'}, qs.map((_, n) => h('i',{class:n < k ? 'on' : ''}))), h('span',{class:'eyebrow'}, 'Questão ' + (k + 1) + ' de ' + qs.length),
+        h('p',{class:'alvo',style:'font-size:20px;font-weight:600'}, q.p),
+        mcq(q, ok => { if (ok) acertos++; prox2.replaceChildren(h('button',{class:'btn',type:'button',onclick:() => { k++; pergunta(); }}, k + 1 < qs.length ? 'Próxima' : 'Ir para a escrita')); }), prox2);
+    };
+    const escrita = () => {
+      const ta = h('textarea',{class:'input',rows:4,id:'prova-texto',placeholder:'Escreva aqui em ' + nomeIdioma(S.profile.target)}), out = h('div'), mm = h('p',{class:'small muted',role:'status'});
+      box.replaceChildren(h('span',{class:'eyebrow'},'Escrita'), h('div',{class:'narra'}, tarefa), ta, h('div',{class:'row'}, micBtn(ta, mm), mm), out,
+        h('button',{class:'btn',type:'button',onclick:ev => { const t = ta.value.trim(); if (t.length < 15){ mm.textContent = 'Escreva pelo menos 2 frases.'; return; } ev.currentTarget.disabled = true;
+          runAI(out, 'Corrigindo...', () => ai(promptAvaliarProva(prox, tarefa, t)), a => resultado(clamp(Math.round(Number(a && a.nota) || 0), 0, 100), a || {})); }}, 'Entregar a prova'));
+    };
+    const resultado = (notaEsc, a) => {
+      const notaQ = Math.round(acertos / qs.length * 100), total = Math.round(notaQ * .7 + notaEsc * .3), passou = total >= 70;
+      S.provaEm = today();
+      if (passou){ S.level = prox; T0(); addXP(100); S.hist = S.hist || []; }
+      save(); if (passou) setTimeout(confete, 150);
+      const t = tutorDe(S.profile.target), pic = tutorEl(S.profile.target, passou ? 'cheer' : 'think', 110, 'pop'); pic.style.background = t.fundo;
+      show('test', h('div',{class:'festa'}, pic, h('h1',null, passou ? 'Você agora é ' + prox + '!' : 'Ainda não foi dessa vez'),
+          h('p',{class:'muted'}, passou ? 'Parabéns! Missões, conversas e aventuras passam a usar o nível ' + prox + '.' : 'Você fez ' + total + ' pontos; precisa de 70. Continue praticando: dá para tentar de novo em 3 dias.')),
+        h('div',{class:'stat'}, h('div',null, h('b',null, acertos + '/' + qs.length), h('span',null,'questões')), h('div',null, h('b',null, String(notaEsc)), h('span',null,'escrita')), h('div',null, h('b',null, String(total)), h('span',null,'nota final'))),
+        str(a.comentario) ? h('div',{class:'note soft'}, str(a.comentario)) : null,
+        str(a.melhor) ? h('div',{class:'card stack tight'}, h('span',{class:'small muted'},'Versão corrigida'), h('p',{class:'alvo'}, str(a.melhor)), ouvirBtn(str(a.melhor), {auto:false})) : null,
+        h('div',{class:'spacer'}), h('button',{class:'btn',type:'button',onclick:() => { drawTabs(); goTab('progresso'); }},'Ver meu progresso'));
+    };
+    pergunta();
+  });
+}
+
+
 function telaProgresso(){
-  const p = S.profile, x = xpInfo(), i = lv(), e = estimativa(p.minutes);
+  const p = S.profile, x = xpInfo(), i = lv(); fotoSemanal();
   const w = S.convo.week === weekId() ? S.convo.weekTurns : 0;
   const erros = S.errors.slice().sort((a,b) => b.n - a.n).slice(0,5);
   show('main', h('h1',null,'Progresso'),
     h('section',{class:'card perfil-top'}, avatarEl(meuAvatar(), 64), h('div',{class:'grow'}, h('h2',null,p.name), h('div',{class:'muted small'}, 'Nível ' + x.n + ' · ' + x.nome + ' · ' + S.xp + ' XP')), tutorEl(p.target,'happy',58,'flutua')),
     h('section',{class:'card stack'}, h('div',{class:'row between'}, h('span',{class:'eyebrow'}, LANGS[p.target].n.replace(/ \(.*/,'')), h('span',{class:'badge'},'Nível ' + S.level)),
       h('div',{class:'line'}, LEVELS.map((L,k) => h('div',{class:'stop' + (k < i ? ' done' : k === i ? ' here' : '')}, h('i'), L === 'A0' ? 'Zero' : L))),
-      e ? h('p',{class:'muted small'},'Até ' + e.prox + ' com ' + p.minutes + ' min por dia: cerca de ' + e.texto + '.') : null),
+      null),
+    cartaoCaminho(),
+    cartaoEstudo(),
     h('section',{class:'card stack tight'}, h('div',{class:'row between'}, h('b',null,'Nível ' + x.n + ' · ' + x.nome), h('span',{class:'muted small'}, S.xp + ' XP')),
       h('div',{class:'bar good'}, h('i',{style:'width:' + x.pct + '%'})), x.prox ? h('p',{class:'muted small'},'Faltam ' + x.falta + ' XP para ' + x.prox + '.') : null),
     h('div',{class:'stat'},
@@ -1627,7 +1792,7 @@ function telaProgresso(){
       h('div',null, h('b',null,S.convo.turns), h('span',null,'trocas de conversa'))),
     h('section',{class:'card stack tight'}, h('span',{class:'eyebrow'},'Missão da semana'), h('p',{style:'font-weight:700'},'Manter ' + META_SEMANA + ' trocas de conversa'),
       h('div',{class:'bar'}, h('i',{style:'width:' + Math.min(100, Math.round(w / META_SEMANA * 100)) + '%'})), h('p',{class:'muted small'}, Math.min(w, META_SEMANA) + ' de ' + META_SEMANA)),
-    h('section',{class:'stack'}, h('h3',null,'Habilidades'), Object.keys(SKILLS).map(barraSkill)),
+    cartaoEvolucao(),
     h('section',{class:'stack'}, h('h3',null,'Pontos para trabalhar'),
       erros.length ? h('div',{class:'card list'}, erros.map(er => h('div',{style:'flex-direction:column;align-items:flex-start;gap:2px'}, h('b',null,er.p + (er.n > 1 ? ' (' + er.n + ' vezes)' : '')), er.better ? h('span',{class:'alvo'},er.better) : null)))
         : h('p',{class:'muted'},'Quando o professor notar um erro que se repete, ele aparece aqui e volta nas próximas missões.')));
