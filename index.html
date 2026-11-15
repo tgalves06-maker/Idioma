@@ -434,6 +434,109 @@ button.painel-linha:active{background:#1E2B4A}
 .skill .delta{font-size:11px;font-weight:800;margin-left:6px}
 .skill .delta.sobe{color:#15803D}.skill .delta.desce{color:#B91C1C}
 details summary{cursor:pointer;font-weight:600}
+
+/* ===== herói e equipamentos (estilo MU) ===== */
+.mu-painel{position:relative;padding:14px;border-radius:18px;background:radial-gradient(circle at 50% 30%,#2A2140,#120E1C 70%);border:1.5px solid #8B6F3A;box-shadow:inset 0 0 0 1px rgba(253,230,138,.15),0 10px 30px rgba(0,0,0,.25);color:#F5E6C8}
+.mu-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
+.mu-topo small{display:block;color:#C9B68C;font-size:12px}
+.poder{text-align:right}.poder small{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#C9B68C}
+.poder b{font:800 22px var(--font-display);background:linear-gradient(180deg,#FDE68A,#F59E0B);-webkit-background-clip:text;background-clip:text;color:transparent}
+.boneco{display:grid;grid-template-columns:62px 1fr 62px;grid-template-rows:repeat(5,62px);gap:8px 6px;align-items:center;justify-items:center}
+.boneco-centro{grid-column:2;grid-row:1 / span 5;align-self:stretch;display:grid;place-items:center}
+.heroi-cv{width:100%;max-width:240px;aspect-ratio:1}
+.slot-arma{grid-column:1;grid-row:1}.slot-luvas{grid-column:1;grid-row:2}.slot-anel{grid-column:1;grid-row:3}.slot-calcas{grid-column:1;grid-row:4}.slot-colar{grid-column:1;grid-row:5}
+.slot-elmo{grid-column:3;grid-row:1}.slot-asas{grid-column:3;grid-row:2}.slot-escudo{grid-column:3;grid-row:3}.slot-armadura{grid-column:3;grid-row:4}.slot-botas{grid-column:3;grid-row:5}
+.it-caixa{position:relative;width:58px;height:58px;padding:6px;border-radius:10px;border:2px solid #4B3F2A;background:linear-gradient(160deg,#2B2238,#17121F);display:grid;place-items:center;flex:none}
+.it-caixa svg{width:100%;height:100%}
+.it-caixa.vazio{border-style:dashed;opacity:.55;color:#C9B68C;font-size:10px;text-align:center}
+.it-caixa.rar-raro{border-color:#3B82F6}.it-caixa.rar-excelente{border-color:#22C55E}.it-caixa.rar-lendario{border-color:#F59E0B}
+.it-caixa.brilha{box-shadow:0 0 12px var(--brilho,#fff),inset 0 0 10px color-mix(in srgb,var(--brilho,#fff) 40%,transparent);animation:brilho-item 1.6s ease-in-out infinite}
+@keyframes brilho-item{50%{box-shadow:0 0 20px var(--brilho,#fff),inset 0 0 14px color-mix(in srgb,var(--brilho,#fff) 55%,transparent)}}
+.it-nv{position:absolute;top:2px;right:4px;font:800 11px var(--font-ui);color:#FDE68A;text-shadow:0 1px 2px #000}
+.it-e{position:absolute;bottom:2px;left:4px;font:800 9px var(--font-ui);color:#86EFAC}
+.mu-conj{margin-top:8px;text-align:center;font-size:12px;color:#86EFAC}
+.atrs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.atr{display:flex;justify-content:space-between;align-items:baseline;padding:8px 10px;border-radius:10px;background:var(--sunk)}
+.efeitos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.efeitos > div{padding:10px;border-radius:12px;background:var(--accent-soft);display:flex;flex-direction:column}
+.efeitos b{font:800 20px var(--font-display)}.efeitos span{font-size:12px;color:var(--muted)}
+.joias{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.joia{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:12px;background:#17121F;color:#F5E6C8;text-align:center}
+.joia svg{width:30px;height:30px}.joia small{font-size:10px;color:#C9B68C}
+.inventario{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;padding:10px;border-radius:14px;background:#120E1C;border:1.5px solid #4B3F2A}
+.inventario .it-caixa{width:100%;height:auto;aspect-ratio:1}
+.modal-fundo{position:fixed;inset:0;z-index:60;background:rgba(5,5,15,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px;animation:entra .2s ease both}
+.mu-tooltip{width:min(460px,100%);padding:16px;border-radius:18px;background:#120E1C;border:1.5px solid #8B6F3A;color:#F5E6C8;display:flex;flex-direction:column;gap:12px;animation:sobe-dlg .25s ease both}
+.mu-tooltip small{color:#C9B68C}
+.mu-nome{font:800 17px var(--font-display);display:block}
+.mu-linhas{display:flex;flex-direction:column;gap:4px;padding:10px;border-radius:10px;background:rgba(255,255,255,.04);font-size:14px;text-align:center}
+.mu-linhas .mais{color:#86EFAC}.mu-linhas .menos{color:#FCA5A5}
+.mu-ref{color:#FDE68A;font-weight:700}.mu-op{color:#4ADE80}.mu-req{color:#C9B68C;font-size:12px}.mu-req.falta{color:#FCA5A5}
+.mu-tooltip .btn.sec{background:transparent;color:#F5E6C8;border-color:#8B6F3A}
+.mu-tooltip .btn.link{color:#FDE68A}
+.classes{display:grid;gap:12px}
+.classe-card{display:grid;grid-template-columns:110px 1fr;grid-template-rows:auto 1fr;gap:2px 12px;align-items:center;text-align:left;background:radial-gradient(circle at 20% 50%,#2A2140,#120E1C 70%);color:#F5E6C8;border:1.5px solid #8B6F3A}
+.classe-card .classe-cv{grid-row:1 / span 2;width:110px;height:110px}
+.classe-card b{font:800 19px var(--font-display);align-self:end}.classe-card .small{color:#C9B68C;align-self:start}
+.refino{display:flex;flex-direction:column;align-items:center;gap:10px}
+.refino-alvo .it-caixa{width:96px;height:96px}
+.refino-alvo.girando .it-caixa{animation:gira-refino 1.3s ease-in-out}
+@keyframes gira-refino{0%{transform:scale(1)}40%{transform:scale(1.15) rotate(8deg);box-shadow:0 0 40px #FDE68A}70%{transform:scale(.95) rotate(-6deg)}100%{transform:scale(1)}}
+.refino-resultado .deu{color:#86EFAC}.refino-resultado .falhou{color:#FCA5A5}
+.joia-op{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-align:left}
+.joia-op svg{width:34px;height:34px;flex:none}.joia-op small{display:block;color:var(--muted)}
+.joia-op:disabled{opacity:.45}
+.drops .drops-lista{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.drop{display:flex;align-items:center;gap:8px;min-width:46%}.drop b{font-size:13px}.drop small{display:block;color:#C9B68C}
+.drops .btn.sec{background:transparent;color:#F5E6C8;border-color:#8B6F3A}
+.loja-item .it-caixa{width:54px;height:54px}
+.arena .heroi canvas{width:96px;height:96px;display:block}
+.arena.golpeando .heroi{transform:translateX(18px) scale(1.05);transition:transform .12s}
+.arena .heroi{transition:transform .2s}
+.toast-solto{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);z-index:70;padding:10px 16px;border-radius:999px;background:rgba(15,20,40,.92);color:#fff;font-size:13px;font-weight:600;max-width:90vw;text-align:center;transition:opacity .4s}
+.toast-solto.sai{opacity:0}
+
+/* ===== aula ao vivo ===== */
+.aovivo-card{position:relative;display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px 14px 6px;border:0;border-radius:22px;text-align:left;color:#E2E8F0;background:radial-gradient(circle at 15% 50%,#123047,#070B16 70%);box-shadow:0 12px 30px rgba(6,20,40,.35),inset 0 0 0 1px rgba(103,232,249,.18);overflow:hidden}
+.aovivo-card .orbe-mini{width:92px;height:92px;flex:none}
+.aovivo-card b{display:block;font:800 18px var(--font-display);color:#FFFFFF;margin:2px 0}
+.aovivo-card span{font-size:13px;line-height:1.35;color:#9FB3C8}
+.aovivo-selo{font:800 10px var(--font-ui)!important;letter-spacing:.12em;color:#F87171!important}
+.aovivo-seta{font-size:22px!important;color:#67E8F9!important;padding-left:4px}
+.aovivo{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;min-height:100dvh;margin:-22px -18px -28px;padding:18px 18px 28px;color:#E2E8F0;background:radial-gradient(circle at 50% 28%,#0E2A3F,#05070F 65%)}
+.aovivo-topo{width:100%;display:flex;justify-content:space-between;align-items:center;font:700 14px var(--font-ui);color:#CBD5E1}
+.aovivo-x{border:0;background:rgba(255,255,255,.08);color:#E2E8F0;border-radius:999px;padding:8px 14px;font:700 13px var(--font-ui)}
+.aovivo .orbe{width:min(230px,58vw);aspect-ratio:1}
+.aovivo-sala .orbe{width:min(260px,64vw)}
+.aovivo-titulo{display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:-10px}
+.aovivo-titulo b{font:800 26px var(--font-display);color:#FFFFFF}.aovivo-titulo span{font-size:13px;color:#94A3B8}
+.aovivo-opcoes{width:100%;display:flex;flex-direction:column;gap:8px}
+.aovivo-opcoes .eyebrow{color:#67E8F9}
+.aovivo .chip{background:rgba(255,255,255,.06);color:#E2E8F0;border-color:rgba(148,163,184,.3)}
+.aovivo .chip[aria-pressed="true"]{background:#E2E8F0;color:#05070F;border-color:#E2E8F0}
+.aovivo-check{display:flex;gap:8px;align-items:center;font-size:13px;color:#CBD5E1}
+.aovivo-comecar{background:linear-gradient(135deg,#06B6D4,#6366F1);border:0;color:#FFFFFF;font-size:17px;box-shadow:0 10px 30px rgba(6,182,212,.35)}
+.aovivo-nota{font-size:12px;color:#64748B;text-align:center;margin:0}
+.aovivo-nome{display:flex;flex-direction:column;align-items:center;color:#FFFFFF;font:800 16px var(--font-display)}
+.aovivo-status{font:700 11px var(--font-ui);letter-spacing:.06em;text-transform:uppercase;color:#67E8F9}
+.aovivo-status.falando{color:#FDE68A}.aovivo-status.pensando{color:#C4B5FD}.aovivo-status.pausado,.aovivo-status.conectando{color:#94A3B8}
+.aovivo-tempo{font:700 13px ui-monospace,Menlo,monospace;color:#94A3B8;min-width:44px;text-align:right}
+.aovivo-legendas{width:100%;min-height:96px;display:flex;flex-direction:column;gap:6px;text-align:center}
+.leg-prof{margin:0;font-size:21px;font-weight:600;line-height:1.35;color:#FFFFFF}
+.leg-aluno{margin:0;font-size:15px;color:#94A3B8;font-style:italic}
+.sem-legenda .leg-prof{filter:blur(7px);user-select:none}
+.aovivo-feed{width:100%;display:flex;flex-direction:column;gap:8px}
+.corr-card{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(148,163,184,.2);animation:sobe-dlg .3s ease both}
+.corr-card s{color:#FCA5A5}.corr-card b{color:#86EFAC}.corr-card small{display:block;color:#94A3B8;margin-top:2px}
+.corr-card.palavra b{color:#FDE68A}.corr-card.aviso{border-color:rgba(253,230,138,.35)}.corr-card.aviso small{color:#FDE68A}
+.aovivo-controles{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:auto}
+.aovivo-ctl{border:0;background:rgba(255,255,255,.08);color:#E2E8F0;border-radius:999px;padding:10px 16px;font:700 13px var(--font-ui)}
+.aovivo-mic{width:76px;height:76px;border-radius:50%;border:0;background:linear-gradient(135deg,#06B6D4,#6366F1);color:#FFFFFF;display:grid;place-items:center;box-shadow:0 0 0 6px rgba(6,182,212,.18)}
+.aovivo-mic .ic svg{width:30px;height:30px}
+.aovivo-mic.off{background:#334155;box-shadow:none}
+.aovivo-mic.gravando{background:#E5484D;animation:pulsa-v 1.2s infinite}
+.aovivo-escrever{width:100%}
+.aovivo-escrever .input{background:rgba(255,255,255,.06);color:#E2E8F0;border-color:rgba(148,163,184,.3)}
 </style>
 </head>
 <body>
@@ -1317,6 +1420,7 @@ function telaInicio(){
     h('div',{class:'row between'},
       h('div',{class:'row'}, avatarEl(meuAvatar(), 46), h('div',null, h('div',{class:'muted small'}, saudacao() + ','), h('b',{style:'font-size:19px'}, p.name))),
       h('span',{class:'streak small',title:'Sequência de dias estudados'}, icon('flame'), seq)),
+    cartaoAoVivo(),
     h('section',{class:'hero'},
       h('div',{class:'fala-row'}, h('div',{class:'balao'}, h('div',{class:'alvo'}, t.ola + ', ' + p.name + '!'), fala), pic),
       h('div',null, h('span',{class:'eyebrow'}, (feito ? 'Missão de hoje concluída' : 'Sua missão de hoje') + ' · ' + nomeIdioma(p.target) + ' ' + S.level), h('h2',{style:'margin-top:6px'}, temaDoDia())),
@@ -1599,6 +1703,7 @@ function telaConversar(){
   };
   const nativos = NATIVOS_P[S.profile.target] || [];
   show('main', h('h1',null,'Conversar'),
+    cartaoAoVivo(),
     nativos.length ? h('section',{class:'stack'}, h('h3',null,'Conversa com nativos'),
       h('p',{class:'muted small'},'Pessoas daquele lugar, no ritmo de verdade. Sem correção no meio; no fim você recebe uma avaliação.'),
       nativos.map(n => h('button',{class:'opt',type:'button',style:'display:flex;align-items:center;gap:12px',onclick:() => telaNativo(n)}, avatarEl(n.av, 52),
@@ -1621,6 +1726,345 @@ function telaAprender(){
     h('h3',null,'Minhas palavras' + (S.vocab.length ? ' (' + S.vocab.length + ')' : '')),
     S.vocab.length ? h('div',{class:'card list'}, S.vocab.slice(-40).reverse().map(v => h('div',null, h('span',{class:'alvo grow',style:'font-weight:600'},v.w), h('span',{class:'muted small'},v.t), h('span',{class:'small',title:'Domínio'}, Math.round(v.box / (CAIXAS.length - 1) * 100) + '%'))))
       : h('p',{class:'muted'},'As palavras que você aprender nas missões ficam guardadas aqui, com a data da próxima revisão.'));
+}
+
+
+/* ============================== aula ao vivo: professor por voz em tempo real ============================== */
+// O celular conversa direto com o Gemini Live (voz natural, dicção clara, corrige na hora).
+// O servidor só entrega um token temporário de uso único; a chave do Gemini nunca vem para o app.
+// Se o Gemini Live não estiver disponível, a aula continua no modo por turnos (gravar, ouvir a resposta).
+const LIVE_MODOS = {
+  livre:{nome:'Conversa livre', emoji:'💬', desc:'Seu dia, seus planos, o que você gosta.', foco:'uma conversa natural sobre o dia a dia, os planos e os interesses do aluno'},
+  trabalho:{nome:'Trabalho', emoji:'💼', desc:'Reuniões, resultados, pedir e dar instruções.', foco:'situações de trabalho na área do aluno: reuniões, apresentar resultados, negociar prazos, pedir e dar instruções'},
+  viagem:{nome:'Viagem', emoji:'✈️', desc:'Aeroporto, hotel, restaurante, pedir ajuda.', foco:'situações de viagem: aeroporto, hotel, restaurante, pedir direções e resolver problemas'},
+  entrevista:{nome:'Entrevista de emprego', emoji:'🎯', desc:'O professor faz o papel do recrutador.', foco:'uma simulação de entrevista de emprego: você é o recrutador e faz as perguntas típicas, uma por vez, e no fim dá um retorno'},
+  pronuncia:{nome:'Pronúncia', emoji:'🗣️', desc:'Repita frases e ajuste os sons na hora.', foco:'treino de pronúncia: você diz uma frase curta e útil, o aluno repete, e você corrige os sons com precisão antes de passar para a próxima'}
+};
+const LIVE_CORRECAO = {tudo:'Corrigir tudo', importante:'Só o importante', fim:'Só no final'};
+const LIVE_MAX_MIN = 10;
+function instrucaoAoVivo(modo, correcao){
+  const p = S.profile, L = nomeIdioma(p.target), t = tutorDe(p.target), lv = S.level, N = p.native, devagar = ['A0','A1','A2'].includes(lv);
+  const erros = S.errors.slice().sort((a, b) => b.n - a.n).slice(0, 4).map(e => e.p).join('; ');
+  const regraCorr = {
+    tudo:'Corrija ao vivo todo erro de gramática, vocabulário ou pronúncia. A cada erro, chame a ferramenta registrar_correcao e, na fala, dê a forma certa de um jeito leve e rápido (por exemplo: "Quase! O certo é: ..."). Quando o erro for importante, peça para o aluno repetir a frase certa. Depois siga a conversa.',
+    importante:'Corrija ao vivo só os erros que atrapalham o entendimento ou que se repetem: chame registrar_correcao e diga a forma certa em uma frase curta. Para erros pequenos, chame registrar_correcao sem comentar na fala.',
+    fim:'Não interrompa para corrigir: a cada erro, chame registrar_correcao em silêncio, sem comentar na fala.'
+  }[correcao];
+  return [
+    'Você é ' + t.nome + ', professor(a) particular de ' + L + ', numa aula ao vivo por voz com ' + p.name + ', um adulto que fala ' + N + ' e está no nível ' + lv + ' (CEFR).',
+    'Estilo: profissional, caloroso e seguro, como um assistente pessoal de alto nível. Dicção muito clara, entonação natural e expressiva, ' + (devagar ? 'ritmo calmo, frases curtas e vocabulário simples.' : 'ritmo natural.') + ' Nunca soe robótico e nunca leia listas.',
+    'Fale sempre em ' + L + '. ' + (lv === 'A0' || lv === 'A1' ? 'Se o aluno travar ou falar em ' + N + ', ajude em ' + N + ' com no máximo uma frase e volte para ' + L + ', mostrando como dizer aquilo.' : 'Use ' + N + ' só se o aluno pedir.'),
+    'Tema da aula: ' + LIVE_MODOS[modo].foco + '. Objetivos do aluno: ' + ((p.goals || []).join(', ') || 'conversação') + '. Interesses: ' + ((p.interests || []).join(', ') || 'variados') + '.',
+    'Turnos curtos: de 1 a 3 frases, quase sempre terminando com uma pergunta, para o aluno falar mais do que você.',
+    regraCorr,
+    'Quando ensinar uma palavra ou expressão útil, chame nova_palavra.',
+    erros ? 'Pontos fracos conhecidos do aluno: ' + erros + '. Crie chances naturais para ele praticar isso.' : '',
+    'Comece cumprimentando ' + p.name + ' pelo nome e propondo o tema com uma pergunta.'
+  ].filter(Boolean).join('\n');
+}
+function ferramentasAoVivo(){
+  const N = S.profile.native;
+  return [{functionDeclarations:[
+    {name:'registrar_correcao', description:'Registra um erro do aluno com a forma correta, para aparecer na tela na hora.', parameters:{type:'OBJECT', properties:{
+      original:{type:'STRING', description:'o trecho que o aluno disse, com o erro'}, correcao:{type:'STRING', description:'a forma correta e natural'},
+      explicacao:{type:'STRING', description:'explicação curtíssima em ' + N}, tipo:{type:'STRING', enum:['gramatica','vocabulario','pronuncia']}}, required:['original','correcao','explicacao']}},
+    {name:'nova_palavra', description:'Registra uma palavra ou expressão nova ensinada na aula.', parameters:{type:'OBJECT', properties:{palavra:{type:'STRING'}, traducao:{type:'STRING', description:'tradução em ' + N}}, required:['palavra','traducao']}}
+  ]}];
+}
+const b64DeBuffer = buf => { const u8 = new Uint8Array(buf); let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
+const CAPTURA_WORKLET = `class Cap extends AudioWorkletProcessor{constructor(){super();this.r=sampleRate/16000;this.b=[];this.a=0;this.s=0;this.n=0;}
+process(i){const ch=i[0]&&i[0][0];if(ch){for(let k=0;k<ch.length;k++){this.s+=ch[k];this.n++;this.a+=1;if(this.a>=this.r){this.a-=this.r;this.b.push(this.s/this.n);this.s=0;this.n=0;}}
+if(this.b.length>=640){const o=new Int16Array(this.b.length);let p=0;for(let k=0;k<this.b.length;k++){const v=Math.max(-1,Math.min(1,this.b[k]));o[k]=v<0?v*32768:v*32767;p=Math.max(p,Math.abs(v));}this.port.postMessage({pcm:o.buffer,pico:p},[o.buffer]);this.b=[];}}return true;}}
+registerProcessor('cap16k',Cap);`;
+
+// Microfone em PCM 16 kHz, em pedaços de 40 ms
+async function abrirMicrofone(ctxIn, aoPedaco){
+  const stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true, channelCount:1}});
+  const src = ctxIn.createMediaStreamSource(stream), mudo = ctxIn.createGain(); mudo.gain.value = 0; mudo.connect(ctxIn.destination);
+  let no = null;
+  try {
+    await ctxIn.audioWorklet.addModule(URL.createObjectURL(new Blob([CAPTURA_WORKLET], {type:'application/javascript'})));
+    no = new AudioWorkletNode(ctxIn, 'cap16k'); no.port.onmessage = e => aoPedaco(e.data.pcm, e.data.pico);
+  } catch(e){
+    // navegadores antigos: ScriptProcessor com a mesma conversão para 16 kHz
+    no = ctxIn.createScriptProcessor(4096, 1, 1); const r = ctxIn.sampleRate / 16000; let acc = 0, soma = 0, n = 0, buf = [];
+    no.onaudioprocess = ev => { const d = ev.inputBuffer.getChannelData(0); for (let k = 0; k < d.length; k++){ soma += d[k]; n++; acc++; if (acc >= r){ acc -= r; buf.push(soma / n); soma = 0; n = 0; } }
+      while (buf.length >= 640){ const pedaco = buf.splice(0, 640), o = new Int16Array(640); let p = 0; pedaco.forEach((v, k) => { v = Math.max(-1, Math.min(1, v)); o[k] = v < 0 ? v * 32768 : v * 32767; p = Math.max(p, Math.abs(v)); }); aoPedaco(o.buffer, p); } };
+  }
+  src.connect(no); no.connect(mudo);
+  return {parar(){ try { src.disconnect(); no.disconnect(); } catch(e){} stream.getTracks().forEach(t => t.stop()); }};
+}
+// Toca o áudio do professor (PCM 24 kHz) em fila, sem emendas, e mede o volume para a animação
+class TocadorAoVivo {
+  constructor(ctx){ this.ctx = ctx; this.fim = 0; this.fontes = []; this.an = ctx.createAnalyser(); this.an.fftSize = 512; this.an.connect(ctx.destination); this.dados = new Uint8Array(this.an.fftSize); }
+  tocar(b64){
+    const bin = atob(b64), n = bin.length >> 1, f = new Float32Array(n);
+    for (let i = 0; i < n; i++){ let v = bin.charCodeAt(i * 2) | (bin.charCodeAt(i * 2 + 1) << 8); if (v >= 32768) v -= 65536; f[i] = v / 32768; }
+    const buf = this.ctx.createBuffer(1, n, 24000); buf.copyToChannel ? buf.copyToChannel(f, 0) : buf.getChannelData(0).set(f);
+    const src = this.ctx.createBufferSource(); src.buffer = buf; src.connect(this.an);
+    const t0 = Math.max(this.ctx.currentTime + .04, this.fim); src.start(t0); this.fim = t0 + buf.duration;
+    this.fontes.push(src); src.onended = () => { this.fontes = this.fontes.filter(x => x !== src); };
+  }
+  falando(){ return this.ctx.currentTime < this.fim - .02; }
+  interromper(){ this.fontes.forEach(s => { try { s.stop(); } catch(e){} }); this.fontes = []; this.fim = 0; }
+  nivel(){ this.an.getByteTimeDomainData(this.dados); let s = 0; for (const v of this.dados){ const x = (v - 128) / 128; s += x * x; } return Math.sqrt(s / this.dados.length); }
+}
+// Sessão com o Gemini Live
+class SessaoAoVivo {
+  constructor(o){ this.o = o; this.ws = null; this.pronto = false; this.encerrada = false; }
+  async conectar(){
+    const o = this.o; let ultimoErro = null;
+    let modelos = null;
+    for (let tentativa = 0; tentativa < 3; tentativa++){
+      let tk;
+      try { tk = await api('live_token', {tentativa}); } catch(e){ throw e; }
+      modelos = modelos || (Array.isArray(tk.modelos) && tk.modelos.length ? tk.modelos : ['gemini-3.8-live']);
+      const modelo = modelos[tentativa]; if (!modelo) break;
+      try { await this.abrir(tk.token, modelo); this.modelo = modelo; return; }
+      catch(e){ ultimoErro = e; if (this.encerrada) return; }
+    }
+    throw ultimoErro || {code:'live_indisponivel'};
+  }
+  abrir(token, modelo){
+    const o = this.o;
+    return new Promise((ok, falha) => {
+      const ws = new WebSocket('wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=' + encodeURIComponent(token));
+      this.ws = ws; let resolvido = false;
+      const tempo = setTimeout(() => { if (!resolvido){ resolvido = true; try { ws.close(); } catch(e){} falha({code:'live_indisponivel', motivo:'tempo'}); } }, 12000);
+      ws.onopen = () => ws.send(JSON.stringify({setup:{
+        model:'models/' + modelo,
+        generationConfig:{responseModalities:['AUDIO'], speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:o.voz}}}},
+        systemInstruction:{parts:[{text:o.instrucao}]},
+        tools:ferramentasAoVivo(),
+        realtimeInputConfig:{automaticActivityDetection:{disabled:false, silenceDurationMs:o.devagar ? 1300 : 900, prefixPaddingMs:300}},
+        inputAudioTranscription:{}, outputAudioTranscription:{}
+      }}));
+      ws.onmessage = async ev => {
+        let msg; try { msg = JSON.parse(typeof ev.data === 'string' ? ev.data : await (ev.data.text ? ev.data.text() : new Response(ev.data).text())); } catch(e){ return; }
+        if (msg.setupComplete){ if (!resolvido){ resolvido = true; clearTimeout(tempo); this.pronto = true; ok(); } return; }
+        this.receber(msg);
+      };
+      ws.onerror = () => {};
+      ws.onclose = ev => {
+        clearTimeout(tempo);
+        if (!resolvido){ resolvido = true; falha({code:'live_indisponivel', motivo:ev.code + ' ' + (ev.reason || '')}); return; }
+        if (!this.encerrada){ this.encerrada = true; o.aoFechar && o.aoFechar(ev); }
+      };
+    });
+  }
+  receber(msg){
+    const o = this.o, sc = msg.serverContent;
+    if (msg.toolCall && Array.isArray(msg.toolCall.functionCalls)){
+      const resp = msg.toolCall.functionCalls.map(fc => { o.aoFerramenta && o.aoFerramenta(fc.name, fc.args || {}); return {id:fc.id, name:fc.name, response:{result:'ok'}}; });
+      this.enviar({toolResponse:{functionResponses:resp}});
+    }
+    if (msg.goAway) o.aoAviso && o.aoAviso('A sessão vai terminar em instantes.');
+    if (!sc) return;
+    if (sc.modelTurn && Array.isArray(sc.modelTurn.parts)) sc.modelTurn.parts.forEach(pt => { if (pt.inlineData && pt.inlineData.data) o.aoAudio(pt.inlineData.data); });
+    if (sc.inputTranscription && sc.inputTranscription.text) o.aoTextoAluno(sc.inputTranscription.text);
+    if (sc.outputTranscription && sc.outputTranscription.text) o.aoTextoProf(sc.outputTranscription.text);
+    if (sc.interrupted) o.aoInterromper();
+    if (sc.turnComplete) o.aoFimTurno();
+  }
+  enviar(m){ if (this.ws && this.ws.readyState === 1) this.ws.send(JSON.stringify(m)); }
+  audio(buf){ this.enviar({realtimeInput:{audio:{mimeType:'audio/pcm;rate=16000', data:b64DeBuffer(buf)}}}); }
+  texto(t){ this.enviar({clientContent:{turns:[{role:'user', parts:[{text:t}]}], turnComplete:true}}); }
+  fechar(){ this.encerrada = true; try { this.ws && this.ws.close(); } catch(e){} }
+}
+
+/* ---------- desenho do orbe (estilo assistente) ---------- */
+function desenharOrbe(c, w, hh, t, estado, nivel){
+  c.clearRect(0, 0, w, hh);
+  const cx = w / 2, cy = hh / 2, R = Math.min(w, hh) * .26;
+  const cores = {conectando:['#64748B','#94A3B8'], ouvindo:['#06B6D4','#67E8F9'], pensando:['#8B5CF6','#C4B5FD'], falando:['#F59E0B','#FDE68A'], pausado:['#475569','#94A3B8']}[estado] || ['#06B6D4','#67E8F9'];
+  const amp = estado === 'falando' || estado === 'ouvindo' ? Math.min(1, nivel * 4) : 0;
+  const g = c.createRadialGradient(cx, cy, R * .2, cx, cy, R * 2.4); g.addColorStop(0, cores[0] + '66'); g.addColorStop(1, cores[0] + '00');
+  c.fillStyle = g; c.fillRect(0, 0, w, hh);
+  // anéis girando
+  c.lineCap = 'round';
+  [[1.55, 1.2, 2, .9], [1.8, -.7, 1.4, .6], [2.05, .45, 1, .45]].forEach(([rr2, vel, lw, alfa], k) => {
+    c.strokeStyle = cores[1]; c.globalAlpha = alfa; c.lineWidth = lw * (w / 300);
+    const a0 = t * vel + k; for (let s2 = 0; s2 < 3; s2++){ c.beginPath(); c.arc(cx, cy, R * rr2, a0 + s2 * 2.1, a0 + s2 * 2.1 + (estado === 'pensando' ? 1.6 : .9)); c.stroke(); }
+  });
+  c.globalAlpha = 1;
+  // esfera que pulsa com a voz
+  c.beginPath();
+  const pts = 64;
+  for (let i = 0; i <= pts; i++){
+    const a = i / pts * Math.PI * 2, onda = Math.sin(a * 5 + t * 4) * .5 + Math.sin(a * 3 - t * 3) * .5;
+    const r = R * (1 + amp * .22 * onda + Math.sin(t * 2) * .02);
+    const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r; i ? c.lineTo(x, y) : c.moveTo(x, y);
+  }
+  const g2 = c.createRadialGradient(cx - R * .3, cy - R * .3, R * .1, cx, cy, R * 1.1); g2.addColorStop(0, '#FFFFFF'); g2.addColorStop(.35, cores[1]); g2.addColorStop(1, cores[0]);
+  c.fillStyle = g2; c.shadowColor = cores[0]; c.shadowBlur = 30 + amp * 40; c.fill(); c.shadowBlur = 0;
+  // partículas em órbita
+  for (let i = 0; i < 18; i++){ const a = t * (.4 + (i % 3) * .2) + i * 1.7, r = R * (1.3 + (i % 5) * .18); c.fillStyle = cores[1]; c.globalAlpha = .4 + (i % 2) * .4; c.beginPath(); c.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r * .9, 1.6 * (w / 300), 0, 7); c.fill(); }
+  c.globalAlpha = 1;
+}
+
+/* ---------- telas ---------- */
+let LIVE_PREF = null;
+function prefAoVivo(){ if (!LIVE_PREF){ try { LIVE_PREF = JSON.parse(lsGet('idioma-ia:aovivo') || 'null'); } catch(e){} LIVE_PREF = Object.assign({modo:'livre', correcao:'importante', fone:false, legenda:true}, LIVE_PREF || {}); } return LIVE_PREF; }
+function guardarPrefAoVivo(){ lsSet('idioma-ia:aovivo', JSON.stringify(LIVE_PREF)); }
+function cartaoAoVivo(){
+  const t = tutorDe(S.profile.target), cv = h('canvas',{width:240,height:240,class:'orbe-mini','aria-hidden':'true'});
+  animarCanvas(cv, (c, tt) => desenharOrbe(c, 240, 240, tt, 'ouvindo', .08 + Math.abs(Math.sin(tt * 1.7)) * .08));
+  return h('button',{class:'aovivo-card',type:'button',onclick:() => telaAoVivo()}, cv,
+    h('div',{class:'grow'}, h('span',{class:'aovivo-selo'}, '● AO VIVO'), h('b',null, 'Aula ao vivo com ' + t.nome), h('span',null, 'Converse por voz em tempo real. ' + t.nome + ' responde na hora e corrige você durante a conversa.')),
+    h('span',{class:'aovivo-seta'}, '→'));
+}
+function telaAoVivo(){
+  const pf = prefAoVivo(), t = tutorDe(S.profile.target), voz = prefVoz().gemini || 'Kore';
+  const chips = (mapa, atual, f) => h('div',{class:'chips'}, Object.keys(mapa).map(k => h('button',{class:'chip',type:'button','aria-pressed':String(atual === k),onclick:ev => { f(k); ev.currentTarget.parentNode.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b === ev.currentTarget))); }}, typeof mapa[k] === 'string' ? mapa[k] : mapa[k].emoji + ' ' + mapa[k].nome)));
+  const cv = h('canvas',{width:520,height:520,class:'orbe','aria-hidden':'true'});
+  animarCanvas(cv, (c, tt) => desenharOrbe(c, 520, 520, tt, 'ouvindo', .05 + Math.abs(Math.sin(tt * 1.3)) * .1));
+  show('chat', h('div',{class:'aovivo aovivo-inicio'},
+    h('div',{class:'aovivo-topo'}, h('button',{class:'aovivo-x',type:'button',onclick:() => goTab(ui.tab || 'inicio')},'←'), h('span',null,'Aula ao vivo'), h('span')),
+    cv,
+    h('div',{class:'aovivo-titulo'}, h('b',null, t.nome), h('span',null, 'Professor de ' + nomeIdioma(S.profile.target) + ' · voz ' + voz + ' · nível ' + S.level)),
+    h('div',{class:'aovivo-opcoes'},
+      h('span',{class:'eyebrow'},'Sobre o que vamos falar?'), chips(LIVE_MODOS, pf.modo, k => { pf.modo = k; guardarPrefAoVivo(); }),
+      h('span',{class:'eyebrow'},'Correção'), chips(LIVE_CORRECAO, pf.correcao, k => { pf.correcao = k; guardarPrefAoVivo(); }),
+      h('label',{class:'aovivo-check'}, (() => { const cb = h('input',{type:'checkbox'}); cb.checked = !!pf.fone; cb.onchange = () => { pf.fone = cb.checked; guardarPrefAoVivo(); }; return cb; })(), ' Estou de fone de ouvido (posso interromper o professor)')),
+    h('button',{class:'btn aovivo-comecar',type:'button',onclick:() => aulaAoVivo()}, '🎙️ Começar a aula'),
+    h('p',{class:'aovivo-nota'}, 'Fale à vontade, como numa chamada. As correções aparecem na tela e ficam no resumo. Cada aula dura até ' + LIVE_MAX_MIN + ' minutos.')));
+}
+function aulaAoVivo(){
+  const pf = prefAoVivo(), t = tutorDe(S.profile.target), p = S.profile, devagar = ['A0','A1','A2'].includes(S.level);
+  // os áudios precisam ser criados no toque (exigência do iPhone)
+  pararAudio();
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  const ctxOut = new Ctx(), ctxIn = new Ctx();
+  ctxOut.resume && ctxOut.resume(); ctxIn.resume && ctxIn.resume();
+  const tocador = new TocadorAoVivo(ctxOut);
+  const A = {estado:'conectando', inicio:Date.now(), correcoes:[], palavras:[], falas:0, linhas:[], micLigado:true, nivelMic:0, modoTurnos:false, fim:false};
+  const cv = h('canvas',{width:520,height:520,class:'orbe','aria-hidden':'true'});
+  const status = h('span',{class:'aovivo-status'}), tempo = h('span',{class:'aovivo-tempo'}, '0:00');
+  const legProf = h('p',{class:'leg-prof alvo','aria-live':'polite'}), legAluno = h('p',{class:'leg-aluno'});
+  const feed = h('div',{class:'aovivo-feed'});
+  const btnMic = h('button',{class:'aovivo-mic',type:'button','aria-label':'Desligar o microfone'}, icon('mic'));
+  const texto = h('input',{type:'text',class:'input',placeholder:'Ou escreva aqui...',enterkeyhint:'send'});
+  const raiz = h('div',{class:'aovivo aovivo-sala' + (pf.legenda ? '' : ' sem-legenda')},
+    h('div',{class:'aovivo-topo'}, h('button',{class:'aovivo-x',type:'button','aria-label':'Encerrar a aula',onclick:() => encerrar('voce')},'Encerrar'), h('span',{class:'aovivo-nome'}, t.nome, ' ', status), tempo),
+    cv,
+    h('div',{class:'aovivo-legendas'}, legProf, legAluno),
+    feed,
+    h('div',{class:'aovivo-controles'},
+      h('button',{class:'aovivo-ctl',type:'button',onclick:() => { pf.legenda = !pf.legenda; guardarPrefAoVivo(); raiz.classList.toggle('sem-legenda', !pf.legenda); }},'Legenda'),
+      btnMic,
+      h('button',{class:'aovivo-ctl',type:'button',onclick:() => pedirDica()},'Dica')),
+    h('form',{class:'aovivo-escrever',onsubmit:ev => { ev.preventDefault(); const tx = texto.value.trim(); if (!tx) return; texto.value = ''; enviarTexto(tx); }}, texto));
+  show('chat', raiz);
+  const setEstado = e => { A.estado = e; status.textContent = {conectando:'conectando...', ouvindo:'ouvindo', pensando:'pensando', falando:'falando', pausado:'microfone desligado', turnos:'modo por turnos'}[e] || ''; status.className = 'aovivo-status ' + e; };
+  setEstado('conectando');
+  animarCanvas(cv, (c, tt) => {
+    let e = A.estado;
+    if (!A.modoTurnos && A.estado !== 'conectando'){ if (tocador.falando()) e = 'falando'; else if (!A.micLigado) e = 'pausado'; else if (A.estado === 'falando') e = 'ouvindo'; if (e !== A.estado && (e === 'falando' || A.estado === 'falando' || e === 'pausado')) setEstado(e); }
+    desenharOrbe(c, 520, 520, tt, e, e === 'falando' ? tocador.nivel() : A.nivelMic);
+    const s = Math.floor((Date.now() - A.inicio) / 1000); tempo.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    if (!A.fim && s >= LIVE_MAX_MIN * 60) terminarPorTempo();
+  });
+  // legendas: junta os pedaços de transcrição de cada fala
+  let bufProf = '', bufAluno = '';
+  const fecharFalaAluno = () => { if (bufAluno.trim()){ A.linhas.push({quem:'aluno', t:bufAluno.trim()}); A.falas++; } bufAluno = ''; };
+  const fecharFalaProf = () => { if (bufProf.trim()) A.linhas.push({quem:'prof', t:bufProf.trim()}); bufProf = ''; };
+  const mostrarCorrecao = c => {
+    if (!str(c.correcao)) return;
+    A.correcoes.push(c);
+    addError(str(c.explicacao).slice(0, 60) || 'correção na aula ao vivo', str(c.original), str(c.correcao));
+    const el = h('div',{class:'corr-card'}, h('div',{class:'corr-linha'}, h('s',null, str(c.original)), h('span',null,' → '), h('b',{class:'alvo'}, str(c.correcao))), str(c.explicacao) ? h('small',null, str(c.explicacao)) : null);
+    feed.prepend(el); while (feed.children.length > 3) feed.lastChild.remove();
+  };
+  const mostrarPalavra = w => { if (!str(w.palavra)) return; A.palavras.push(w); addWord({w:str(w.palavra), t:str(w.traducao)}); const el = h('div',{class:'corr-card palavra'}, h('span',null,'✨ '), h('b',{class:'alvo'}, str(w.palavra)), h('small',null, ' = ' + str(w.traducao))); feed.prepend(el); while (feed.children.length > 3) feed.lastChild.remove(); };
+  let mic = null, sessao = null;
+  const aoPedaco = (buf, pico) => {
+    A.nivelMic = A.nivelMic * .6 + pico * .4; ultimaAcao = Date.now();
+    if (!sessao || !sessao.pronto || !A.micLigado || A.fim) return;
+    if (!pf.fone && tocador.falando()) return; // sem fone: o microfone espera o professor terminar, para não ouvir a própria voz dele
+    sessao.audio(buf);
+  };
+  btnMic.onclick = () => { A.micLigado = !A.micLigado; btnMic.classList.toggle('off', !A.micLigado); btnMic.setAttribute('aria-label', A.micLigado ? 'Desligar o microfone' : 'Ligar o microfone'); if (A.modoTurnos) gravarTurno(); };
+  const enviarTexto = tx => { if (A.modoTurnos) return turnoTexto(tx); if (!sessao) return; tocador.interromper(); A.linhas.push({quem:'aluno', t:tx}); A.falas++; legAluno.textContent = tx; sessao.texto(tx); setEstado('pensando'); };
+  const pedirDica = () => enviarTexto('(Dica, por favor: me dê um exemplo de como responder à sua última pergunta e peça para eu repetir.)');
+  const terminarPorTempo = () => { A.fim = true; if (sessao && !A.modoTurnos){ sessao.texto('(A aula chegou ao limite de tempo: despeça-se em uma frase curta.)'); setTimeout(() => encerrar('tempo'), 9000); } else encerrar('tempo'); };
+  const encerrar = motivo => {
+    if (A.encerrou) return; A.encerrou = true; A.fim = true;
+    fecharFalaAluno(); fecharFalaProf();
+    try { sessao && sessao.fechar(); } catch(e){}
+    try { mic && mic.parar(); } catch(e){}
+    tocador.interromper(); setTimeout(() => { try { ctxIn.close(); ctxOut.close(); } catch(e){} }, 300);
+    resumoAoVivo(A, motivo);
+  };
+  A.encerrar = encerrar;
+  // ----- modo por turnos (quando o Gemini Live não está disponível) -----
+  const historico = () => A.linhas.slice(-8).map(l => (l.quem === 'prof' ? t.nome : p.name) + ': ' + l.t).join('\n');
+  const promptTurno = (extra) => 'TAREFA: aula_turno\n' + regras() + '\n\n' + ctx() + '\n\n' + instrucaoAoVivo(pf.modo, pf.correcao) + '\n\nConversa até agora:\n' + (historico() || '(início da aula)') + '\n\n' + extra +
+    '\n\nResponda SOMENTE com um objeto JSON: {"ouvi": transcrição do que o aluno disse ("" se for o começo), "resposta": sua próxima fala em ' + nomeIdioma(p.target) + ' (1 a 3 frases, terminando com uma pergunta), "correcoes": lista de {"original", "correcao", "explicacao"} com os erros do aluno nesta fala (pode ser vazia), "palavras": lista de {"palavra", "traducao"} ensinadas nesta resposta (pode ser vazia)}. Sem markdown.';
+  const aplicarTurno = r => {
+    r = r && typeof r === 'object' ? r : {};
+    if (str(r.ouvi)){ A.linhas.push({quem:'aluno', t:str(r.ouvi)}); A.falas++; legAluno.textContent = str(r.ouvi); }
+    (Array.isArray(r.correcoes) ? r.correcoes : []).forEach(mostrarCorrecao);
+    (Array.isArray(r.palavras) ? r.palavras : []).forEach(mostrarPalavra);
+    const resp = str(r.resposta) || 'Can you say that again?';
+    A.linhas.push({quem:'prof', t:resp}); legProf.textContent = resp;
+    setEstado('falando'); falar(resp).finally(() => { if (!A.fim) setEstado('turnos'); });
+  };
+  const turnoTexto = tx => { setEstado('pensando'); legAluno.textContent = tx; ai(promptTurno('O aluno escreveu: "' + tx + '".')).then(aplicarTurno, e => { legProf.textContent = aiMsg(e); setEstado('turnos'); }); };
+  let gravando = null;
+  const gravarTurno = async () => {
+    if (gravando){ const g = gravando; gravando = null; btnMic.classList.remove('gravando'); const out = await g.parar(); if (out.seg < .6){ setEstado('turnos'); return; }
+      setEstado('pensando'); api('ouvir', {audio:out.b64, mime:'audio/wav', prompt:promptTurno('O aluno respondeu por voz (áudio anexo). Ouça com atenção.')}).then(d => aplicarTurno(extrairJSON(d && d.text)), e => { legProf.textContent = e && e.code === 'bad_request' ? 'O servidor ainda não ouve áudio: escreva a sua resposta.' : aiMsg(e); setEstado('turnos'); });
+      return; }
+    pararAudio(); try { gravando = await gravador(); btnMic.classList.add('gravando'); setEstado('ouvindo'); } catch(e){ legProf.textContent = 'Não consegui ligar o microfone.'; }
+  };
+  const entrarModoTurnos = motivo => {
+    A.modoTurnos = true; A.micLigado = false; btnMic.classList.remove('off'); btnMic.setAttribute('aria-label','Gravar a sua fala');
+    try { mic && mic.parar(); } catch(e){}
+    feed.prepend(h('div',{class:'corr-card aviso'}, h('small',null, motivo)));
+    setEstado('pensando'); ai(promptTurno('Comece a aula agora.')).then(aplicarTurno, e => { legProf.textContent = aiMsg(e); setEstado('turnos'); });
+  };
+  // ----- ligar tudo -----
+  (async () => {
+    try { mic = await abrirMicrofone(ctxIn, aoPedaco); }
+    catch(e){ A.micLigado = false; btnMic.classList.add('off'); feed.prepend(h('div',{class:'corr-card aviso'}, h('small',null, 'O microfone está bloqueado. Libere a permissão do navegador ou escreva as respostas.'))); }
+    sessao = new SessaoAoVivo({voz:prefVoz().gemini || 'Kore', instrucao:instrucaoAoVivo(pf.modo, pf.correcao), devagar,
+      aoAudio:b64 => { if (A.fim && !A.despedida) return; tocador.tocar(b64); if (bufAluno){ fecharFalaAluno(); } },
+      aoTextoAluno:tx => { bufAluno += tx; legAluno.textContent = bufAluno; if (A.estado !== 'falando') setEstado('pensando'); },
+      aoTextoProf:tx => { if (bufAluno) fecharFalaAluno(); bufProf += tx; legProf.textContent = bufProf; },
+      aoInterromper:() => { tocador.interromper(); fecharFalaProf(); },
+      aoFimTurno:() => { fecharFalaProf(); fecharFalaAluno(); },
+      aoFerramenta:(nome, args) => { if (nome === 'registrar_correcao') mostrarCorrecao(args); else if (nome === 'nova_palavra') mostrarPalavra(args); },
+      aoAviso:msg => feed.prepend(h('div',{class:'corr-card aviso'}, h('small',null, msg))),
+      aoFechar:() => { if (!A.encerrou) encerrar('conexao'); }});
+    try {
+      await sessao.conectar();
+      if (A.encerrou){ sessao.fechar(); return; }
+      setEstado('ouvindo'); A.inicio = Date.now(); A.despedida = true;
+      sessao.texto('(A aula começou. Cumprimente o aluno e comece.)');
+    } catch(e){
+      if (A.encerrou) return;
+      entrarModoTurnos(e && e.code === 'bad_request' ? 'A aula ao vivo ainda não está ligada no servidor (falta atualizar o Code.gs). Por enquanto, a aula segue por turnos: toque no microfone para falar e toque de novo para enviar.' : e && e.code === 'limit' ? aiMsg(e) : 'Não consegui abrir a conversa em tempo real agora. A aula segue por turnos: toque no microfone para falar e de novo para enviar.');
+    }
+  })();
+}
+function resumoAoVivo(A, motivo){
+  const min = Math.max(1, Math.round((Date.now() - A.inicio) / 60000)), t = tutorDe(S.profile.target);
+  const xp = addXP(Math.min(80, 10 + min * 6 + A.falas * 2)); S.convo.turns += A.falas;
+  if (S.convo.week !== weekId()){ S.convo.week = weekId(); S.convo.weekTurns = 0; } S.convo.weekTurns += A.falas;
+  if (A.falas) skill('conversa', clamp(92 - A.correcoes.length * 4, 45, 95));
+  const bonus = touchDay(); if (bonus) addXP(bonus);
+  save();
+  const pic = tutorEl(S.profile.target,'cheer',100,'pop'); pic.style.background = t.fundo;
+  show('chat', h('div',{class:'festa'}, pic, h('h1',null,'Aula concluída'), h('p',{class:'muted'}, motivo === 'conexao' ? 'A conexão caiu, mas o que você praticou ficou salvo.' : 'Ótimo trabalho, ' + S.profile.name + '. Veja o que dá para melhorar.')),
+    h('div',{class:'stat'}, h('div',null, h('b',null, min + ' min'), h('span',null,'de conversa')), h('div',null, h('b',null, String(A.falas)), h('span',null,'falas suas')),
+      h('div',null, h('b',null, String(A.correcoes.length)), h('span',null,'correções')), h('div',null, h('b',null,'+' + xp), h('span',null,'XP'))),
+    A.correcoes.length ? h('section',{class:'stack tight'}, h('h3',null,'Correções da aula'), A.correcoes.map(c => h('div',{class:'card stack tight'}, h('div',null, h('s',{class:'muted'}, str(c.original))), h('div',{class:'row between'}, h('b',{class:'alvo'}, str(c.correcao)), ouvirBtn(str(c.correcao), {auto:false})), str(c.explicacao) ? h('small',{class:'muted'}, str(c.explicacao)) : null)))
+      : h('div',{class:'note'}, A.falas ? 'Nenhuma correção nesta aula. Mandou bem!' : 'Você não chegou a falar desta vez. Na próxima, é só falar como numa chamada.'),
+    A.palavras.length ? h('section',{class:'stack tight'}, h('h3',null,'Palavras novas'), h('div',{class:'card list'}, A.palavras.map(w => h('div',null, h('b',{class:'alvo'}, str(w.palavra)), h('span',{class:'muted'}, ' ' + str(w.traducao)))))) : null,
+    h('p',{class:'small muted'},'As correções entram nos seus pontos para trabalhar e as palavras vão para as revisões.'),
+    h('div',{class:'spacer'}),
+    h('button',{class:'btn',type:'button',onclick:() => telaAoVivo()},'Nova aula'),
+    h('button',{class:'btn sec',type:'button',onclick:() => goTab(ui.tab || 'inicio')},'Voltar'));
 }
 
 /* ============================== progresso ============================== */
@@ -1957,7 +2401,7 @@ function telaTemas(){
 }
 
 /* ---------- entrada da aventura: o mundo aberto ---------- */
-function telaAventura(){ const j = J(); if (!j.tema) return telaTemas(); pintarTema(); telaMundo(); }
+function telaAventura(){ const j = J(); if (!j.tema) return telaTemas(); pintarTema(); if (!EQ().classe) return telaClasse(() => telaMundo()); telaMundo(); }
 /* ---------- diário: a jornada inteira em etapas ---------- */
 function telaDiario(){
   const j = J(); if (!j.tema) return telaTemas();
@@ -1997,7 +2441,10 @@ function abrirBau(){
   j.bau = today();
   const faltam = Object.keys(ITENS).filter(k => !j.itens.includes(k) && ITENS[k].preco <= 120);
   let premio;
-  if (faltam.length && Math.random() < .25){ const k = sorteia(faltam); j.itens.push(k); premio = 'Você ganhou: ' + ITENS[k].nome + '! Equipe na Loja.'; }
+  const sorte = Math.random();
+  if (j.classe && sorte < .35){ darJoia('bencao'); premio = 'uma Joia da Bênção!'; }
+  else if (j.classe && sorte < .6){ const dp = sortearDrop(Math.max(0, tierMax() - 1), false); premio = dp.vendido ? 'um item (inventário cheio: vendido por ' + dp.vendido + ').' : nomeItem(dp.it) + '!'; }
+  else if (faltam.length && Math.random() < .25){ const k = sorteia(faltam); j.itens.push(k); premio = 'Você ganhou: ' + ITENS[k].nome + '! Equipe na Loja.'; }
   else { const m = 20 + Math.floor(Math.random() * 31); j.moedas += m; premio = '+' + m + ' ' + TEMAS[j.tema].moeda + '.'; }
   save(); confete();
   return premio;
@@ -2070,36 +2517,41 @@ function jogarBatalha(r, i, chefe, dados){
   const rodar = d => {
     const rodadas = (Array.isArray(d && d.rodadas) ? d.rodadas : []).map(x => ({x, q: normQ({p:'', opcoes:x && x.opcoes, certa:x && x.certa})})).filter(y => y.x && str(y.x.ataque) && y.q);
     if (rodadas.length < 3){ box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null,'A batalha veio incompleta.'), h('button',{class:'btn sec',type:'button',onclick:() => jogarBatalha(r, i, chefe)},'Gerar de novo'))); return; }
-    const nomeIni = str(chefe ? d.chefe : d.inimigo) || tm.inimigo, MAXV = vidasMax(), SEG = chefe ? 25 : 20;
-    let vidas = MAXV, k = 0, acertos = 0, timer = 0;
+    const AT = atributos(), nomeIni = str(chefe ? d.chefe : d.inimigo) || tm.inimigo, MAXV = vidasMax(), SEG = (chefe ? 25 : 20) + AT.efeito.tempo;
+    const HPMAX = Math.round((100 + r * 45) * (chefe ? 1.6 : 1)), DANO = Math.max(AT.efeito.dano, Math.ceil(HPMAX / 4));
+    let vidas = MAXV, k = 0, acertos = 0, timer = 0, hpIni = HPMAX;
     rodadas.forEach(y => prepararAudio(str(y.x.ataque).replace(/_{2,}/g, '...')));
     const ini = h('span',{class:'inimigo'}); ini.innerHTML = inimigoSVG(j.tema, chefe);
     const hp = h('i',{style:'width:100%'});
     const arena = h('section',{class:'arena'}, h('b',null, nomeIni), ini, h('div',{class:'hp','aria-label':'Vida do inimigo'}, hp),
       str(d.fala) ? h('p',{class:'small',style:'opacity:.9;text-align:center'}, '"' + str(d.fala) + '"') : null,
-      h('div',{class:'heroi'}, avatarEl(meuAvatar(), 46)));
+      h('div',{class:'heroi'}, (() => { const cv = h('canvas',{width:120,height:120,class:'heroi-arena','aria-label':'Seu herói'}); const vis = visualEquip();
+        animarCanvas(cv, (c, tt) => { c.clearRect(0, 0, 120, 120); desenharHeroi(c, 60, 108, {visual:vis, dir:'e', parado:true, t:tt, escala:2.6, armaPadrao:true}); }); return cv; })()));
     const golpe = (txt, alvo) => { const e = h('span',{class:'dano'}, txt); alvo.append(e); setTimeout(() => e.remove(), 900); };
     const fim = () => {
       clearInterval(timer);
-      const passou = vidas > 0 && acertos >= Math.ceil(rodadas.length * .6);
+      const passou = vidas > 0 && hpIni <= 0;
       if (!passou) return derrota(() => jogarBatalha(r, i, chefe, d));
       if (chefe) return golpeFinal();
       vitoria(r, i, 'batalha', {acertos, total:rodadas.length, inimigo:nomeIni});
     };
     const rodada = () => {
-      if (vidas <= 0 || k >= rodadas.length) return fim();
+      if (vidas <= 0 || hpIni <= 0 || k >= rodadas.length) return fim();
       const {x, q} = rodadas[k], tr = h('div'), fb = h('div'), barra = h('i',{style:'width:100%'});
       let respondeu = false; const t0 = Date.now();
       const responder = (oi, b) => {
         if (respondeu) return; respondeu = true; clearInterval(timer);
         const ok = oi === q.certa;
         btns.forEach((bb, bi) => { bb.disabled = true; if (bi === q.certa) bb.classList.add('ok'); });
-        if (ok){ acertos++; hp.style.width = Math.max(0, 100 - acertos / rodadas.length * 100) + '%'; ini.classList.remove('chacoalha'); void ini.offsetWidth; ini.classList.add('chacoalha'); golpe('-1', arena); reagir(true); skill('vocabulario', 100); skill('gramatica', 100); }
+        if (ok){ acertos++; const crit = Math.random() < .15, dano = Math.round(DANO * (crit ? 1.5 : 1)); hpIni = Math.max(0, hpIni - dano); hp.style.width = (hpIni / HPMAX * 100) + '%'; ini.classList.remove('chacoalha'); void ini.offsetWidth; ini.classList.add('chacoalha'); golpe((crit ? 'CRÍTICO -' : '-') + dano, arena); arena.classList.add('golpeando'); setTimeout(() => arena.classList.remove('golpeando'), 300); reagir(true); skill('vocabulario', 100); skill('gramatica', 100); }
+        else if (Math.random() * 100 < AT.efeito.bloqueio){ if (b) b.classList.add('no'); golpe('🛡️ BLOQUEADO', arena.querySelector('.heroi')); reagir(false); skill('gramatica', 35);
+          fb.replaceChildren(h('div',{class:'note soft'}, 'Seu equipamento bloqueou o golpe: você não perdeu coração. ' + (str(x.dica) || 'Olhe a resposta certa em verde.'))); }
         else { if (b) b.classList.add('no'); vidas--; arena.querySelector('.heroi').classList.add('chacoalha'); reagir(false); skill('gramatica', 35);
           fb.replaceChildren(h('div',{class:'note soft'}, (b ? '' : 'O tempo acabou. ') + (str(x.dica) || 'Olhe a resposta certa em verde.'))); }
         save();
         cab.replaceChildren(h('span',{class:'eyebrow'}, 'Golpe ' + (k + 1) + ' de ' + rodadas.length), vidasEl(vidas, MAXV));
-        fb.append(h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:() => { k++; rodada(); }}, vidas <= 0 || k + 1 >= rodadas.length ? 'Ver resultado' : 'Próximo golpe'));
+        const acabou = vidas <= 0 || hpIni <= 0 || k + 1 >= rodadas.length;
+        fb.append(h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:() => { k++; if (hpIni <= 0) return fim(); rodada(); }}, acabou ? (hpIni <= 0 ? (chefe ? 'Golpe final!' : 'Vencer!') : 'Ver resultado') : 'Próximo golpe'));
       };
       const btns = q.opcoes.map((o, oi) => h('button',{class:'opt alvo',type:'button',onclick:ev => responder(oi, ev.currentTarget)}, o));
       const cab = h('div',{class:'row between'}, h('span',{class:'eyebrow'}, 'Golpe ' + (k + 1) + ' de ' + rodadas.length), vidasEl(vidas, MAXV));
@@ -2149,6 +2601,14 @@ function vitoria(r, i, tipo, info){
   const ganho = {missao:[30,20], batalha:[40,25], chefe:[100,60]}[tipo];
   const primeira = !noFeito(r, i);
   if (info && info.estrelas) ganho[0] += info.estrelas * 10;
+  const AT = atributos(); ganho[0] = Math.round(ganho[0] * (1 + AT.efeito.moedas / 100)); ganho[1] = Math.round(ganho[1] * (1 + AT.efeito.xp / 100));
+  // o que cai da vitória: itens e joias
+  const drops = [], joiasG = [];
+  if (j.classe){
+    if (tipo === 'chefe'){ drops.push(sortearDrop(r, true)); darJoia('bencao', 2); joiasG.push(['bencao', 2]); if (Math.random() < .5){ darJoia('alma'); joiasG.push(['alma', 1]); } if (Math.random() < .2){ darJoia('vida'); joiasG.push(['vida', 1]); } if (r >= 2 && Math.random() < .3){ darJoia('caos'); joiasG.push(['caos', 1]); } }
+    else if (tipo === 'batalha'){ if (Math.random() < .65) drops.push(sortearDrop(r, false)); if (Math.random() < .4){ darJoia('bencao'); joiasG.push(['bencao', 1]); } }
+    else if (info && info.estrelas){ if (info.estrelas === 3){ darJoia('bencao'); joiasG.push(['bencao', 1]); if (Math.random() < .35){ darJoia('alma'); joiasG.push(['alma', 1]); } } if (info.estrelas >= 2 && Math.random() < .5) drops.push(sortearDrop(r, false)); }
+  }
   j.moedas += ganho[0]; addXP(ganho[1]); const xp = ganharHXP({missao:40, batalha:50, chefe:120}[tipo]); const bonus = touchDay(); if (bonus) addXP(bonus);
   j.feitos[noId(r, i)] = true;
   let item = null;
@@ -2166,6 +2626,10 @@ function vitoria(r, i, tipo, info){
       h('div',null, h('b',null,'+' + xp), h('span',null,'XP do herói')),
       info.total ? h('div',null, h('b',null, info.acertos + '/' + info.total), h('span',null,'acertos')) : null,
       h('div',null, h('b',null, S.streak.cur), h('span',null, S.streak.cur === 1 ? 'dia de sequência' : 'dias de sequência'))),
+    drops.length || joiasG.length ? h('section',{class:'mu-painel drops'}, h('span',{class:'eyebrow',style:'color:#FDE68A'},'Itens que caíram'),
+      h('div',{class:'drops-lista'}, drops.map(dp => h('div',{class:'drop'}, caixaItem(dp.it), h('b',{style:'color:' + RARIDADES[dp.it.rar].cor}, nomeItem(dp.it)), dp.vendido ? h('small',null,'Inventário cheio: vendido por ' + dp.vendido) : null)),
+        joiasG.map(([k2, n2]) => { const el = h('div',{class:'drop'}); const ic = h('span',{class:'it-caixa'}); ic.innerHTML = iconeJoiaSVG(k2); el.append(ic, h('b',{style:'color:' + JOIAS[k2].cor}, JOIAS[k2].nome + (n2 > 1 ? ' ×' + n2 : ''))); return el; })),
+      h('button',{class:'btn sec',type:'button',onclick:() => telaHeroi()},'Ver no herói')) : null,
     item ? h('section',{class:'card perfil-top'}, avatarEl(Object.assign({}, meuAvatar(), {item}), 64), h('div',{class:'grow'}, h('b',null,'Novo item: ' + ITENS[item].nome), h('div',{class:'small muted'},'Equipe na Loja para usar no seu avatar.'))) : null,
     tipo === 'chefe' && r + 1 < tm.regioes.length && primeira ? h('div',{class:'note'}, 'O portal para ' + tm.regioes[r + 1] + ' acendeu. Entre nele no mapa.') : null,
     h('div',{class:'spacer'}),
@@ -2180,21 +2644,391 @@ function derrota(denovo){
     h('button',{class:'btn sec',type:'button',onclick:() => goTab('inicio')},'Voltar ao mapa'));
 }
 
-/* ---------- loja de itens do avatar ---------- */
+/* ---------- loja: equipamentos, joias e visual ---------- */
+let ABA_LOJA = 'equip';
 function telaLoja(){
-  const j = J(), tm = TEMAS[j.tema] || TEMAS.viagem, equipado = (S.profile.avatar || {}).item || '';
-  const msg = h('p',{class:'small',role:'status'});
-  const equipar = k => { S.profile.avatar = Object.assign({}, meuAvatar(), {item:k || ''}); save(); telaLoja(); };
-  show('jogo', topoJogo('Loja'), h('h1',null,'Loja do herói'),
-    h('p',{class:'muted'}, 'Use ' + tm.moeda + ' para comprar itens para o seu avatar. Os chefes também dão itens.'),
-    h('section',{class:'card perfil-top'}, avatarEl(meuAvatar(), 72), h('div',{class:'grow'}, h('b',null, S.profile.name), h('div',{class:'small muted'}, equipado ? 'Usando: ' + ITENS[equipado].nome : 'Sem item equipado')),
-      equipado ? h('button',{class:'btn sec',type:'button',style:'width:auto',onclick:() => equipar('')},'Tirar') : null),
-    msg,
-    h('div',{class:'stack'}, Object.keys(ITENS).map(k => { const it = ITENS[k], tem = j.itens.includes(k);
+  const j = EQ(), tm = TEMAS[j.tema] || TEMAS.viagem, equipado = (S.profile.avatar || {}).item || '', n = nivelHeroi(j.hxp), msg = h('p',{class:'small',role:'status'});
+  const pagar = (preco, f) => { if (j.moedas < preco){ msg.textContent = 'Faltam ' + (preco - j.moedas) + ' ' + tm.moeda + '. Jogue mais uma missão ou batalha.'; return; } j.moedas -= preco; f(); save(); telaLoja(); };
+  const abas = h('div',{class:'chips'}, [['equip','⚔️ Equipamentos'],['joias','💎 Joias'],['visual','🎩 Visual']].map(([k, t]) => h('button',{class:'chip',type:'button','aria-pressed':String(ABA_LOJA === k),onclick:() => { ABA_LOJA = k; telaLoja(); }}, t)));
+  let corpo;
+  if (ABA_LOJA === 'equip'){
+    if (!j.classe){ corpo = h('div',{class:'note'}, h('p',null,'Escolha a classe do seu herói para comprar equipamentos.'), h('button',{class:'btn',type:'button',onclick:() => telaClasse(telaLoja)},'Escolher classe')); }
+    else {
+      const tier = tierMax(), cls = CLASSES[j.classe].arma;
+      const ofertas = ['arma','escudo','elmo','armadura','calcas','luvas','botas','colar','anel'].map(sl => ({sl, it:Object.assign(criarItem(sl, tier, 'comum', 0, cls), {id:'loja-' + sl}), preco:Math.round((sl === 'arma' ? 70 : 45) * tier * (1 + tier * .3))}));
+      ofertas.push({sl:'asas', it:Object.assign(criarItem('asas', 1, 'raro', 0), {id:'loja-asas'}), preco:900, req:5});
+      corpo = h('div',{class:'stack tight'}, h('p',{class:'small muted'}, 'Itens do conjunto ' + CONJUNTOS[tier].nome + ' (liberado pela sua região mais avançada). Itens raros, excelentes e lendários só caem de batalhas, chefes e baús.'),
+        ofertas.map(o => h('div',{class:'card item loja-item'}, caixaItem(o.it), h('div',{class:'grow'}, h('b',null, nomeItem(o.it)), h('div',{class:'small muted'}, Object.entries(statsItem(o.it)).map(([k, v]) => ({atk:'Ataque', def:'Defesa', hp:'Vida', agi:'Agilidade'}[k] + ' ' + v)).join(' · ') + (o.req ? ' · requer nível ' + o.req : ''))),
+          h('button',{class:'btn sec',type:'button',style:'width:auto',disabled:!!(o.req && n < o.req),onclick:() => pagar(o.preco, () => { const novo = criarItem(o.sl, o.it.tier, o.it.rar, 0, cls); const r2 = darItem(novo); if (!j.eq[o.sl] && !r2.vendido) j.eq[o.sl] = novo.id; msg.textContent = 'Comprado: ' + nomeItem(novo) + '.'; })}, icon('coin'), String(o.preco)))));
+    }
+  } else if (ABA_LOJA === 'joias'){
+    corpo = h('div',{class:'stack tight'}, Object.keys(JOIAS).map(k => { const ic = h('span',{class:'it-caixa'}); ic.innerHTML = iconeJoiaSVG(k);
+      return h('div',{class:'card item loja-item'}, ic, h('div',{class:'grow'}, h('b',null, JOIAS[k].nome + ' (você tem ' + (j.joias[k] || 0) + ')'), h('div',{class:'small muted'}, JOIAS[k].desc)),
+        h('button',{class:'btn sec',type:'button',style:'width:auto',onclick:() => pagar(JOIAS[k].preco, () => darJoia(k))}, icon('coin'), String(JOIAS[k].preco))); }));
+  } else {
+    const equipar = k => { S.profile.avatar = Object.assign({}, meuAvatar(), {item:k || ''}); save(); telaLoja(); };
+    corpo = h('div',{class:'stack'}, h('p',{class:'small muted'},'Acessórios para o seu avatar. No mapa, o elmo cobre o chapéu.'),
+      equipado ? h('button',{class:'btn sec',type:'button',onclick:() => equipar('')},'Tirar acessório') : null,
+      Object.keys(ITENS).map(k => { const it = ITENS[k], tem = j.itens.includes(k);
       return h('div',{class:'card item'}, avatarEl(Object.assign({}, meuAvatar(), {item:k}), 56),
         h('div',{class:'grow'}, h('b',null, it.nome), h('div',{class:'small muted'}, tem ? 'Seu' : it.preco + ' ' + tm.moeda)),
         tem ? h('button',{class:'btn' + (equipado === k ? ' sec' : ''),type:'button',style:'width:auto',disabled: equipado === k,onclick:() => equipar(k)}, equipado === k ? 'Usando' : 'Usar')
-          : h('button',{class:'btn sec',type:'button',style:'width:auto',onclick:() => { if (j.moedas < it.preco){ msg.textContent = 'Faltam ' + (it.preco - j.moedas) + ' ' + tm.moeda + '. Jogue mais uma missão.'; return; } j.moedas -= it.preco; j.itens.push(k); save(); equipar(k); }}, icon('coin'), String(it.preco))); })));
+          : h('button',{class:'btn sec',type:'button',style:'width:auto',onclick:() => pagar(it.preco, () => { j.itens.push(k); S.profile.avatar = Object.assign({}, meuAvatar(), {item:k}); })}, icon('coin'), String(it.preco))); }));
+  }
+  show('jogo', topoJogo('Loja'), h('div',{class:'row between'}, h('h1',null,'Loja do herói'), moedasEl()), abas, msg, corpo,
+    h('button',{class:'btn',type:'button',onclick:() => telaHeroi()}, '⚔️ Ver meu herói'));
+}
+
+/* ============================== equipamentos do herói (estilo MU) ============================== */
+// Cada peça tem conjunto (nível), raridade, refino (+0 a +15) e opções excelentes.
+// Os atributos mudam o jogo de aprendizado: mais dano por acerto, mais corações, bloqueio de erro e mais tempo.
+const SLOTS = ['arma','escudo','elmo','armadura','calcas','luvas','botas','asas','colar','anel'];
+const SLOT_INFO = {
+  arma:{nome:'Arma', base:{atk:12}}, escudo:{nome:'Escudo', base:{def:7}}, elmo:{nome:'Elmo', base:{def:4, hp:12}},
+  armadura:{nome:'Armadura', base:{def:7, hp:22}}, calcas:{nome:'Calças', base:{def:5, hp:16}}, luvas:{nome:'Luvas', base:{atk:3, def:2}},
+  botas:{nome:'Botas', base:{def:3, agi:3}}, asas:{nome:'Asas', base:{atk:8, def:8, hp:30}}, colar:{nome:'Colar', base:{atk:6, agi:2}}, anel:{nome:'Anel', base:{hp:14, def:2}}
+};
+const CLASSES = {
+  cavaleiro:{nome:'Cavaleiro', arma:'espada', desc:'Espada e escudo. Mais resistente: +1 coração em toda batalha e missão.', cor:'#B91C1C'},
+  mago:{nome:'Mago', arma:'cajado', desc:'Cajado mágico. Seus golpes causam 20% mais dano.', cor:'#6D28D9'},
+  arqueiro:{nome:'Arqueiro', arma:'arco', desc:'Arco e flecha. +4 segundos para responder cada golpe.', cor:'#15803D'}
+};
+const CONJUNTOS = [null,
+  {nome:'Couro', cor:'#8B5A2B', cor2:'#C08A4E', req:1},
+  {nome:'Bronze', cor:'#9A5B2A', cor2:'#E9A85F', req:3},
+  {nome:'Escamas', cor:'#22625C', cor2:'#7FD1C5', req:5},
+  {nome:'Dragão', cor:'#7F1D1D', cor2:'#F59E0B', req:7},
+  {nome:'Lendário', cor:'#1E3A8A', cor2:'#BFDBFE', req:9}];
+const NOMES_ARMA = {espada:['','Espada Curta','Espada de Bronze','Lâmina Rúnica','Espada do Dragão','Espada Divina'], cajado:['','Cajado de Carvalho','Cajado de Bronze','Cajado Rúnico','Cajado do Dragão','Cajado Divino'], arco:['','Arco Curto','Arco de Bronze','Arco Rúnico','Arco do Dragão','Arco Divino']};
+const NOMES_ASAS = ['', 'Asas de Fada', 'Asas do Céu', 'Asas de Satã', 'Asas do Dragão', 'Asas Divinas'];
+const CORES_ASAS = [null, {cor:'#F9A8D4', cor2:'#FDF2F8'}, {cor:'#60A5FA', cor2:'#EFF6FF'}, {cor:'#450A0A', cor2:'#DC2626'}, {cor:'#B45309', cor2:'#FDE68A'}, {cor:'#E0E7FF', cor2:'#FFFFFF'}];
+const coresItem = it => it.slot === 'asas' ? CORES_ASAS[it.tier] : CONJUNTOS[it.tier] || CONJUNTOS[1];
+const RARIDADES = {
+  comum:{nome:'Comum', cor:'#E5E7EB', mult:1, op:0}, raro:{nome:'Raro', cor:'#60A5FA', mult:1.25, op:0},
+  excelente:{nome:'Excelente', cor:'#4ADE80', mult:1.5, op:1}, lendario:{nome:'Lendário', cor:'#FBBF24', mult:2, op:2}
+};
+const OPCOES = {xp:'+10% de XP nas vitórias', moedas:'+15% de moedas', tempo:'+3 s para responder', bloqueio:'+8% de chance de bloquear um erro', dano:'+10% de dano'};
+const JOIAS = {
+  bencao:{nome:'Joia da Bênção', cor:'#93C5FD', desc:'Refina um item até +6. Sempre funciona.', preco:60},
+  alma:{nome:'Joia da Alma', cor:'#C4B5FD', desc:'Refina de +6 até +9. Pode falhar: o item volta 1 nível.', preco:150},
+  caos:{nome:'Joia do Caos', cor:'#FDE68A', desc:'Refina de +9 até +15. Chance menor; se falhar, volta 1 nível.', preco:400},
+  vida:{nome:'Joia da Vida', cor:'#FCA5A5', desc:'Adiciona uma opção excelente ao item (até 2).', preco:220}
+};
+const MAX_INV = 32;
+function EQ(){ const j = J(); if (!j.inv) j.inv = []; if (!j.eq) j.eq = {}; if (!j.joias) j.joias = {bencao:0, alma:0, caos:0, vida:0}; return j; }
+const novoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const tierMax = () => { let t = 1; for (let r = 0; r < 4; r++) if (noLiberado(r, 0)) t = r + 1; return t; };
+function criarItem(slot, tier, rar, nv, tipo){
+  const it = {id:novoId(), slot, tier:clamp(tier, 1, 5), rar:rar || 'comum', nv:nv || 0, ops:[]};
+  if (slot === 'arma') it.tipo = tipo || (CLASSES[EQ().classe] || CLASSES.cavaleiro).arma;
+  const n = RARIDADES[it.rar].op; const ks = Object.keys(OPCOES);
+  while (it.ops.length < n){ const k = sorteia(ks); if (!it.ops.includes(k)) it.ops.push(k); }
+  return it;
+}
+function nomeItem(it){
+  const base = it.slot === 'arma' ? NOMES_ARMA[it.tipo || 'espada'][it.tier] : it.slot === 'asas' ? NOMES_ASAS[it.tier] : SLOT_INFO[it.slot].nome + ' de ' + CONJUNTOS[it.tier].nome;
+  return (it.rar === 'excelente' ? 'Excelente ' : it.rar === 'lendario' ? 'Lendário: ' : '') + base + (it.nv ? ' +' + it.nv : '');
+}
+function statsItem(it){
+  const b = SLOT_INFO[it.slot].base, m = RARIDADES[it.rar].mult, out = {};
+  for (const k in b) out[k] = Math.round(b[k] * it.tier * m * (1 + it.nv * .1)) + (it.nv >= 10 ? (it.nv - 9) * b[k] : 0);
+  return out;
+}
+const reqItem = it => CONJUNTOS[it.tier].req;
+// Atributos totais do herói e o que eles valem no jogo
+function atributos(){
+  const j = EQ(), nivel = nivelHeroi(j.hxp), cl = j.classe;
+  const t = {atk:4 + nivel * 2, def:2 + nivel, hp:20 + nivel * 6, agi:2 + nivel}, ops = {};
+  let refinoTotal = 0;
+  for (const s of SLOTS){ const it = itemEq(s); if (!it) continue; const st = statsItem(it); for (const k in st) t[k] = (t[k] || 0) + st[k]; it.ops.forEach(o => { ops[o] = (ops[o] || 0) + 1; }); refinoTotal += it.nv; }
+  const conj = conjuntoCompleto();
+  if (conj) t.def = Math.round(t.def * 1.1);
+  const efeito = {
+    coracoes: Math.min(3, Math.floor(t.hp / 120)) + (cl === 'cavaleiro' ? 1 : 0),
+    dano: Math.round((34 + t.atk * .35) * (cl === 'mago' ? 1.2 : 1) * (1 + (ops.dano || 0) * .1)),
+    bloqueio: Math.min(40, Math.round(t.def / 6) + (ops.bloqueio || 0) * 8),
+    tempo: Math.min(12, Math.floor(t.agi / 4) + (cl === 'arqueiro' ? 4 : 0) + (ops.tempo || 0) * 3),
+    xp: (ops.xp || 0) * 10, moedas: (ops.moedas || 0) * 15
+  };
+  const poder = Math.round(t.atk * 3 + t.def * 2.5 + t.hp * 1.2 + t.agi * 4 + refinoTotal * 25 + Object.keys(ops).length * 60 + (conj ? 300 : 0));
+  return {t, efeito, poder, ops, conj};
+}
+function itemEq(slot){ const j = EQ(), id = j.eq[slot]; return id ? j.inv.find(i => i.id === id) || null : null; }
+function conjuntoCompleto(){
+  const pecas = ['elmo','armadura','calcas','luvas','botas'].map(itemEq);
+  if (pecas.some(p => !p)) return null;
+  const tier = pecas[0].tier; if (pecas.some(p => p.tier !== tier)) return null;
+  return {tier, nv:Math.min(...pecas.map(p => p.nv))};
+}
+// visual do herói para o desenho no mapa
+function visualEquip(){
+  const j = EQ(), v = {classe:j.classe || null};
+  for (const s of SLOTS){ const it = itemEq(s); if (it) v[s] = {tier:it.tier, nv:it.nv, rar:it.rar, tipo:it.tipo}; }
+  v.conj = conjuntoCompleto();
+  return v;
+}
+function brilhoCor(nv, t){
+  if (nv >= 15) return 'hsl(' + Math.round((t || 0) * 90 % 360) + ',95%,65%)';
+  if (nv >= 13) return '#E879F9'; if (nv >= 11) return '#60A5FA'; if (nv >= 9) return '#FBBF24'; if (nv >= 7) return '#FFFFFF';
+  return null;
+}
+// sorteio de itens que caem nas vitórias e baús
+function sortearRaridade(chefe){
+  const x = Math.random() * 100;
+  if (chefe) return x < 10 ? 'lendario' : x < 45 ? 'excelente' : 'raro';
+  return x < 2 ? 'lendario' : x < 12 ? 'excelente' : x < 40 ? 'raro' : 'comum';
+}
+function darItem(it){
+  const j = EQ();
+  if (j.inv.length >= MAX_INV){ const v = valorVenda(it); j.moedas += v; return {it, vendido:v}; }
+  j.inv.push(it); return {it};
+}
+function sortearDrop(r, chefe){
+  const slotsPos = SLOTS.filter(s => s !== 'asas' || (chefe && r >= 1));
+  let slot = sorteia(slotsPos); if (slot === 'asas' && Math.random() < .6) slot = 'armadura';
+  const tier = clamp(r + 1 + (chefe && r === 3 && Math.random() < .25 ? 1 : 0), 1, 5);
+  return darItem(criarItem(slot, slot === 'asas' ? Math.max(1, tier - 1) : tier, sortearRaridade(chefe), chefe && Math.random() < .3 ? 1 + Math.floor(Math.random() * 3) : 0));
+}
+const valorVenda = it => Math.round(15 * it.tier * RARIDADES[it.rar].mult * (1 + it.nv * .3));
+function darJoia(k, n){ const j = EQ(); j.joias[k] = (j.joias[k] || 0) + (n || 1); }
+
+/* ---------- desenho: ícones dos itens ---------- */
+function iconeItemSVG(it){
+  const c = coresItem(it), c1 = c.cor, c2 = c.cor2, g = 'g' + it.id;
+  const def = '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c2 + '"/><stop offset="1" stop-color="' + c1 + '"/></linearGradient></defs>';
+  const f = 'url(#' + g + ')', aco = '#E2E8F0';
+  const formas = {
+    espada:'<path d="M33 6 L40 8 L18 32 L14 30Z" fill="' + aco + '" stroke="#94A3B8"/><path d="M12 26 L22 36" stroke="' + c2 + '" stroke-width="4" stroke-linecap="round"/><path d="M15 33 L8 40" stroke="' + c1 + '" stroke-width="4" stroke-linecap="round"/><circle cx="7" cy="41" r="3" fill="' + c2 + '"/>',
+    cajado:'<path d="M10 42 L32 12" stroke="' + c1 + '" stroke-width="4" stroke-linecap="round"/><circle cx="34" cy="10" r="7" fill="' + f + '" stroke="' + c2 + '"/><circle cx="32" cy="8" r="2.5" fill="#fff" opacity=".8"/>',
+    arco:'<path d="M14 6 Q42 24 14 42" fill="none" stroke="' + f + '" stroke-width="4" stroke-linecap="round"/><path d="M14 6 L14 42" stroke="#E5E7EB" stroke-width="1.2"/><path d="M8 24 L38 24" stroke="#94A3B8" stroke-width="2"/><path d="M38 24 L32 20 M38 24 L32 28" stroke="' + c2 + '" stroke-width="2"/>',
+    escudo:'<path d="M24 5 L40 11 L38 28 Q34 38 24 44 Q14 38 10 28 L8 11Z" fill="' + f + '" stroke="' + c2 + '" stroke-width="2"/><path d="M24 13 L24 36 M15 22 L33 22" stroke="' + c2 + '" stroke-width="3"/>',
+    elmo:'<path d="M9 30 Q9 8 24 8 Q39 8 39 30 L39 36 L9 36Z" fill="' + f + '" stroke="' + c2 + '" stroke-width="2"/><rect x="14" y="22" width="20" height="4" rx="2" fill="#0F172A"/><path d="M24 4 L24 14" stroke="' + c2 + '" stroke-width="3"/>',
+    armadura:'<path d="M14 8 L20 12 L28 12 L34 8 L42 14 L38 22 L34 20 L34 42 L14 42 L14 20 L10 22 L6 14Z" fill="' + f + '" stroke="' + c2 + '" stroke-width="2"/><path d="M24 14 L24 40" stroke="' + c2 + '" stroke-width="2" opacity=".7"/>',
+    calcas:'<path d="M12 8 L36 8 L38 42 L28 42 L24 20 L20 42 L10 42Z" fill="' + f + '" stroke="' + c2 + '" stroke-width="2"/>',
+    luvas:'<path d="M14 40 L14 20 Q14 14 18 14 L18 10 Q22 8 24 10 L26 8 Q30 8 30 12 L32 12 Q35 13 35 17 L35 32 Q35 40 28 42 L18 42Z" fill="' + f + '" stroke="' + c2 + '" stroke-width="2"/><rect x="13" y="34" width="22" height="6" fill="' + c1 + '"/>',
+    botas:'<path d="M14 6 L28 6 L28 30 L42 34 L42 42 L12 42 L14 30Z" fill="' + f + '" stroke="' + c2 + '" stroke-width="2"/><rect x="12" y="38" width="30" height="4" fill="' + c1 + '"/>',
+    asas:'<path d="M24 26 Q14 4 2 10 Q8 18 4 24 Q12 26 8 34 Q18 34 24 28Z" fill="' + f + '" stroke="' + c2 + '"/><path d="M24 26 Q34 4 46 10 Q40 18 44 24 Q36 26 40 34 Q30 34 24 28Z" fill="' + f + '" stroke="' + c2 + '"/>',
+    colar:'<path d="M10 8 Q24 34 38 8" fill="none" stroke="#FCD34D" stroke-width="2.5"/><path d="M24 26 L31 33 L24 42 L17 33Z" fill="' + f + '" stroke="#fff" stroke-width="1.5"/>',
+    anel:'<circle cx="24" cy="28" r="12" fill="none" stroke="#FCD34D" stroke-width="5"/><path d="M24 6 L31 14 L24 20 L17 14Z" fill="' + f + '" stroke="#fff" stroke-width="1.5"/>'
+  };
+  const forma = it.slot === 'arma' ? formas[it.tipo || 'espada'] : formas[it.slot];
+  return '<svg viewBox="0 0 48 48" aria-hidden="true">' + def + forma + '</svg>';
+}
+function iconeJoiaSVG(k){
+  const c = JOIAS[k].cor;
+  return '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6 L38 18 L24 42 L10 18Z" fill="' + c + '" stroke="#fff" stroke-width="2"/><path d="M10 18 L38 18 M24 6 L18 18 L24 42 L30 18Z" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.2"/></svg>';
+}
+function caixaItem(it, o){
+  o = o || {};
+  const el = h('button',{class:'it-caixa rar-' + it.rar + (it.nv >= 7 ? ' brilha' : '') + (o.equipado ? ' eq' : ''),type:'button','aria-label':nomeItem(it),onclick:o.onclick || null});
+  el.innerHTML = iconeItemSVG(it);
+  if (it.nv) el.append(h('span',{class:'it-nv'}, '+' + it.nv));
+  if (o.equipado) el.append(h('span',{class:'it-e'}, 'E'));
+  if (it.nv >= 7) el.style.setProperty('--brilho', brilhoCor(it.nv) || '#fff');
+  return el;
+}
+
+/* ---------- desenho do herói equipado (mapa, lugares, batalha e tela do herói) ---------- */
+function desenharHeroi(c, cx, by, o){
+  o = o || {};
+  const v = o.visual || visualEquip(), d = o.dir || 's', t = o.t || 0, anda = Math.sin(o.passo || 0), s = o.escala || 1;
+  const cor = (slot, k) => v[slot] ? CONJUNTOS[v[slot].tier][k || 'cor'] : null;
+  const pulo = o.parado ? Math.sin(t * 2.4) * .6 : Math.abs(anda) * -1.6;
+  // aura do conjunto completo +10 (no chão)
+  if (v.conj && v.conj.nv >= 10){
+    c.save(); c.translate(cx, by); c.scale(s, s); const a = t * 1.5;
+    c.strokeStyle = brilhoCor(v.conj.nv, t) || '#FBBF24'; c.lineWidth = 1.5; c.globalAlpha = .7;
+    c.beginPath(); c.ellipse(0, 0, 15, 5.5, 0, a, a + 4.5); c.stroke(); c.globalAlpha = .35; c.beginPath(); c.ellipse(0, 0, 19, 7, 0, -a, -a + 3.5); c.stroke();
+    c.restore();
+  }
+  const asas = () => {
+    if (!v.asas) return;
+    const tier = v.asas.tier, bate = Math.sin(t * (o.parado ? 3 : 8)) * .22, c1 = CORES_ASAS[tier].cor, c2 = CORES_ASAS[tier].cor2;
+    c.save(); c.translate(cx, by + pulo * s); c.scale(s, s); c.translate(0, -16);
+    for (const lado of [-1, 1]){
+      c.save(); c.scale(lado, 1); c.rotate(-.15 - bate);
+      const gr = c.createLinearGradient(0, 0, 26, -10); gr.addColorStop(0, c2); gr.addColorStop(1, c1);
+      c.fillStyle = gr; c.globalAlpha = tier === 1 ? .75 : .95;
+      c.beginPath(); c.moveTo(2, 0);
+      if (tier === 3){ c.lineTo(10, -16); c.lineTo(26, -20); c.lineTo(22, -8); c.lineTo(28, -2); c.lineTo(18, 2); c.lineTo(20, 10); c.lineTo(8, 6); }
+      else { c.quadraticCurveTo(12, -22, 28, -18); c.quadraticCurveTo(22, -10, 27, -4); c.quadraticCurveTo(18, -2, 22, 6); c.quadraticCurveTo(10, 6, 2, 4); }
+      c.closePath(); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = .8; c.stroke();
+      if (v.asas.nv >= 7 || tier >= 4){ c.globalCompositeOperation = 'lighter'; c.globalAlpha = .25 + Math.sin(t * 4) * .1; c.fillStyle = brilhoCor(Math.max(9, v.asas.nv), t) || c2; c.fill(); }
+      c.restore();
+    }
+    c.restore();
+  };
+  const arma = (frente) => {
+    if (!v.arma && !(v.classe && o.armaPadrao)) return;
+    const tipo = v.arma ? v.arma.tipo : CLASSES[v.classe].arma, c1 = v.arma ? CONJUNTOS[v.arma.tier].cor : '#8B5A2B', c2 = v.arma ? CONJUNTOS[v.arma.tier].cor2 : '#C08A4E', nv = v.arma ? v.arma.nv : 0;
+    const lado = d === 'w' ? -1 : 1, hx = 9 * lado, hy = -11 - (lado > 0 ? anda : -anda) * 2;
+    c.save(); c.translate(cx, by + pulo * s); c.scale(s, s); c.translate(hx, hy); c.scale(lado, 1);
+    const brilho = brilhoCor(nv, t);
+    if (tipo === 'espada'){
+      c.rotate(-.5 + (o.golpe || 0));
+      c.fillStyle = '#E2E8F0'; c.beginPath(); c.moveTo(-1.2, -2); c.lineTo(1.2, -2); c.lineTo(.8, -17); c.lineTo(0, -19); c.lineTo(-.8, -17); c.closePath(); c.fill();
+      c.fillStyle = c2; c.fillRect(-3.5, -2.5, 7, 2); c.fillStyle = c1; c.fillRect(-1, -.5, 2, 4);
+      if (brilho){ c.globalCompositeOperation = 'lighter'; c.strokeStyle = brilho; c.globalAlpha = .55 + Math.sin(t * 6) * .2; c.lineWidth = 2.5; c.beginPath(); c.moveTo(0, -3); c.lineTo(0, -18); c.stroke(); }
+    } else if (tipo === 'cajado'){
+      c.rotate(-.2);
+      c.strokeStyle = c1; c.lineWidth = 2; c.beginPath(); c.moveTo(0, 6); c.lineTo(0, -20); c.stroke();
+      c.fillStyle = c2; c.beginPath(); c.arc(0, -22, 3.4, 0, 7); c.fill();
+      c.globalCompositeOperation = 'lighter'; c.globalAlpha = .35 + Math.sin(t * 5) * .2; c.fillStyle = brilho || c2; c.beginPath(); c.arc(0, -22, 6 + (brilho ? 2 : 0), 0, 7); c.fill();
+    } else {
+      c.strokeStyle = c2; c.lineWidth = 1.8; c.beginPath(); c.arc(-4, -6, 11, -1.1, 1.1); c.stroke();
+      c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = .6; c.beginPath(); c.moveTo(-4 + 11 * Math.cos(-1.1), -6 + 11 * Math.sin(-1.1)); c.lineTo(-4 + 11 * Math.cos(1.1), -6 + 11 * Math.sin(1.1)); c.stroke();
+      if (brilho){ c.globalCompositeOperation = 'lighter'; c.strokeStyle = brilho; c.globalAlpha = .5; c.lineWidth = 3; c.beginPath(); c.arc(-4, -6, 11, -1.1, 1.1); c.stroke(); }
+    }
+    c.restore();
+  };
+  const escudo = () => {
+    if (!v.escudo) return;
+    const lado = d === 'w' ? 1 : -1, c1 = CONJUNTOS[v.escudo.tier].cor, c2 = CONJUNTOS[v.escudo.tier].cor2;
+    c.save(); c.translate(cx, by + pulo * s); c.scale(s, s); c.translate(10 * lado, -11);
+    c.fillStyle = c1; c.strokeStyle = c2; c.lineWidth = 1.2;
+    c.beginPath(); c.moveTo(0, -6); c.lineTo(5, -4); c.lineTo(4.5, 2); c.quadraticCurveTo(3, 6, 0, 8); c.quadraticCurveTo(-3, 6, -4.5, 2); c.lineTo(-5, -4); c.closePath(); c.fill(); c.stroke();
+    c.strokeStyle = c2; c.beginPath(); c.moveTo(0, -4); c.lineTo(0, 6); c.stroke();
+    const br = brilhoCor(v.escudo.nv, t); if (br){ c.globalCompositeOperation = 'lighter'; c.globalAlpha = .4; c.fillStyle = br; c.fill(); }
+    c.restore();
+  };
+  if (d === 'n'){ arma(); escudo(); }
+  else asas();
+  desenharPessoa(c, cx, by, o.av || meuAvatar(), Object.assign({}, o, {item: v.elmo ? '' : o.item, corpo:cor('armadura'), detalhe:cor('armadura','cor2'), pernas:cor('calcas'), maos:cor('luvas'), pes:cor('botas'), ombro:!!v.armadura}));
+  // elmo por cima da cabeça
+  if (v.elmo){
+    const c1 = CONJUNTOS[v.elmo.tier].cor, c2 = CONJUNTOS[v.elmo.tier].cor2, hy = -27;
+    c.save(); c.translate(cx, by + pulo * s); c.scale(s, s);
+    c.fillStyle = c1; c.beginPath(); c.arc(0, hy - 1, 11.2, Math.PI * 1.02, Math.PI * 1.98); c.lineTo(11, hy + 3); c.lineTo(-11, hy + 3); c.closePath(); c.fill();
+    c.fillStyle = c2; c.fillRect(-11, hy + 1, 22, 2.5);
+    if (d !== 'n'){ c.fillStyle = 'rgba(15,23,42,.85)'; c.fillRect(d === 'e' ? 1 : d === 'w' ? -9 : -7, hy + 3, d === 's' ? 14 : 8, 2); }
+    if (v.elmo.tier >= 4){ c.fillStyle = c2; for (const l of [-1, 1]){ c.beginPath(); c.moveTo(7 * l, hy - 7); c.quadraticCurveTo(14 * l, hy - 14, 10 * l, hy - 20); c.quadraticCurveTo(10 * l, hy - 12, 4 * l, hy - 9); c.fill(); } }
+    else { c.fillStyle = c2; c.beginPath(); c.moveTo(-1.5, hy - 11); c.lineTo(1.5, hy - 11); c.lineTo(0, hy - 17); c.fill(); }
+    const br = brilhoCor(v.elmo.nv, t); if (br){ c.globalCompositeOperation = 'lighter'; c.globalAlpha = .35 + Math.sin(t * 5) * .15; c.fillStyle = br; c.beginPath(); c.arc(0, hy - 1, 12, Math.PI, 0); c.fill(); }
+    c.restore();
+  }
+  // brilho dos itens refinados no corpo
+  const nvCorpo = Math.max(v.armadura ? v.armadura.nv : 0, v.calcas ? v.calcas.nv : 0);
+  const brC = brilhoCor(nvCorpo, t);
+  if (brC){ c.save(); c.translate(cx, by + pulo * s); c.scale(s, s); c.globalCompositeOperation = 'lighter'; c.globalAlpha = .22 + Math.sin(t * 4) * .1; c.fillStyle = brC; rr(c, -9, -19, 18, 19, 6); c.fill();
+    if (nvCorpo >= 11){ c.globalAlpha = .9; for (let k = 0; k < 4; k++){ const a = t * 2 + k * 1.6, px = Math.cos(a) * 10, py = -10 + Math.sin(a * 1.3) * 10; c.fillStyle = brC; c.fillRect(px - .8, py - .8, 1.6, 1.6); } }
+    c.restore(); }
+  if (d !== 'n'){ escudo(); arma(); }
+  else asas();
+}
+
+/* ---------- escolher a classe ---------- */
+function telaClasse(depois){
+  const j = EQ();
+  const cartoes = Object.keys(CLASSES).map(k => {
+    const cv = h('canvas',{class:'classe-cv',width:240,height:240}); const cl = CLASSES[k];
+    const vis = {classe:k, arma:{tier:2, nv:7, rar:'raro', tipo:cl.arma}, armadura:{tier:k === 'mago' ? 5 : k === 'arqueiro' ? 3 : 4, nv:0, rar:'raro'}, escudo:k === 'cavaleiro' ? {tier:4, nv:0} : null, elmo:k === 'cavaleiro' ? {tier:4, nv:0} : null, botas:{tier:2, nv:0}};
+    animarCanvas(cv, (c, tt) => { c.clearRect(0, 0, 240, 240); desenharHeroi(c, 120, 205, {visual:vis, dir:'s', parado:true, t:tt, escala:4.6}); });
+    return h('button',{class:'card classe-card',type:'button',onclick:() => {
+      j.classe = k; darItem(criarItem('arma', 1, 'comum', 0, cl.arma)); darItem(criarItem('armadura', 1, 'comum', 0));
+      if (k === 'cavaleiro') darItem(criarItem('escudo', 1, 'comum', 0));
+      j.inv.forEach(it => { if (!j.eq[it.slot]) j.eq[it.slot] = it.id; });
+      darJoia('bencao', 3); save(); confete(); (depois || telaHeroi)();
+    }}, cv, h('b',null, cl.nome), h('span',{class:'small muted'}, cl.desc));
+  });
+  show('jogo', topoJogo('Escolha a classe'), h('h1',null,'Escolha a sua classe'), h('p',{class:'muted'},'A classe define a arma do seu herói e uma vantagem nas batalhas. Você ganha um kit inicial para começar.'), h('div',{class:'classes'}, cartoes));
+}
+function animarCanvas(cv, desenhar){
+  const c = cv.getContext('2d'); let t0 = performance.now();
+  const passo = agora => { if (!cv.isConnected && performance.now() - t0 > 2000) return; desenhar(c, (agora - t0) / 1000); requestAnimationFrame(passo); };
+  requestAnimationFrame(passo);
+}
+
+/* ---------- tela do herói: equipamentos, atributos e inventário ---------- */
+function telaHeroi(){
+  pintarTema();
+  const j = EQ(); if (!j.classe) return telaClasse();
+  const a = atributos(), n = nivelHeroi(j.hxp);
+  const cv = h('canvas',{class:'heroi-cv',width:300,height:300,'aria-label':'Seu herói com os equipamentos'});
+  animarCanvas(cv, (c, tt) => { c.clearRect(0, 0, 300, 300); const g = c.createRadialGradient(150, 230, 10, 150, 230, 120); g.addColorStop(0, 'rgba(250,204,21,.25)'); g.addColorStop(1, 'rgba(250,204,21,0)'); c.fillStyle = g; c.fillRect(0, 0, 300, 300); desenharHeroi(c, 150, 262, {dir:'s', parado:true, t:tt, escala:5.6, armaPadrao:true}); });
+  const slotEl = s => {
+    const it = itemEq(s);
+    return h('div',{class:'slot slot-' + s}, it ? caixaItem(it, {equipado:true, onclick:() => detalheItem(it)}) : h('button',{class:'it-caixa vazio',type:'button','aria-label':SLOT_INFO[s].nome + ' vazio',onclick:() => toastHeroi('Nenhum item de ' + SLOT_INFO[s].nome.toLowerCase() + ' equipado. Ganhe itens em batalhas, chefes e baús.')}, h('span',null, SLOT_INFO[s].nome)));
+  };
+  const linha = (rot, val, extra) => h('div',{class:'atr'}, h('span',null, rot), h('b',null, String(val)), extra ? h('small',null, extra) : null);
+  const eqIds = Object.values(j.eq);
+  const inv = j.inv.filter(it => !eqIds.includes(it.id)).sort((x, y) => (RARIDADES[y.rar].mult - RARIDADES[x.rar].mult) || (y.tier - x.tier) || (y.nv - x.nv));
+  const vagas = Array.from({length:Math.max(0, MAX_INV - eqIds.length)}, (_, k) => inv[k] ? caixaItem(inv[k], {onclick:() => detalheItem(inv[k])}) : h('span',{class:'it-caixa vazio'}));
+  show('jogo', topoJogo('Herói'),
+    h('section',{class:'mu-painel'},
+      h('div',{class:'mu-topo'}, h('div',null, h('b',null, S.profile.name), h('small',null, CLASSES[j.classe].nome + ' · Nível ' + n + ' · ' + tituloHeroi(n))),
+        h('div',{class:'poder'}, h('small',null,'Poder de combate'), h('b',null, a.poder.toLocaleString('pt-BR')))),
+      h('div',{class:'boneco'}, ['arma','elmo','asas','luvas','escudo','anel','colar','calcas','armadura','botas'].map(slotEl), h('div',{class:'boneco-centro'}, cv)),
+      a.conj ? h('div',{class:'mu-conj'}, '✦ Conjunto ' + CONJUNTOS[a.conj.tier].nome + ' completo: +10% de defesa' + (a.conj.nv >= 10 ? ' · aura +' + a.conj.nv : '')) : null),
+    h('section',{class:'card stack tight'}, h('span',{class:'eyebrow'},'Atributos'),
+      h('div',{class:'atrs'}, linha('⚔️ Ataque', a.t.atk), linha('🛡️ Defesa', a.t.def), linha('❤️ Vida', a.t.hp), linha('💨 Agilidade', a.t.agi)),
+      h('span',{class:'eyebrow',style:'margin-top:8px'},'No jogo isso vale'),
+      h('div',{class:'efeitos'},
+        h('div',null, h('b',null, String(a.efeito.dano)), h('span',null,'de dano por acerto')),
+        h('div',null, h('b',null, '+' + a.efeito.coracoes), h('span',null,'corações extras')),
+        h('div',null, h('b',null, a.efeito.bloqueio + '%'), h('span',null,'de bloquear um erro')),
+        h('div',null, h('b',null, '+' + a.efeito.tempo + ' s'), h('span',null,'para responder')),
+        a.efeito.xp ? h('div',null, h('b',null, '+' + a.efeito.xp + '%'), h('span',null,'de XP')) : null,
+        a.efeito.moedas ? h('div',null, h('b',null, '+' + a.efeito.moedas + '%'), h('span',null,'de moedas')) : null)),
+    h('section',{class:'stack tight'}, h('div',{class:'row between'}, h('h3',null,'Joias'), h('span',{class:'small muted'}, 'Toque num item para refinar')),
+      h('div',{class:'joias'}, Object.keys(JOIAS).map(k => { const el = h('div',{class:'joia',title:JOIAS[k].desc}); el.innerHTML = iconeJoiaSVG(k); el.append(h('b',null, '×' + (j.joias[k] || 0)), h('small',null, JOIAS[k].nome.replace('Joia d', 'D'))); return el; }))),
+    h('section',{class:'stack tight'}, h('div',{class:'row between'}, h('h3',null,'Inventário'), h('span',{class:'small muted'}, j.inv.length + '/' + MAX_INV)),
+      h('div',{class:'inventario'}, vagas)),
+    h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:() => telaLoja()}, icon('coin'), 'Loja'), h('button',{class:'btn',type:'button',onclick:() => goTab('inicio')}, icon('map'), 'Voltar ao mapa')));
+}
+function toastHeroi(t){ const el = h('div',{class:'toast-solto',role:'status'}, t); document.body.append(el); setTimeout(() => el.classList.add('sai'), 2600); setTimeout(() => el.remove(), 3100); }
+function detalheItem(it){
+  const j = EQ(), eq = j.eq[it.slot] === it.id, st = statsItem(it), atual = itemEq(it.slot), n = nivelHeroi(j.hxp), podeUsar = n >= reqItem(it);
+  const nomesSt = {atk:'Ataque', def:'Defesa', hp:'Vida', agi:'Agilidade'};
+  const comp = k => { if (eq || !atual) return ''; const o = statsItem(atual)[k] || 0, d2 = (st[k] || 0) - o; return d2 ? ' (' + (d2 > 0 ? '+' : '') + d2 + ')' : ''; };
+  const fundo = h('div',{class:'modal-fundo',onclick:ev => { if (ev.target === fundo) fundo.remove(); }});
+  const caixa = h('div',{class:'mu-tooltip',role:'dialog','aria-label':nomeItem(it)},
+    h('div',{class:'row',style:'gap:12px;align-items:center'}, caixaItem(it), h('div',{class:'grow'}, h('b',{class:'mu-nome',style:'color:' + RARIDADES[it.rar].cor}, nomeItem(it)), h('small',null, RARIDADES[it.rar].nome + ' · ' + SLOT_INFO[it.slot].nome + (it.slot === 'arma' ? ' (' + CLASSES[Object.keys(CLASSES).find(k => CLASSES[k].arma === it.tipo)].nome + ')' : '')))),
+    h('div',{class:'mu-linhas'},
+      Object.keys(st).map(k => h('div',null, nomesSt[k] + ': ' + st[k], h('span',{class:comp(k).includes('+') ? 'mais' : 'menos'}, comp(k)))),
+      it.nv ? h('div',{class:'mu-ref'}, 'Refino +' + it.nv) : null,
+      it.ops.map(o => h('div',{class:'mu-op'}, OPCOES[o])),
+      h('div',{class:podeUsar ? 'mu-req' : 'mu-req falta'}, 'Requer herói nível ' + reqItem(it))),
+    h('div',{class:'stack tight'},
+      eq ? h('button',{class:'btn sec',type:'button',onclick:() => { delete j.eq[it.slot]; save(); fundo.remove(); telaHeroi(); }},'Remover')
+        : h('button',{class:'btn',type:'button',disabled:!podeUsar,onclick:() => { j.eq[it.slot] = it.id; save(); fundo.remove(); telaHeroi(); if (it.slot === 'arma' && it.tipo !== CLASSES[j.classe].arma) toastHeroi('Essa arma é de outra classe: funciona, mas sem o bônus da sua classe.'); }}, podeUsar ? 'Equipar' : 'Nível ' + reqItem(it) + ' necessário'),
+      h('button',{class:'btn sec',type:'button',onclick:() => { fundo.remove(); telaRefino(it); }}, '✦ Refinar'),
+      eq ? null : h('button',{class:'btn link',type:'button',onclick:() => { j.inv = j.inv.filter(x => x.id !== it.id); const v = valorVenda(it); j.moedas += v; save(); fundo.remove(); toastHeroi('Vendido por ' + v + ' ' + TEMAS[j.tema || 'viagem'].moeda + '.'); telaHeroi(); }}, 'Vender por ' + valorVenda(it))));
+  fundo.append(caixa); document.body.append(fundo);
+}
+function chanceRefino(it, k){
+  if (k === 'bencao') return it.nv < 6 ? 100 : 0;
+  if (k === 'alma') return it.nv >= 6 && it.nv < 9 ? [60, 50, 40][it.nv - 6] : 0;
+  if (k === 'caos') return it.nv >= 9 && it.nv < 15 ? Math.max(15, 45 - (it.nv - 9) * 5) : 0;
+  if (k === 'vida') return it.ops.length < 2 ? 70 : 0;
+  return 0;
+}
+function telaRefino(it){
+  const j = EQ(), out = h('div',{class:'refino-resultado',role:'status'});
+  const alvo = h('div',{class:'refino-alvo'}, caixaItem(it));
+  const opcoes = Object.keys(JOIAS).map(k => {
+    const ch = chanceRefino(it, k), tem = j.joias[k] || 0, el = h('button',{class:'joia-op',type:'button',disabled: !ch || !tem,onclick:() => refinar(k)});
+    el.innerHTML = iconeJoiaSVG(k);
+    el.append(h('div',{class:'grow'}, h('b',null, JOIAS[k].nome + ' (×' + tem + ')'), h('small',null, ch ? JOIAS[k].desc + ' Chance: ' + ch + '%.' : 'Não serve para este item agora.')));
+    return el;
+  });
+  const refinar = k => {
+    const ch = chanceRefino(it, k); if (!ch || !(j.joias[k] > 0)) return;
+    j.joias[k]--; alvo.classList.add('girando'); opcoes.forEach(b => { b.disabled = true; });
+    setTimeout(() => {
+      alvo.classList.remove('girando');
+      const deu = Math.random() * 100 < ch;
+      if (k === 'vida'){ if (deu){ const ks = Object.keys(OPCOES).filter(o => !it.ops.includes(o)); it.ops.push(sorteia(ks)); if (it.rar === 'comum' || it.rar === 'raro') it.rar = 'excelente'; } }
+      else if (deu) it.nv++; else if (k !== 'bencao') it.nv = Math.max(0, it.nv - 1);
+      save();
+      if (deu) confete();
+      out.replaceChildren(h('b',{class:deu ? 'deu' : 'falhou'}, deu ? '✦ Sucesso! ' + nomeItem(it) : 'Falhou... o item ficou ' + (it.nv ? '+' + it.nv : '+0') + '.'));
+      setTimeout(() => telaRefino(it), 1400);
+    }, 1300);
+  };
+  show('jogo', topoJogo('Refino'), h('h1',null,'Máquina de refino'), h('p',{class:'muted'}, 'Use joias para deixar o item mais forte. A partir de +7 ele brilha no seu herói.'),
+    h('section',{class:'mu-painel refino'}, alvo, h('b',{class:'mu-nome',style:'color:' + RARIDADES[it.rar].cor + ';text-align:center'}, nomeItem(it)), out),
+    h('div',{class:'stack tight'}, opcoes), h('button',{class:'btn sec',type:'button',onclick:() => telaHeroi()},'Voltar ao herói'));
 }
 
 /* ============================== mundo aberto do Modo Aventura ============================== */
@@ -2333,7 +3167,7 @@ const TITULOS = ['Aprendiz','Viajante','Aventureiro','Desbravador','Herói','Cam
 const nivelHeroi = hxp => Math.floor(Math.sqrt((hxp || 0) / 40)) + 1;
 const hxpDoNivel = n => 40 * (n - 1) * (n - 1);
 const tituloHeroi = n => TITULOS[Math.min(n - 1, TITULOS.length - 1)];
-const vidasMax = () => 3 + Math.floor((nivelHeroi(J().hxp) - 1) / 3);
+const vidasMax = () => Math.min(7, 3 + Math.floor((nivelHeroi(J().hxp) - 1) / 3) + (J().classe ? atributos().efeito.coracoes : 0));
 function ganharHXP(n){
   const j = J(), antes = nivelHeroi(j.hxp);
   j.hxp = (j.hxp || 0) + n;
@@ -2542,13 +3376,16 @@ function desenharPessoa(c, cx, by, av, o){
   c.translate(0, pulo);
   if (it === 'capa'){ c.fillStyle = '#B8323A'; c.beginPath(); c.moveTo(-7, -17); c.lineTo(7, -17); c.lineTo(9 + anda, -2); c.lineTo(-9 - anda, -2); c.fill(); }
   // pernas
-  c.fillStyle = INK;
+  c.fillStyle = o.pernas || INK;
   c.fillRect(-5, -6 + (anda > 0 ? -anda * 2 : 0), 4, 6); c.fillRect(1, -6 + (anda < 0 ? anda * 2 : 0), 4, 6);
+  if (o.pes){ c.fillStyle = o.pes; c.fillRect(-5.5, -2.5 + (anda > 0 ? -anda * 2 : 0), 5, 3); c.fillRect(.5, -2.5 + (anda < 0 ? anda * 2 : 0), 5, 3); }
   // corpo
-  c.fillStyle = roupa; rr(c, -8, -18, 16, 13, 5); c.fill();
+  c.fillStyle = o.corpo || roupa; rr(c, -8, -18, 16, 13, 5); c.fill();
   c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(-8, -17, 16, 3);
+  if (o.detalhe){ c.fillStyle = o.detalhe; c.fillRect(-1, -17, 2, 11); c.fillRect(-8, -9, 16, 2); }
+  if (o.ombro){ c.fillStyle = o.detalhe || o.corpo; c.beginPath(); c.arc(-8, -16, 3.6, 0, 7); c.arc(8, -16, 3.6, 0, 7); c.fill(); }
   // braços
-  c.fillStyle = pele;
+  c.fillStyle = o.maos || pele;
   c.beginPath(); c.arc(-9, -11 + anda * 2, 2.6, 0, 7); c.fill(); c.beginPath(); c.arc(9, -11 - anda * 2, 2.6, 0, 7); c.fill();
   if (it === 'medalha'){ c.fillStyle = '#FFD84A'; c.beginPath(); c.arc(3, -12, 2.4, 0, 7); c.fill(); }
   // cabeça
@@ -2759,8 +3596,8 @@ function telaMundo(rForcada){
     const n = nivelHeroi(j.hxp), base = hxpDoNivel(n), prox = hxpDoNivel(n + 1), pct = Math.round(((j.hxp || 0) - base) / (prox - base) * 100);
     const bauOk = j.bau !== today();
     hud.replaceChildren(...semVazios([
-      h('button',{class:'hud-heroi',type:'button','aria-label':'Herói nível ' + n,onclick:() => abrirMenuMundo()}, avatarEl(meuAvatar(), 40),
-        h('span',{class:'hud-nv'}, h('b',null,'Nv ' + n), h('small',null, tituloHeroi(n)), h('span',{class:'hud-xp'}, h('i',{style:'width:' + pct + '%'})))),
+      h('button',{class:'hud-heroi',type:'button','aria-label':'Herói nível ' + n + ': equipamentos',onclick:() => { if (MUNDO && MUNDO.salvarPos) MUNDO.salvarPos(); telaHeroi(); }}, avatarEl(meuAvatar(), 40),
+        h('span',{class:'hud-nv'}, h('b',null,'Nv ' + n + ' · ⚔ ' + (j.classe ? atributos().poder.toLocaleString('pt-BR') : '0')), h('small',null, tituloHeroi(n)), h('span',{class:'hud-xp'}, h('i',{style:'width:' + pct + '%'})))),
       h('span',{class:'grow'}),
       bauOk ? h('button',{class:'hud-bau',type:'button','aria-label':'Abrir o baú do dia',onclick:() => { const p = abrirBau(true); toastMundo('Baú do dia: ' + p); pintarHUD(); }}, icon('chest')) : null,
       moedasEl(),
@@ -2944,6 +3781,8 @@ function telaMundo(rForcada){
       w.abertos[k] = 1; const moedas = 15 + Math.floor(ruido(a.x, a.y, r) * 25); confete(); faiscas(a.x, a.y, '#FFD84A');
       const pb = PALAVRAS.bau, alvoBau = S.profile.target === 'pt' ? pb.p : pb[S.profile.target] || pb.en;
       abrirDlg({nome:'Baú escondido', el:icon('chest')}, [narra('Você achou um baú! Dentro tem ' + moedas + ' ' + tm.moeda + '.'), cartaoPalavra({alvo:alvoBau, pt:'baú'})], [btn('Pegar', fecharDlg)]);
+      if (j.classe && Math.random() < .4){ const dp = sortearDrop(r, false); toastMundo('Dentro do baú: ' + nomeItem(dp.it) + '!'); }
+      else if (j.classe){ darJoia('bencao'); toastMundo('Dentro do baú: Joia da Bênção!'); }
       recompensa(20, moedas, 'Baú aberto!');
       return;
     }
@@ -3172,7 +4011,7 @@ function telaMundo(rForcada){
     const lista = [];
     for (const o of m.objs){ const largo = o.c === 'H' ? 3 : 1; if (o.x + largo < x0 || o.x > x1 || o.y > y1 || o.base < y0) continue; lista.push({b:o.base, f:() => desenharObj(tela, o, sk, W.t, m)}); }
     for (const k in m.ent){ const e = m.ent[k]; if (!entAtiva(m, e)) continue; if (e.px < x0 - 1 || e.px > x1 || e.py < y0 - 1 || e.py > y1) continue; lista.push({b:e.py + 1, f:() => desenharEnt(e)}); }
-    lista.push({b:H0.py + 1.01, f:() => desenharPessoa(tela, (H0.px + .5) * TILE, (H0.py + 1) * TILE - 3, meuAvatar(), {dir:H0.dir, passo:H0.mov ? H0.passo : 0, item:(S.profile.avatar || {}).item, parado:!H0.mov, t:W.t})});
+    lista.push({b:H0.py + 1.01, f:() => desenharHeroi(tela, (H0.px + .5) * TILE, (H0.py + 1) * TILE - 3, {visual:W.visual || (W.visual = visualEquip()), dir:H0.dir, passo:H0.mov ? H0.passo : 0, item:(S.profile.avatar || {}).item, parado:!H0.mov, t:W.t})});
     lista.push({b:W.pet.py + .9, f:() => { const im = W.imgs.pet; if (im.complete && im.naturalWidth){ const b = Math.sin(W.t * 4) * 1.5; tela.fillStyle = 'rgba(0,0,0,.18)'; tela.beginPath(); tela.ellipse((W.pet.px + .5) * TILE, (W.pet.py + 1) * TILE - 4, 8, 3, 0, 0, 7); tela.fill(); tela.drawImage(im, (W.pet.px + .5) * TILE - 12, (W.pet.py + 1) * TILE - 28 + b, 24, 24); } }});
     lista.sort((a, b) => a.b - b.b).forEach(o => o.f());
     // partículas
@@ -3295,6 +4134,7 @@ function abrirMenuMundo(){
       h('div',null, h('b',null, exp + '%'), h('span',null,'explorado')),
       h('div',null, h('b',null, String(pal)), h('span',null,'palavras achadas'))),
     h('span',{class:'eyebrow'},'Viajar para'), h('div',{class:'stack tight'}, regioes),
+    h('button',{class:'btn',type:'button',onclick:() => { fechar(); W.salvarPos(); telaHeroi(); }}, '⚔️ Herói e equipamentos'),
     h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); W.salvarPos(); telaLoja(); }}, icon('coin'), 'Loja'), h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); W.salvarPos(); telaDiario(); }}, icon('book'), 'Diário')),
     h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); telaTemas(); }}, icon('map'), 'Trocar tema'), h('button',{class:'btn sec',type:'button',onclick:() => { fechar(); S.profile.modo = 'normal'; save(); drawTabs(); goTab('inicio'); }}, 'Modo normal')),
     h('p',{class:'small muted'}, 'Como jogar: toque no mapa para andar ou use as setas. Toque nas pessoas para conversar e nos objetos para aprender o nome deles. A faixa amarela no topo te leva até o próximo objetivo.')));
@@ -4492,7 +5332,7 @@ function telaCena(k, missao, dados){
     const lista = [];
     objs.forEach(o => lista.push({b:o.base, f:() => o.c === 'd' ? desenharRotulo(ctxC, o, C) : desenharCoisa(ctxC, o.c, o.x * TILE, o.y * TILE, C, o)}));
     for (const kk in ents){ const e = ents[kk]; lista.push({b:e.py + 1, f:() => { desenharPessoa(ctxC, (e.px + .5) * TILE, (e.py + 1) * TILE - 3, avatarDeSemente(k + e.papel + nomeNpc(e.papel)), {dir:e.dir, parado:true, t:C.t + e.x, item:e.papel === 'fiscal' || e.papel === 'seguranca' ? 'detetive' : ''}); }}); }
-    lista.push({b:H0.py + 1.01, f:() => desenharPessoa(ctxC, (H0.px + .5) * TILE, (H0.py + 1) * TILE - 3, meuAvatar(), {dir:H0.dir, passo:H0.mov ? H0.passo : 0, item:(S.profile.avatar || {}).item, parado:!H0.mov, t:C.t})});
+    lista.push({b:H0.py + 1.01, f:() => desenharHeroi(ctxC, (H0.px + .5) * TILE, (H0.py + 1) * TILE - 3, {visual:W.visual || (W.visual = visualEquip()), dir:H0.dir, passo:H0.mov ? H0.passo : 0, item:(S.profile.avatar || {}).item, parado:!H0.mov, t:C.t})});
     lista.sort((a, b) => a.b - b.b).forEach(o => o.f());
     // marcador "!" em quem você precisa procurar
     const p = spec.passos[C.passo], alvoE = p && C.d ? (p.npc && ents[p.npc] ? ents[p.npc] : p.t === 'direcoes' && !C.flags.direcoesDadas ? ents[p.de] : null) : null;

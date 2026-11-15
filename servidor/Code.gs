@@ -8,6 +8,7 @@
  *   - cadastro e login por e-mail e senha, só para quem tem o código de convite;
  *   - guarda o progresso de cada pessoa na planilha;
  *   - ouve a voz do aluno nos desafios de fala e avalia a pronúncia;
+ *   - abre a aula ao vivo por voz (token temporário do Gemini Live);
  *   - chama o Gemini com a chave guardada em Propriedades do script (GEMINI_API_KEY),
  *     que nunca vai para o celular de ninguém.
  */
@@ -25,7 +26,8 @@ const PADRAO = {
   modelo_voz: 'gemini-3.8-flash-tts', // modelo do Gemini que lê em voz alta
   limite_diario: 300,              // chamadas de IA por pessoa, por dia
   max_pessoas: 12,                 // quantas contas podem existir
-  dias_sessao: 60                  // dias até pedir login de novo
+  dias_sessao: 60,                 // dias até pedir login de novo
+  modelo_live: 'gemini-3.8-live,gemini-3.1-flash-live-preview' // modelos da aula ao vivo, em ordem
 };
 const PEDACO = 40000;   // uma célula guarda até 50 mil caracteres; o progresso é dividido em partes
 const MAX_ESTADO = 400000;
@@ -42,6 +44,7 @@ function instalar() {
   if (!cfg.limite_diario) sh.appendRow(['limite_diario', PADRAO.limite_diario, 'Chamadas de IA por pessoa, por dia.']);
   if (!cfg.max_pessoas) sh.appendRow(['max_pessoas', PADRAO.max_pessoas, 'Quantas contas podem existir.']);
   if (!cfg.modelo_voz) sh.appendRow(['modelo_voz', PADRAO.modelo_voz, 'Modelo do Gemini que lê as frases em voz alta.']);
+  if (!cfg.modelo_live) sh.appendRow(['modelo_live', PADRAO.modelo_live, 'Modelos do Gemini Live para a aula ao vivo (o primeiro que funcionar é usado).']);
   const temChave = !!prop_('GEMINI_API_KEY');
   Logger.log('Abas prontas. Código de convite: ' + config_().convite);
   Logger.log(temChave ? 'Chave do Gemini encontrada.' : 'FALTA a chave: Configurações do projeto > Propriedades do script > GEMINI_API_KEY.');
@@ -79,6 +82,7 @@ function doPost(e) {
     if (a === 'ai') return saida_(ok_(ia_(user, req)));
     if (a === 'tts') return saida_(ok_(voz_(user, req)));
     if (a === 'ouvir') return saida_(ok_(ouvir_(user, req)));
+    if (a === 'live_token') return saida_(ok_(tokenAoVivo_(user, req)));
     return saida_(falha_('bad_request', 'Ação desconhecida.'));
   } catch (err) {
     if (err && err.code) return saida_(falha_(err.code, err.message));
@@ -276,6 +280,29 @@ function contarUso_(user, tokensIn, tokensOut) {
     }
     sh.appendRow([dia, user.id, 1, tokensIn, tokensOut]);
   });
+}
+/**
+ * Aula ao vivo: cria um token temporário (uso único, vale 30 minutos) para o celular conversar
+ * direto com o Gemini Live por voz. A chave do Gemini nunca sai do servidor.
+ */
+function tokenAoVivo_(user, req) {
+  checarLimite_(user);
+  const chave = prop_('GEMINI_API_KEY');
+  if (!chave) throw erro_('config', 'Falta a chave do Gemini no servidor.');
+  const modelos = String(config_().modelo_live || PADRAO.modelo_live).split(',').map(function (x) { return x.trim(); }).filter(String);
+  const agora = Date.now();
+  const r = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/auth_tokens', {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    headers: { 'x-goog-api-key': chave },
+    payload: JSON.stringify({ uses: 1, expireTime: new Date(agora + 30 * 60000).toISOString(), newSessionExpireTime: new Date(agora + 2 * 60000).toISOString() })
+  });
+  const code = r.getResponseCode();
+  if (code !== 200) throw erro_('upstream_error', 'Não consegui abrir a aula ao vivo (' + code + ').');
+  const j = JSON.parse(r.getContentText());
+  if (!j.name) throw erro_('upstream_error', 'O Gemini não devolveu o token da aula.');
+  // uma aula ao vivo conta como 5 usos do limite do dia
+  for (let i = 0; i < 5; i++) contarUso_(user, 0, 0);
+  return { token: j.name, modelos: modelos };
 }
 /** Ouve a voz do aluno (WAV em base64) e avalia com o Gemini, seguindo o pedido do app. */
 function ouvir_(user, req) {
