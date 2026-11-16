@@ -319,11 +319,25 @@ function ouvir_(user, req) {
 }
 /** Lê uma frase em voz alta com uma voz do Gemini. Devolve o áudio em base64 (WAV ou PCM). */
 function voz_(user, req) {
-  const texto = String(req.text || '').trim().slice(0, 400);
+  const MAX = 1500;
+  const texto = String(req.text || '').trim().slice(0, MAX);
   if (!texto) throw erro_('invalid', 'Nada para falar.');
-  const voz = /^[A-Za-z]{2,24}$/.test(String(req.voice || '')) ? String(req.voice) : 'Kore';
+  const valida = function (v) { return /^[A-Za-z]{2,24}$/.test(String(v || '')) ? String(v) : 'Kore'; };
+  const voz = valida(req.voice);
   checarLimite_(user);
   const modelo = String(config_().modelo_voz || PADRAO.modelo_voz);
+  // Diálogo com duas vozes numa chamada só (episódios de áudio): o texto vem como "Nome: fala" em cada linha.
+  if (Array.isArray(req.speakers) && req.speakers.length === 2) {
+    const sp = req.speakers.map(function (x) { return { speaker: String(x.nome || '').replace(/[^A-Za-zÀ-ÿ ]/g, '').slice(0, 30) || 'Voz', voiceConfig: { prebuiltVoiceConfig: { voiceName: valida(x.voz) } } }; });
+    const jm = postGemini_(modelo, [
+      { contents: [{ role: 'user', parts: [{ text: 'TTS the following conversation between ' + sp[0].speaker + ' and ' + sp[1].speaker + ', speaking clearly and naturally, like a language-learning podcast:\n' + texto }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { multiSpeakerVoiceConfig: { speakerVoiceConfigs: sp } } } }
+    ], 'modelo_voz');
+    const pm = ((jm.candidates && jm.candidates[0] && jm.candidates[0].content && jm.candidates[0].content.parts) || []).filter(function (x) { return x && x.inlineData && x.inlineData.data; })[0];
+    if (!pm) throw erro_('refused', 'O Gemini não devolveu o áudio.');
+    const umm = jm.usageMetadata || {};
+    contarUso_(user, Number(umm.promptTokenCount) || 0, Number(umm.candidatesTokenCount) || 0);
+    return { audio: pm.inlineData.data, mime: String(pm.inlineData.mimeType || 'audio/wav'), max: MAX };
+  }
   const estilo = req.slow ? 'speaking slowly and clearly, like a patient language teacher' : 'speaking clearly, like a friendly language teacher';
   // Primeiro o formato atual da documentação; se o modelo recusar, o formato anterior.
   const j = postGemini_(modelo, [
@@ -335,7 +349,7 @@ function voz_(user, req) {
   if (!p) throw erro_('refused', 'O Gemini não devolveu o áudio.');
   const um = j.usageMetadata || {};
   contarUso_(user, Number(um.promptTokenCount) || 0, Number(um.candidatesTokenCount) || 0);
-  return { audio: p.inlineData.data, mime: String(p.inlineData.mimeType || 'audio/wav') };
+  return { audio: p.inlineData.data, mime: String(p.inlineData.mimeType || 'audio/wav'), max: MAX };
 }
 /** Envia ao Gemini, tentando cada corpo em ordem enquanto o modelo recusar o formato (erro 400). */
 function postGemini_(modelo, corpos, linhaConfig) {
@@ -354,6 +368,7 @@ function postGemini_(modelo, corpos, linhaConfig) {
       try { return JSON.parse(txt); } catch (err) { throw erro_('upstream_error', 'Resposta ilegível do Gemini.'); }
     }
     ultimo = status + ' ' + txt.slice(0, 300);
+    if (status === 429 && /per ?day|PerDay|daily/i.test(txt)) throw erro_('cota_dia', 'A cota diária do Gemini para este recurso acabou. Volta amanhã (ou aumente o plano na Google AI Studio).');
     if (status === 429) throw erro_('rate_limited', 'O Gemini está no limite de uso agora. Tente de novo em instantes.');
     if (status === 401 || status === 403 || /API key/i.test(txt)) throw erro_('config', 'O Gemini recusou a chave do servidor. Confira GEMINI_API_KEY.');
     if (status === 404) throw erro_('config', 'O modelo "' + modelo + '" não foi encontrado. Confira a linha "' + linhaConfig + '" na aba CONFIG.');

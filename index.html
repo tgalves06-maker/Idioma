@@ -874,6 +874,7 @@ function aiMsg(e){
   const c = e && e.code;
   if (c === 'config_app') return 'O app ainda não está ligado ao servidor. Confira o endereço no arquivo config.js.';
   if (c === 'offline') return 'Sem conexão. O professor precisa de internet. A revisão de palavras funciona sem ela.';
+  if (c === 'cota_dia') return (e && e.message) || 'A cota diária de voz do Gemini acabou. Volta amanhã.';
   if (c === 'limit' || c === 'config' || c === 'rate_limited') return (e && e.message) || 'O professor não está disponível agora. Tente de novo daqui a pouco.';
   if (c === 'auth') return 'Sua sessão terminou. Entre de novo.';
   if (c === 'sem_ouvir') return 'O servidor ainda não sabe ouvir áudio. Grave de novo: vou usar o reconhecimento de voz do celular.';
@@ -2186,41 +2187,106 @@ function wavDePCM(partes, total){
   const out = new Int16Array(buf, 44); let o = 0; partes.forEach(p => { if (p.silencio) o += Math.round(p.silencio * 24000); else { out.set(p.pcm, o); o += p.pcm.length; } });
   return new Blob([buf], {type:'audio/wav'});
 }
+// O servidor novo aceita textos longos e diálogos com duas vozes numa chamada só (bem menos chamadas ao Gemini).
+let TTS_MAX = Number(lsGet('idioma-ia:ttsmax')) || 380, TTS_PARALELO = 2;
+async function ttsEpisodio(job, aviso){
+  const k = 'ep|' + (job.speakers ? job.speakers.map(x => x.nome + '=' + x.voz).join('+') : job.voz) + '|' + (job.slow ? 1 : 0) + '|' + job.texto;
+  const b = await lerCacheVoz(k); if (b) return new Int16Array(await b.arrayBuffer());
+  const esperas = [10, 20, 30, 45, 60, 60, 90, 90];
+  for (let t = 0; ; t++){
+    try {
+      const d = await api('tts', {text:job.texto, voice:job.voz, slow:job.slow, speakers:job.speakers});
+      if (d.max && d.max - 30 > TTS_MAX){ TTS_MAX = d.max - 30; lsSet('idioma-ia:ttsmax', String(TTS_MAX)); }
+      const pcm = pcmDeResposta(d); gravarCacheVoz(k, new Blob([pcm.buffer])); return pcm;
+    } catch(e){
+      if (e && e.code === 'rate_limited' && t < esperas.length){ TTS_PARALELO = 1; for (let x = esperas[t]; x > 0; x--){ aviso('O Gemini pediu uma pausa. Continuo sozinho em ' + x + ' s...'); await new Promise(r => setTimeout(r, 1000)); } continue; }
+      throw e;
+    }
+  }
+}
 async function montarEpisodio(roteiro, aoProgresso){
-  const pers = roteiro.personagens || {}, lento = ['A0','A1','A2'].includes(S.level);
+  const pers = roteiro.personagens || {}, lento = ['A0','A1','A2'].includes(S.level), t = tutorDe(S.profile.target);
   const vozDe = v => { if (v === 'prof') return VOZES_EP.prof; if (v === 'narrador') return VOZES_EP.narrador; const p = pers[v] || {}, lista = p.genero === 'f' ? VOZES_EP.f : VOZES_EP.m; return lista[v === 'p2' ? 1 : 0]; };
-  // lista de falas e pausas
+  const nomeDe = v => { const n = v === 'prof' ? t.nome : v === 'narrador' ? 'Narrator' : str((pers[v] || {}).nome) || (v === 'p2' ? 'Sarah' : 'Mike'); return n.replace(/[^A-Za-zÀ-ÿ]/g, '') || 'Voz'; };
+  // descobre se o servidor já aceita textos longos (1 chamada curtinha, uma vez)
+  if (TTS_MAX < 1000 && lsGet('idioma-ia:ttsteste') !== today()){ try { await ttsEpisodio({texto:'Hi!', voz:VOZES_EP.prof, slow:false}, msg => aoProgresso(0, 1, msg)); lsSet('idioma-ia:ttsteste', today()); } catch(e){ if (e && (e.code === 'rate_limited' || e.code === 'cota_dia')) throw e; } }
+  const blocos = TTS_MAX >= 1000;
+  // falas, pausas e capítulos em ordem
   const itens = [], capitulos = [], legendas = [];
-  (roteiro.segmentos || []).forEach((sg, i) => {
+  const fala = (texto, voz, papel, slow, leg) => itens.push({fala:texto, voz, papel, slow, leg});
+  (roteiro.segmentos || []).forEach(sg => {
     const texto = str(sg.texto); if (!texto) return;
     if (str(sg.capitulo)) itens.push({cap:str(sg.capitulo)});
-    const voz = vozDe(sg.voz), slow = lento && sg.lingua === 'alvo';
-    itens.push({fala:texto, voz, slow, leg:{texto, trad:str(sg.trad), voz:sg.voz}});
-    if (sg.tipo === 'repita'){ itens.push({silencio:Math.max(2.5, texto.split(/\s+/).length * .6)}); itens.push({fala:texto, voz, slow, leg:{texto, trad:str(sg.trad), voz:sg.voz}}); itens.push({silencio:Math.max(2, texto.split(/\s+/).length * .5)}); }
-    else if (sg.tipo === 'pergunta'){ itens.push({silencio:4}); if (str(sg.resposta)) itens.push({fala:str(sg.resposta), voz:VOZES_EP.prof, slow:false, leg:{texto:str(sg.resposta), trad:'', voz:'prof'}}); }
-    itens.push({silencio:.45});
+    const papel = ['prof','narrador','p1','p2'].includes(sg.voz) ? sg.voz : 'prof', voz = vozDe(papel), slow = lento && sg.lingua === 'alvo', leg = {texto, trad:str(sg.trad), voz:papel};
+    fala(texto, voz, papel, slow, leg);
+    if (sg.tipo === 'repita'){ itens.push({silencio:Math.max(2.5, texto.split(/\s+/).length * .6)}); fala(texto, voz, papel, slow, leg); itens.push({silencio:Math.max(2, texto.split(/\s+/).length * .5)}); }
+    else if (sg.tipo === 'pergunta'){ itens.push({silencio:4}); if (str(sg.resposta)) fala(str(sg.resposta), VOZES_EP.prof, 'prof', false, {texto:str(sg.resposta), trad:'', voz:'prof'}); itens.push({silencio:.6}); }
+    else itens.push({silencio:.45});
   });
-  // busca as vozes (3 de cada vez) e guarda no aparelho
-  const tarefas = []; itens.forEach(it => { if (it.fala) partirTexto(it.fala).forEach(p => tarefas.push({texto:p, voz:it.voz, slow:it.slow, it})); });
-  let feitas = 0; aoProgresso(0, tarefas.length);
-  await Promise.all(tarefas.map(tf => limitar(async () => {
-    const k = 'ep|' + tf.voz + '|' + (tf.slow ? 1 : 0) + '|' + tf.texto;
-    let pcm = null;
-    const b = await lerCacheVoz(k); if (b){ pcm = new Int16Array(await b.arrayBuffer()); }
-    else { const d = await api('tts', {text:tf.texto, voice:tf.voz, slow:tf.slow}); pcm = pcmDeResposta(d); gravarCacheVoz(k, new Blob([pcm.buffer])); }
-    tf.pcm = pcm; aoProgresso(++feitas, tarefas.length);
-  })));
+  // agrupa em blocos: até 2 vozes e o tamanho que o servidor aceita; quebra nas pausas longas e nos capítulos
+  const seq = []; let atual = null;
+  const fechar = () => { if (atual && atual.falas.length) seq.push(atual); atual = null; };
+  for (const it of itens){
+    if (it.cap){ fechar(); seq.push(it); continue; }
+    if (it.silencio){ if (it.silencio > .5 || !blocos){ fechar(); seq.push(it); } continue; }
+    const papeis = atual ? new Set(atual.falas.map(f => f.papel).concat(it.papel)) : null;
+    if (!blocos || !atual || atual.slow !== it.slow || papeis.size > 2 || atual.chars + it.fala.length + 20 > TTS_MAX) fechar();
+    if (!atual) atual = {falas:[], chars:0, slow:it.slow};
+    atual.falas.push(it); atual.chars += it.fala.length + 20;
+  }
+  fechar();
+  const jobsDe = bl => {
+    const papeis = [...new Set(bl.falas.map(f => f.papel))];
+    if (papeis.length === 1){ const txt = bl.falas.map(f => f.fala).join(' '); return (blocos ? [txt] : partirTexto(txt)).map(x => ({texto:x, voz:bl.falas[0].voz, slow:bl.slow})); }
+    const nomes = papeis.map(nomeDe); if (nomes[0] === nomes[1]) nomes[1] += 'B';
+    return [{texto:bl.falas.map(f => nomes[papeis.indexOf(f.papel)] + ': ' + f.fala).join('\n'), voz:bl.falas[0].voz, slow:bl.slow, speakers:papeis.map((pp, k) => ({nome:nomes[k], voz:bl.falas.find(f => f.papel === pp).voz}))}];
+  };
+  const blocosFala = seq.filter(x => x.falas); blocosFala.forEach(bl => { bl.jobs = jobsDe(bl); });
+  const todos = blocosFala.flatMap(bl => bl.jobs);
+  let feitas = 0, prox = 0; aoProgresso(0, todos.length);
+  const aviso = msg => aoProgresso(feitas, todos.length, msg);
+  const trabalhador = async () => { while (prox < todos.length){ const jb = todos[prox++]; jb.pcm = await ttsEpisodio(jb, aviso); aoProgresso(++feitas, todos.length); if (TTS_PARALELO === 1 && prox < todos.length) await new Promise(r => setTimeout(r, 1500)); } };
+  await Promise.all([trabalhador(), new Promise(r => setTimeout(r, 400)).then(() => TTS_PARALELO > 1 ? trabalhador() : null)]);
   // monta o arquivo e marca capítulos e legendas no tempo
   const partes = []; let total = 0;
-  for (const it of itens){
+  for (const it of seq){
     if (it.cap){ capitulos.push({nome:it.cap, t:total / 24000}); continue; }
     if (it.silencio){ partes.push({silencio:it.silencio}); total += Math.round(it.silencio * 24000); continue; }
-    const ini = total / 24000;
-    tarefas.filter(tf => tf.it === it).forEach(tf => { partes.push({pcm:tf.pcm}); total += tf.pcm.length; });
-    legendas.push(Object.assign({t:ini, fim:total / 24000}, it.leg));
+    const ini = total; it.jobs.forEach(jb => { partes.push({pcm:jb.pcm}); total += jb.pcm.length; });
+    const dur = (total - ini) / 24000, chars = it.falas.reduce((a, f) => a + f.fala.length, 0); let acc = 0;
+    it.falas.forEach(f => { const t0 = ini / 24000 + dur * acc / chars; acc += f.fala.length; legendas.push(Object.assign({t:t0, fim:ini / 24000 + dur * acc / chars}, f.leg)); });
   }
   if (!capitulos.length || capitulos[0].t > 0) capitulos.unshift({nome:'Início', t:0});
   return {blob:wavDePCM(partes, total), dur:total / 24000, capitulos, legendas};
+}
+// Plano B: ler o roteiro na hora com a voz do celular (sem gravar), quando o Gemini não deixa gravar agora
+function lerComVozDoCelular(rot, tipo){
+  const segs = (rot.segmentos || []).filter(sg => str(sg.texto)), atual = h('p',{class:'ep-leg alvo'}), trad = h('p',{class:'ep-trad'}), cap = h('b',{class:'ep-cap'});
+  let parar = false;
+  const vozPara = lang => { const vs = speechSynthesis.getVoices(); return vs.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(lang.toLowerCase())) || vs.find(v => v.lang.toLowerCase().startsWith(lang.slice(0, 2).toLowerCase())); };
+  const dizer = (texto, lingua) => new Promise(res => {
+    if (parar) return res();
+    const u = new SpeechSynthesisUtterance(texto), lang = lingua === 'pt' ? 'pt-BR' : LANGS[S.profile.target].tts, v = vozPara(lang);
+    u.lang = lang; if (v) u.voice = v; u.rate = lingua === 'pt' ? 1 : prefVoz().velocidade;
+    let feito = false; const fim = () => { if (!feito){ feito = true; res(); } }; u.onend = fim; u.onerror = fim; setTimeout(fim, 3000 + texto.length * 120);
+    speechSynthesis.speak(u);
+  });
+  const espera = s => new Promise(r => setTimeout(r, s * 1000));
+  show('chat', h('div',{class:'row between'}, h('h2',null,'🎧 ' + (str(rot.titulo) || 'Episódio')), h('button',{class:'btn link',type:'button',onclick:() => { parar = true; speechSynthesis.cancel(); telaOuvir(); }},'Parar')),
+    h('div',{class:'note soft small'}, 'Lendo com a voz do celular: mantenha a tela ligada. Quando o Gemini liberar, prepare de novo para ter as vozes naturais e ouvir com a tela bloqueada.'),
+    cap, h('div',{class:'ep-legenda'}, atual, trad));
+  (async () => {
+    for (const sg of segs){
+      if (parar) return;
+      if (str(sg.capitulo)) cap.textContent = str(sg.capitulo);
+      atual.textContent = str(sg.texto); trad.textContent = str(sg.trad); atual.className = 'ep-leg ' + (sg.lingua === 'pt' ? 'prof' : 'alvo');
+      await dizer(str(sg.texto), sg.lingua);
+      if (sg.tipo === 'repita'){ await espera(3); await dizer(str(sg.texto), sg.lingua); await espera(2); }
+      else if (sg.tipo === 'pergunta'){ await espera(4); if (str(sg.resposta)) await dizer(str(sg.resposta), 'pt'); }
+      await espera(.4);
+    }
+    if (!parar){ atual.textContent = 'Fim do episódio. 👏'; trad.textContent = ''; }
+  })();
 }
 // --- episódios guardados no aparelho ---
 const chaveEps = () => 'idioma-ia:eps:' + (USER ? USER.id : 'x');
@@ -2247,8 +2313,10 @@ function telaOuvir(){
   const a = aulaAtual(), eps = listaEps(), feitas = (S.ouvir && S.ouvir.aulas) || {}, t = tutorDe(S.profile.target);
   const min = [5, 10, 15], escolhaMin = {v:10};
   const chipsMin = chipSet(min.map(m => [m, m + ' min']), 10, false, v => { escolhaMin.v = v; });
+  const pend = epPendente();
   show('main', h('h1',null,'Ouvir'),
     tocandoAgora(),
+    pend ? h('button',{class:'mini-player',type:'button',onclick:() => criarEpisodio(pend.tipo, pend.min, pend.tema, pend.rot)}, h('span',null,'⏳'), h('span',{class:'grow'}, h('b',null, str(pend.rot.titulo) || TIPOS_EP[pend.tipo].nome), h('small',null,'Preparação parou no meio: toque para continuar')), h('span',null,'→')) : null,
     h('section',{class:'aula-hoje'},
       h('span',{class:'eyebrow'}, 'Aula ' + (a.i + 1) + ' de ' + a.lista.length + ' · nível ' + S.level),
       h('b',null, a.tema),
@@ -2268,20 +2336,30 @@ function telaOuvir(){
       h('div',{class:'card list'}, a.lista.map((tema, i) => h('div',{class:'aula-linha'}, h('span',{class:'aula-n' + (feitas[S.level + ':' + tema] ? ' ok' : '')}, feitas[S.level + ':' + tema] ? '✓' : String(i + 1)), h('span',{class:'grow'}, tema),
         h('button',{class:'btn link',type:'button',onclick:() => criarEpisodio('aula', 8, tema)}, 'Ouvir'))))));
 }
-function criarEpisodio(tipo, min, tema){
-  const box = h('div',{class:'stack'}), barra = h('i',{style:'width:0%'}), info = h('p',{class:'small muted',role:'status'}, 'Escrevendo o roteiro...');
+const chavePend = () => 'idioma-ia:ep-pend:' + (USER ? USER.id : 'x');
+function epPendente(){ try { const p = JSON.parse(lsGet(chavePend()) || 'null'); return p && Date.now() - p.quando < 3 * 864e5 ? p : null; } catch(e){ return null; } }
+function criarEpisodio(tipo, min, tema, rotPronto){
+  const box = h('div',{class:'stack'}), barra = h('i',{style:'width:0%'}), info = h('p',{class:'small muted',role:'status'}, rotPronto ? 'Retomando de onde parou...' : 'Escrevendo o roteiro...');
   show('chat', h('div',{class:'row between'}, h('h2',null, TIPOS_EP[tipo].emoji + ' ' + TIPOS_EP[tipo].nome), h('button',{class:'btn link',type:'button',onclick:() => telaOuvir()},'Cancelar')),
     h('div',{class:'ep-prep'}, h('div',{class:'ep-onda'}, Array.from({length:9}, () => h('i'))), h('b',null, 'Preparando o seu episódio'), info, h('div',{class:'bar good'}, barra),
-      h('p',{class:'small muted'}, 'Leva cerca de 1 minuto. Depois ele fica salvo no celular para ouvir até sem internet.')), box);
+      h('p',{class:'small muted'}, 'Leva de 1 a 3 minutos. O que já foi gravado fica guardado: se parar no meio, continua de onde parou. Depois o episódio fica salvo no celular para ouvir até sem internet.')), box);
   const vivo = () => ui.screen === 'chat' && barra.isConnected;
-  ai(promptEpisodio(tipo, min, tema)).then(async rot => {
+  let rotAtual = rotPronto || null;
+  (rotPronto ? Promise.resolve(rotPronto) : ai(promptEpisodio(tipo, min, tema))).then(async rot => {
     if (!rot || !Array.isArray(rot.segmentos) || rot.segmentos.length < 4) throw {code:'invalid_json'};
+    rotAtual = rot; lsSet(chavePend(), JSON.stringify({tipo, min, tema, rot, quando:Date.now()}));
     info.textContent = 'Gravando as vozes...';
-    const m = await montarEpisodio(rot, (f, n) => { barra.style.width = Math.round(f / Math.max(1, n) * 100) + '%'; info.textContent = 'Gravando as vozes (' + f + ' de ' + n + ')...'; });
+    const m = await montarEpisodio(rot, (f, n, msg) => { barra.style.width = Math.round(f / Math.max(1, n) * 100) + '%'; info.textContent = msg || 'Gravando as vozes (' + f + ' de ' + n + ')...'; });
     const ep = {id:Date.now().toString(36), tipo, tema, titulo:str(rot.titulo) || TIPOS_EP[tipo].nome, resumo:str(rot.resumo), dur:m.dur, capitulos:m.capitulos, legendas:m.legendas, palavras:(rot.palavras || []).slice(0, 8), criado:today()};
-    await salvarEp(ep, m.blob);
+    await salvarEp(ep, m.blob); lsSet(chavePend(), '');
     if (vivo()) abrirEp(ep, m.blob);
-  }).catch(e => { if (!vivo()) return; box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null, e && e.code === 'invalid_json' ? 'O roteiro veio incompleto.' : aiMsg(e)), h('button',{class:'btn sec',type:'button',onclick:() => criarEpisodio(tipo, min, tema)},'Tentar de novo'))); });
+  }).catch(e => {
+    if (!vivo()) return;
+    const msg = e && e.code === 'invalid_json' ? 'O roteiro veio incompleto.' : e && e.code === 'rate_limited' ? 'O Gemini continua no limite de uso. O que já foi gravado está guardado: tente continuar daqui a alguns minutos.' : aiMsg(e);
+    box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null, msg),
+      rotAtual ? h('button',{class:'btn',type:'button',onclick:() => criarEpisodio(tipo, min, tema, rotAtual)},'Continuar de onde parou') : h('button',{class:'btn sec',type:'button',onclick:() => criarEpisodio(tipo, min, tema)},'Tentar de novo'),
+      rotAtual && 'speechSynthesis' in window ? h('button',{class:'btn sec',type:'button',onclick:() => lerComVozDoCelular(rotAtual, tipo)},'Ouvir agora com a voz do celular') : null));
+  });
 }
 // --- tocador: continua tocando ao trocar de tela e com a tela bloqueada ---
 let EP = null; // {ep, audio, url}
