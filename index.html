@@ -537,6 +537,58 @@ details summary{cursor:pointer;font-weight:600}
 .aovivo-mic.gravando{background:#E5484D;animation:pulsa-v 1.2s infinite}
 .aovivo-escrever{width:100%}
 .aovivo-escrever .input{background:rgba(255,255,255,.06);color:#E2E8F0;border-color:rgba(148,163,184,.3)}
+
+/* ===== ouvir no caminho ===== */
+.ouvir-card{display:flex;align-items:center;gap:12px;width:100%;padding:16px;border:0;border-radius:22px;text-align:left;color:#1B1F2E;background:linear-gradient(135deg,#FDE68A,#FDBA74);box-shadow:0 10px 26px rgba(234,140,40,.25)}
+.ouvir-card b{display:block;font:800 17px var(--font-display)}.ouvir-card span{font-size:13px;line-height:1.35}
+.ouvir-ic{font-size:34px;width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.55);display:grid;place-items:center;flex:none}
+.ouvir-card .aovivo-seta{color:#9A3412!important}
+.aula-hoje{display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:22px;color:#FFFFFF;background:linear-gradient(140deg,#1E3A8A,#6D28D9);box-shadow:0 12px 30px rgba(30,58,138,.3)}
+.aula-hoje .eyebrow{color:#C7D2FE}.aula-hoje b{font:800 22px var(--font-display)}.aula-hoje p{margin:0;color:#E0E7FF;font-size:14px}
+.aula-hoje .btn{background:#FFFFFF;color:#1E3A8A;border:0}.aula-hoje .btn.sec{background:rgba(255,255,255,.14);color:#FFFFFF;border:1px solid rgba(255,255,255,.35)}
+.ep-tipo{display:flex;gap:12px;align-items:center;text-align:left}.ep-emoji{font-size:28px}
+.ep-item{display:flex;align-items:center;gap:10px}
+.ep-play{width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:#FFFFFF;font-size:16px;flex:none}
+.aula-linha{display:flex;align-items:center;gap:10px}
+.aula-n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--sunk);font:700 12px var(--font-ui);flex:none}.aula-n.ok{background:#DCFCE7;color:#166534}
+.mini-player{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:0;border-radius:16px;background:#111827;color:#FFFFFF;text-align:left}
+.mini-player b{display:block;font-size:14px}.mini-player small{color:#9CA3AF;font-size:12px}
+.ep-prep{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:24px 8px}
+.ep-onda{display:flex;gap:5px;align-items:center;height:60px}.ep-onda i{width:7px;height:100%;border-radius:9px;background:linear-gradient(180deg,#F59E0B,#EA580C);animation:onda-ep 1s ease-in-out infinite}
+.ep-onda i:nth-child(2n){animation-delay:.15s}.ep-onda i:nth-child(3n){animation-delay:.3s}
+@keyframes onda-ep{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+.ep-prep .bar{width:100%}
+.ep-capa{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 16px;border-radius:24px;text-align:center;color:#FFFFFF;background:radial-gradient(circle at 30% 20%,#F59E0B,#7C2D12 75%);box-shadow:0 16px 34px rgba(124,45,18,.35)}
+.ep-capa-emoji{font-size:54px}.ep-capa b{font:800 21px var(--font-display)}.ep-capa small{color:#FED7AA}
+.ep-cap{text-align:center;color:var(--muted);font-size:13px}
+.ep-legenda{min-height:92px;text-align:center}
+.ep-leg{margin:0;font-size:20px;font-weight:600;line-height:1.35}.ep-leg.prof{font-size:16px;font-weight:500;color:var(--muted)}
+.ep-trad{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.ep-tempo{display:flex;align-items:center;gap:10px;font:600 12px ui-monospace,Menlo,monospace;color:var(--muted)}
+.ep-barra{flex:1;accent-color:#EA580C}
+.ep-controles{display:flex;justify-content:center;align-items:center;gap:14px}
+.ep-btn{width:52px;height:52px;border-radius:50%;border:0;background:var(--sunk);color:var(--ink);font:700 15px var(--font-ui)}
+.ep-btn-play{width:78px;height:78px;border-radius:50%;border:0;background:linear-gradient(135deg,#F59E0B,#EA580C);color:#FFFFFF;font-size:26px;box-shadow:0 10px 24px rgba(234,88,12,.35)}
+.ep-caps .chip{margin:0 6px 6px 0}
+.aovivo-aula{display:flex;flex-direction:column;align-items:center;padding:12px;border-radius:16px;background:rgba(103,232,249,.08);border:1px solid rgba(103,232,249,.25);text-align:center}
+.aovivo-aula small{color:#67E8F9;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px}.aovivo-aula b{color:#FFFFFF;font-size:17px}
+/* ===== cenas da história ===== */
+.cutscene{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,rgba(0,0,0,.75) 0,rgba(0,0,0,0) 12%,rgba(0,0,0,0) 45%,rgba(0,0,0,.8) 100%);animation:entra .4s ease both}
+.cutscene::before{content:'';position:absolute;left:0;right:0;top:0;height:9%;background:#000}
+.cutscene.sai{opacity:0;transition:opacity .35s}
+.em-cena .hud,.em-cena .objetivo,.em-cena .dpad,.em-cena .acao,.em-cena .toast-mundo{visibility:hidden}
+.cs-titulo{position:absolute;top:13%;left:0;right:0;text-align:center;color:#FDE68A;text-shadow:0 2px 8px #000;animation:sobe-dlg .6s ease both}
+.cs-titulo small{display:block;font:700 12px var(--font-ui);letter-spacing:.2em;text-transform:uppercase;color:#FFFFFF}
+.cs-titulo b{font:800 26px var(--font-display)}
+.cs-painel{margin:12px;padding:16px;border-radius:20px;background:rgba(12,10,24,.92);border:1.5px solid #8B6F3A;color:#F5E6C8;display:flex;flex-direction:column;gap:8px;animation:sobe-dlg .3s ease both}
+.cs-quem{display:flex;align-items:center;gap:10px}.cs-quem b{font:800 17px var(--font-display);color:#FDE68A}
+.cs-quem .avatar,.cs-quem .tutor{border:2px solid #8B6F3A;border-radius:50%}
+.cs-texto{margin:0;font-size:19px;font-weight:600;line-height:1.4;min-height:2.6em;color:#FFFFFF}.cs-texto.narr{font-style:italic;font-weight:500;color:#E7DCC4}
+.cs-trad{margin:0;font-size:14px;color:#C9B68C}
+.cs-acoes{display:flex;align-items:center;gap:8px}
+.cs-btn{border:1px solid #8B6F3A;background:transparent;color:#F5E6C8;border-radius:999px;padding:8px 12px;font:700 13px var(--font-ui)}
+.cs-btn.forte{background:#F59E0B;color:#1B1F2E;border-color:#F59E0B}
+.historia summary{list-style:none}.hist-cena{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}.hist-fala{font-size:14px}
 </style>
 </head>
 <body>
@@ -1120,7 +1172,7 @@ function falar(texto, prefExtra){
 }
 // Fila de falas automáticas da tela: tocam uma depois da outra.
 function autoFalar(texto, prefExtra, botao){
-  texto = String(texto || '').trim(); if (!texto || !autoAudio()) return;
+  texto = String(texto || '').trim(); if (!texto || !autoAudio() || (typeof EP !== 'undefined' && EP && EP.audio && !EP.audio.paused)) return;
   FILA.push({texto, prefExtra, botao, tela:TELA_ID}); prepararAudio(texto, prefExtra);
   if (!TOCANDO) tocarFila(TELA_ID);
 }
@@ -1420,7 +1472,9 @@ function telaInicio(){
     h('div',{class:'row between'},
       h('div',{class:'row'}, avatarEl(meuAvatar(), 46), h('div',null, h('div',{class:'muted small'}, saudacao() + ','), h('b',{style:'font-size:19px'}, p.name))),
       h('span',{class:'streak small',title:'Sequência de dias estudados'}, icon('flame'), seq)),
+    tocandoAgora(),
     cartaoAoVivo(),
+    cartaoOuvir(),
     h('section',{class:'hero'},
       h('div',{class:'fala-row'}, h('div',{class:'balao'}, h('div',{class:'alvo'}, t.ola + ', ' + p.name + '!'), fala), pic),
       h('div',null, h('span',{class:'eyebrow'}, (feito ? 'Missão de hoje concluída' : 'Sua missão de hoje') + ' · ' + nomeIdioma(p.target) + ' ' + S.level), h('h2',{style:'margin-top:6px'}, temaDoDia())),
@@ -1718,7 +1772,7 @@ function telaConversar(){
 function telaAprender(){
   const due = dueWords(50).length;
   const item = (t, d, fn, dis) => h('button',{class:'opt',type:'button',disabled:dis,onclick:fn}, h('b',null,t), h('div',{class:'muted small'},d));
-  show('main', h('h1',null,'Aprender'), h('p',{class:'muted'},'Treinos avulsos, para quando sobrar um minuto.'),
+  show('main', h('h1',null,'Aprender'), tocandoAgora(), cartaoOuvir(), h('p',{class:'muted'},'Treinos avulsos, para quando sobrar um minuto.'),
     item('Leitura rápida','Um texto curto no seu nível, com 2 perguntas.', () => iniciarMissao(2, {leitura:1}, 'Leitura rápida')),
     item('Desafio de escrita','Uma mensagem real para escrever. O professor mostra a forma mais natural.', () => iniciarMissao(2, {escrita:1}, 'Desafio de escrita')),
     item('Palavras novas','Três palavras em contexto, sobre os seus assuntos.', () => iniciarMissao(2, {vocab:3}, 'Palavras novas')),
@@ -1742,7 +1796,7 @@ const LIVE_MODOS = {
 };
 const LIVE_CORRECAO = {tudo:'Corrigir tudo', importante:'Só o importante', fim:'Só no final'};
 const LIVE_MAX_MIN = 10;
-function instrucaoAoVivo(modo, correcao){
+function instrucaoAoVivo(modo, correcao, aula){
   const p = S.profile, L = nomeIdioma(p.target), t = tutorDe(p.target), lv = S.level, N = p.native, devagar = ['A0','A1','A2'].includes(lv);
   const erros = S.errors.slice().sort((a, b) => b.n - a.n).slice(0, 4).map(e => e.p).join('; ');
   const regraCorr = {
@@ -1754,7 +1808,7 @@ function instrucaoAoVivo(modo, correcao){
     'Você é ' + t.nome + ', professor(a) particular de ' + L + ', numa aula ao vivo por voz com ' + p.name + ', um adulto que fala ' + N + ' e está no nível ' + lv + ' (CEFR).',
     'Estilo: profissional, caloroso e seguro, como um assistente pessoal de alto nível. Dicção muito clara, entonação natural e expressiva, ' + (devagar ? 'ritmo calmo, frases curtas e vocabulário simples.' : 'ritmo natural.') + ' Nunca soe robótico e nunca leia listas.',
     'Fale sempre em ' + L + '. ' + (lv === 'A0' || lv === 'A1' ? 'Se o aluno travar ou falar em ' + N + ', ajude em ' + N + ' com no máximo uma frase e volte para ' + L + ', mostrando como dizer aquilo.' : 'Use ' + N + ' só se o aluno pedir.'),
-    'Tema da aula: ' + LIVE_MODOS[modo].foco + '. Objetivos do aluno: ' + ((p.goals || []).join(', ') || 'conversação') + '. Interesses: ' + ((p.interests || []).join(', ') || 'variados') + '.',
+    'Tema da aula: ' + (modo === 'aula' ? 'uma AULA interativa sobre "' + aula + '": explique o ponto em ' + N + ' de forma breve e clara, dê exemplos curtos em ' + L + ', peça para o aluno criar as próprias frases com o tema, corrija, e no fim faça um resumo do que ele aprendeu' : LIVE_MODOS[modo].foco) + '. Objetivos do aluno: ' + ((p.goals || []).join(', ') || 'conversação') + '. Interesses: ' + ((p.interests || []).join(', ') || 'variados') + '.',
     'Turnos curtos: de 1 a 3 frases, quase sempre terminando com uma pergunta, para o aluno falar mais do que você.',
     regraCorr,
     'Quando ensinar uma palavra ou expressão útil, chame nova_palavra.',
@@ -1913,7 +1967,8 @@ function cartaoAoVivo(){
     h('div',{class:'grow'}, h('span',{class:'aovivo-selo'}, '● AO VIVO'), h('b',null, 'Aula ao vivo com ' + t.nome), h('span',null, 'Converse por voz em tempo real. ' + t.nome + ' responde na hora e corrige você durante a conversa.')),
     h('span',{class:'aovivo-seta'}, '→'));
 }
-function telaAoVivo(){
+function telaAoVivo(opts){
+  const aula = opts && opts.modo === 'aula' ? opts.foco : null;
   const pf = prefAoVivo(), t = tutorDe(S.profile.target), voz = prefVoz().gemini || 'Kore';
   const chips = (mapa, atual, f) => h('div',{class:'chips'}, Object.keys(mapa).map(k => h('button',{class:'chip',type:'button','aria-pressed':String(atual === k),onclick:ev => { f(k); ev.currentTarget.parentNode.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b === ev.currentTarget))); }}, typeof mapa[k] === 'string' ? mapa[k] : mapa[k].emoji + ' ' + mapa[k].nome)));
   const cv = h('canvas',{width:520,height:520,class:'orbe','aria-hidden':'true'});
@@ -1923,13 +1978,14 @@ function telaAoVivo(){
     cv,
     h('div',{class:'aovivo-titulo'}, h('b',null, t.nome), h('span',null, 'Professor de ' + nomeIdioma(S.profile.target) + ' · voz ' + voz + ' · nível ' + S.level)),
     h('div',{class:'aovivo-opcoes'},
-      h('span',{class:'eyebrow'},'Sobre o que vamos falar?'), chips(LIVE_MODOS, pf.modo, k => { pf.modo = k; guardarPrefAoVivo(); }),
+      aula ? h('div',{class:'aovivo-aula'}, h('small',null,'Aula do curso'), h('b',null, aula)) : h('span',{class:'eyebrow'},'Sobre o que vamos falar?'), aula ? null : chips(LIVE_MODOS, pf.modo, k => { pf.modo = k; guardarPrefAoVivo(); }),
       h('span',{class:'eyebrow'},'Correção'), chips(LIVE_CORRECAO, pf.correcao, k => { pf.correcao = k; guardarPrefAoVivo(); }),
       h('label',{class:'aovivo-check'}, (() => { const cb = h('input',{type:'checkbox'}); cb.checked = !!pf.fone; cb.onchange = () => { pf.fone = cb.checked; guardarPrefAoVivo(); }; return cb; })(), ' Estou de fone de ouvido (posso interromper o professor)')),
-    h('button',{class:'btn aovivo-comecar',type:'button',onclick:() => aulaAoVivo()}, '🎙️ Começar a aula'),
+    h('button',{class:'btn aovivo-comecar',type:'button',onclick:() => aulaAoVivo(aula)}, '🎙️ Começar a aula'),
     h('p',{class:'aovivo-nota'}, 'Fale à vontade, como numa chamada. As correções aparecem na tela e ficam no resumo. Cada aula dura até ' + LIVE_MAX_MIN + ' minutos.')));
 }
-function aulaAoVivo(){
+function aulaAoVivo(aula){
+  if (EP && EP.audio && !EP.audio.paused) EP.audio.pause();
   const pf = prefAoVivo(), t = tutorDe(S.profile.target), p = S.profile, devagar = ['A0','A1','A2'].includes(S.level);
   // os áudios precisam ser criados no toque (exigência do iPhone)
   pararAudio();
@@ -1998,7 +2054,7 @@ function aulaAoVivo(){
   A.encerrar = encerrar;
   // ----- modo por turnos (quando o Gemini Live não está disponível) -----
   const historico = () => A.linhas.slice(-8).map(l => (l.quem === 'prof' ? t.nome : p.name) + ': ' + l.t).join('\n');
-  const promptTurno = (extra) => 'TAREFA: aula_turno\n' + regras() + '\n\n' + ctx() + '\n\n' + instrucaoAoVivo(pf.modo, pf.correcao) + '\n\nConversa até agora:\n' + (historico() || '(início da aula)') + '\n\n' + extra +
+  const promptTurno = (extra) => 'TAREFA: aula_turno\n' + regras() + '\n\n' + ctx() + '\n\n' + instrucaoAoVivo(aula ? 'aula' : pf.modo, pf.correcao, aula) + '\n\nConversa até agora:\n' + (historico() || '(início da aula)') + '\n\n' + extra +
     '\n\nResponda SOMENTE com um objeto JSON: {"ouvi": transcrição do que o aluno disse ("" se for o começo), "resposta": sua próxima fala em ' + nomeIdioma(p.target) + ' (1 a 3 frases, terminando com uma pergunta), "correcoes": lista de {"original", "correcao", "explicacao"} com os erros do aluno nesta fala (pode ser vazia), "palavras": lista de {"palavra", "traducao"} ensinadas nesta resposta (pode ser vazia)}. Sem markdown.';
   const aplicarTurno = r => {
     r = r && typeof r === 'object' ? r : {};
@@ -2027,7 +2083,7 @@ function aulaAoVivo(){
   (async () => {
     try { mic = await abrirMicrofone(ctxIn, aoPedaco); }
     catch(e){ A.micLigado = false; btnMic.classList.add('off'); feed.prepend(h('div',{class:'corr-card aviso'}, h('small',null, 'O microfone está bloqueado. Libere a permissão do navegador ou escreva as respostas.'))); }
-    sessao = new SessaoAoVivo({voz:prefVoz().gemini || 'Kore', instrucao:instrucaoAoVivo(pf.modo, pf.correcao), devagar,
+    sessao = new SessaoAoVivo({voz:prefVoz().gemini || 'Kore', instrucao:instrucaoAoVivo(aula ? 'aula' : pf.modo, pf.correcao, aula), devagar,
       aoAudio:b64 => { if (A.fim && !A.despedida) return; tocador.tocar(b64); if (bufAluno){ fecharFalaAluno(); } },
       aoTextoAluno:tx => { bufAluno += tx; legAluno.textContent = bufAluno; if (A.estado !== 'falando') setEstado('pensando'); },
       aoTextoProf:tx => { if (bufAluno) fecharFalaAluno(); bufProf += tx; legProf.textContent = bufProf; },
@@ -2065,6 +2121,262 @@ function resumoAoVivo(A, motivo){
     h('div',{class:'spacer'}),
     h('button',{class:'btn',type:'button',onclick:() => telaAoVivo()},'Nova aula'),
     h('button',{class:'btn sec',type:'button',onclick:() => goTab(ui.tab || 'inicio')},'Voltar'));
+}
+
+
+/* ============================== ouvir no caminho: aulas e histórias em áudio ============================== */
+// Episódios montados pelo Gemini (roteiro) e lidos com vozes diferentes (professor, narrador, personagens).
+// Viram um único arquivo de áudio: toca com a tela bloqueada, no fone e no carro, e fica salvo para ouvir sem internet.
+const CURRICULO = {
+  A0:['Cumprimentos e apresentações','Números, idade e telefone','Ser e estar no presente','Família e pessoas próximas','Dias, meses e horas','Pedir comida e bebida','Roupas, cores e compras','Verbos da rotina'],
+  A1:['Presente: rotina e hábitos','Fazer perguntas no presente','Pronomes e possessivos','Existe, tem e lugares da cidade','Preços, quantidades e compras','Pedir e entender direções','Passado: o que eu fiz ontem','Planos e futuro próximo','Saber e poder: habilidades','Falar do seu trabalho'],
+  A2:['Passado: verbos irregulares mais usados','Comparar coisas e pessoas','Ação acontecendo agora x hábito','Experiências de vida','Pedidos educados e favores','Viagem: aeroporto, hotel e imprevistos','Dar opinião, concordar e discordar','Telefone e mensagens do trabalho','Conectores: porque, então, mas, embora','Contar uma história no passado'],
+  B1:['Condicionais: se isso, então aquilo','Voz passiva no dia a dia','Expressões e verbos frasais do trabalho','Contar o que os outros disseram','Reuniões: interromper, esclarecer e resumir','Negociar prazos e resolver problemas','Metas, resultados e indicadores','Expressões idiomáticas frequentes','Apresentar uma ideia com clareza','E-mails profissionais'],
+  B2:['Tempos verbais na narrativa','Hipóteses sobre o passado','Linguagem diplomática e feedback','Argumentar e contra-argumentar','Formal x informal','Liderança e gestão de equipe','Fala rápida e sotaques','Humor, ironia e cultura'],
+  C1:['Nuances de registro','Persuasão e storytelling','Expressões avançadas do trabalho','Debates e temas complexos'],
+  C2:['Precisão e estilo','Cultura, humor e referências','Discurso público','Debates de alto nível']
+};
+const TIPOS_EP = {
+  aula:{nome:'Aula do professor', emoji:'👨‍🏫', desc:'Explicação em português, exemplos com vozes nativas e momentos para repetir.'},
+  historia:{nome:'História', emoji:'📖', desc:'Uma história com personagens, e o professor explicando as expressões no meio.'},
+  mix:{nome:'Mix do trajeto', emoji:'🚗', desc:'Revisão das suas palavras e erros, uma mini-aula e uma história curta.'}
+};
+const VOZES_EP = {prof:'Sulafat', narrador:'Charon', m:['Orus','Puck','Iapetus'], f:['Aoede','Leda','Zephyr']};
+function aulaAtual(){
+  const lista = CURRICULO[S.level] || CURRICULO.A1, feitas = (S.ouvir && S.ouvir.aulas) || {};
+  const i = lista.findIndex(t => !feitas[S.level + ':' + t]);
+  return {lista, i: i < 0 ? 0 : i, tema: lista[i < 0 ? 0 : i], todas: i < 0};
+}
+function promptEpisodio(tipo, min, tema){
+  const L = nomeIdioma(S.profile.target), N = S.profile.native, pal = S.vocab.slice(-12).map(v => v.w + ' (' + v.t + ')').join(', '), err = S.errors.slice().sort((a, b) => b.n - a.n).slice(0, 4).map(e => e.p + (e.better ? ' → ' + e.better : '')).join('; ');
+  const regrasTipo = {
+    aula:'É uma AULA sobre o tema "' + tema + '". O professor abre de forma calorosa, explica com poucas regras e muitos exemplos curtos em ' + L + ' (ditos pelos personagens p1 e p2 ou pelo próprio professor), usa segmentos "repita" para o aluno repetir em voz alta, faz 2 ou 3 perguntas de compreensão e termina com um resumo e um desafio para usar no dia.',
+    historia:'É uma HISTÓRIA envolvente, com começo, conflito e desfecho, sobre uma situação real (' + (tema || 'trabalho, viagem ou cidade') + '), contada pelo narrador em ' + L + ' com diálogos entre p1 e p2. Depois de cada trecho, o professor entra em ' + N + ' explicando 1 ou 2 expressões úteis que acabaram de aparecer e às vezes pede para repetir. Inclua 2 ou 3 perguntas de compreensão e termine com um resumo.',
+    mix:'É um MIX: comece revisando por áudio as palavras e erros do aluno (o professor pergunta "como se diz...?", com "pergunta" e "resposta"), depois uma mini-aula sobre "' + tema + '" e por fim uma história curta com p1 e p2.'
+  }[tipo];
+  return 'TAREFA: episodio_audio\n' + regras() + '\n\n' + ctx() + '\n\nCrie o roteiro de um episódio de áudio de cerca de ' + min + ' minutos (por volta de ' + (min * 115) + ' palavras faladas) para o aluno ouvir de fone, no carro ou no ônibus, e aprender ' + L + ' de forma natural, nível ' + S.level + '.\n' + regrasTipo +
+    '\nVozes: "prof" (professor; explica em ' + N + ' e dá exemplos em ' + L + '), "narrador" (narra em ' + L + '), "p1" e "p2" (personagens; falam em ' + L + ').' +
+    (pal ? '\nPalavras recentes do aluno: ' + pal + '.' : '') + (err ? '\nErros frequentes do aluno: ' + err + '.' : '') +
+    '\nResponda SOMENTE com um objeto JSON: {"titulo": em ' + N + ', "resumo": 1 frase em ' + N + ', "personagens": {"p1": {"nome", "genero": "m" ou "f"}, "p2": {"nome", "genero"}}, "palavras": lista de 4 a 8 {"w": expressão em ' + L + ', "t": tradução}, "segmentos": lista de {"voz": "prof"|"narrador"|"p1"|"p2", "lingua": "pt" ou "alvo", "texto": o que é dito (no máximo 300 caracteres), "trad": tradução em ' + N + ' quando lingua for "alvo", "tipo": "fala" ou "repita" ou "pergunta", "resposta": só em "pergunta", a resposta curta, "capitulo": nome curto do capítulo em ' + N + ' (só no primeiro segmento de cada parte)}}.' +
+    '\nTom de podcast: natural, caloroso e envolvente, nunca listas. Em "repita", frases curtas em ' + L + ' que valem a pena decorar. Sem markdown.';
+}
+// --- áudio: pedaços de PCM 24 kHz montados num arquivo só ---
+function pcmDeResposta(d){
+  const bin = atob(d.audio || ''), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  let ini = 0, rate = Number((/rate=(\d+)/.exec(d.mime || '') || [])[1]) || 24000;
+  if (/wav/i.test(d.mime || '') || (u8[0] === 82 && u8[1] === 73 && u8[2] === 70 && u8[3] === 70)){
+    const dv = new DataView(u8.buffer); rate = dv.getUint32(24, true) || rate; let p = 12;
+    while (p + 8 < u8.length){ const id = String.fromCharCode(u8[p], u8[p + 1], u8[p + 2], u8[p + 3]), tam = dv.getUint32(p + 4, true); if (id === 'data'){ ini = p + 8; break; } p += 8 + tam; }
+  }
+  let pcm = new Int16Array(u8.buffer.slice(ini, ini + ((u8.length - ini) & ~1)));
+  if (rate !== 24000){ const r = rate / 24000, n = Math.floor(pcm.length / r), o = new Int16Array(n); for (let i = 0; i < n; i++) o[i] = pcm[Math.floor(i * r)]; pcm = o; }
+  return pcm;
+}
+function partirTexto(t){
+  t = String(t || '').trim(); if (t.length <= 380) return t ? [t] : [];
+  const frases = t.match(/[^.!?…]+[.!?…]*\s*/g) || [t], out = []; let cur = '';
+  frases.forEach(f => { if ((cur + f).length > 380 && cur){ out.push(cur.trim()); cur = ''; } cur += f; });
+  if (cur.trim()) out.push(cur.trim());
+  return out.flatMap(x => x.length > 380 ? x.match(/.{1,380}(\s|$)/g).map(y => y.trim()) : [x]);
+}
+function wavDePCM(partes, total){
+  const buf = new ArrayBuffer(44 + total * 2), dv = new DataView(buf), w = (o, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); dv.setUint32(4, 36 + total * 2, true); w(8, 'WAVE'); w(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, 24000, true); dv.setUint32(28, 48000, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true); w(36, 'data'); dv.setUint32(40, total * 2, true);
+  const out = new Int16Array(buf, 44); let o = 0; partes.forEach(p => { if (p.silencio) o += Math.round(p.silencio * 24000); else { out.set(p.pcm, o); o += p.pcm.length; } });
+  return new Blob([buf], {type:'audio/wav'});
+}
+async function montarEpisodio(roteiro, aoProgresso){
+  const pers = roteiro.personagens || {}, lento = ['A0','A1','A2'].includes(S.level);
+  const vozDe = v => { if (v === 'prof') return VOZES_EP.prof; if (v === 'narrador') return VOZES_EP.narrador; const p = pers[v] || {}, lista = p.genero === 'f' ? VOZES_EP.f : VOZES_EP.m; return lista[v === 'p2' ? 1 : 0]; };
+  // lista de falas e pausas
+  const itens = [], capitulos = [], legendas = [];
+  (roteiro.segmentos || []).forEach((sg, i) => {
+    const texto = str(sg.texto); if (!texto) return;
+    if (str(sg.capitulo)) itens.push({cap:str(sg.capitulo)});
+    const voz = vozDe(sg.voz), slow = lento && sg.lingua === 'alvo';
+    itens.push({fala:texto, voz, slow, leg:{texto, trad:str(sg.trad), voz:sg.voz}});
+    if (sg.tipo === 'repita'){ itens.push({silencio:Math.max(2.5, texto.split(/\s+/).length * .6)}); itens.push({fala:texto, voz, slow, leg:{texto, trad:str(sg.trad), voz:sg.voz}}); itens.push({silencio:Math.max(2, texto.split(/\s+/).length * .5)}); }
+    else if (sg.tipo === 'pergunta'){ itens.push({silencio:4}); if (str(sg.resposta)) itens.push({fala:str(sg.resposta), voz:VOZES_EP.prof, slow:false, leg:{texto:str(sg.resposta), trad:'', voz:'prof'}}); }
+    itens.push({silencio:.45});
+  });
+  // busca as vozes (3 de cada vez) e guarda no aparelho
+  const tarefas = []; itens.forEach(it => { if (it.fala) partirTexto(it.fala).forEach(p => tarefas.push({texto:p, voz:it.voz, slow:it.slow, it})); });
+  let feitas = 0; aoProgresso(0, tarefas.length);
+  await Promise.all(tarefas.map(tf => limitar(async () => {
+    const k = 'ep|' + tf.voz + '|' + (tf.slow ? 1 : 0) + '|' + tf.texto;
+    let pcm = null;
+    const b = await lerCacheVoz(k); if (b){ pcm = new Int16Array(await b.arrayBuffer()); }
+    else { const d = await api('tts', {text:tf.texto, voice:tf.voz, slow:tf.slow}); pcm = pcmDeResposta(d); gravarCacheVoz(k, new Blob([pcm.buffer])); }
+    tf.pcm = pcm; aoProgresso(++feitas, tarefas.length);
+  })));
+  // monta o arquivo e marca capítulos e legendas no tempo
+  const partes = []; let total = 0;
+  for (const it of itens){
+    if (it.cap){ capitulos.push({nome:it.cap, t:total / 24000}); continue; }
+    if (it.silencio){ partes.push({silencio:it.silencio}); total += Math.round(it.silencio * 24000); continue; }
+    const ini = total / 24000;
+    tarefas.filter(tf => tf.it === it).forEach(tf => { partes.push({pcm:tf.pcm}); total += tf.pcm.length; });
+    legendas.push(Object.assign({t:ini, fim:total / 24000}, it.leg));
+  }
+  if (!capitulos.length || capitulos[0].t > 0) capitulos.unshift({nome:'Início', t:0});
+  return {blob:wavDePCM(partes, total), dur:total / 24000, capitulos, legendas};
+}
+// --- episódios guardados no aparelho ---
+const chaveEps = () => 'idioma-ia:eps:' + (USER ? USER.id : 'x');
+function listaEps(){ try { return JSON.parse(lsGet(chaveEps()) || '[]'); } catch(e){ return []; } }
+function guardarEps(l){ lsSet(chaveEps(), JSON.stringify(l.slice(0, 8))); }
+const urlEp = id => location.origin + '/__ep/' + id;
+async function salvarEp(ep, blob){
+  try { if (window.caches) await (await caches.open('idioma-eps-v1')).put(urlEp(ep.id), new Response(blob, {headers:{'Content-Type':'audio/wav'}})); ep.salvo = true; } catch(e){ ep.salvo = false; }
+  const l = listaEps().filter(x => x.id !== ep.id); l.unshift(ep);
+  // mantém no máximo 8 episódios; apaga o áudio dos mais antigos
+  l.slice(8).forEach(x => { try { caches.open('idioma-eps-v1').then(c => c.delete(urlEp(x.id))); } catch(e){} });
+  guardarEps(l);
+}
+async function lerEp(id){ try { if (!window.caches) return null; const r = await (await caches.open('idioma-eps-v1')).match(urlEp(id)); return r ? await r.blob() : null; } catch(e){ return null; } }
+function apagarEp(id){ guardarEps(listaEps().filter(x => x.id !== id)); try { caches.open('idioma-eps-v1').then(c => c.delete(urlEp(id))); } catch(e){} }
+
+/* ---------- tela: ouvir ---------- */
+function cartaoOuvir(){
+  const a = aulaAtual();
+  return h('button',{class:'ouvir-card',type:'button',onclick:() => telaOuvir()}, h('span',{class:'ouvir-ic'}, '🎧'),
+    h('div',{class:'grow'}, h('b',null,'Ouvir no caminho'), h('span',null, 'Aula de hoje: ' + a.tema + '. Para ouvir de fone ou no carro, até com a tela bloqueada.')), h('span',{class:'aovivo-seta'}, '→'));
+}
+function telaOuvir(){
+  const a = aulaAtual(), eps = listaEps(), feitas = (S.ouvir && S.ouvir.aulas) || {}, t = tutorDe(S.profile.target);
+  const min = [5, 10, 15], escolhaMin = {v:10};
+  const chipsMin = chipSet(min.map(m => [m, m + ' min']), 10, false, v => { escolhaMin.v = v; });
+  show('main', h('h1',null,'Ouvir'),
+    tocandoAgora(),
+    h('section',{class:'aula-hoje'},
+      h('span',{class:'eyebrow'}, 'Aula ' + (a.i + 1) + ' de ' + a.lista.length + ' · nível ' + S.level),
+      h('b',null, a.tema),
+      h('p',null, t.nome + ' explica em português, com exemplos de nativos e momentos para você repetir em voz alta.'),
+      h('div',{class:'stack tight'},
+        h('button',{class:'btn',type:'button',onclick:() => criarEpisodio('aula', 8, a.tema)}, '🎧 Ouvir a aula (8 min)'),
+        h('button',{class:'btn sec',type:'button',onclick:() => telaAoVivo({modo:'aula', foco:a.tema})}, '🎙️ Praticar esta aula ao vivo com ' + t.nome))),
+    h('section',{class:'card stack'}, h('span',{class:'eyebrow'},'Para o trajeto'),
+      h('span',{class:'small muted'},'Duração:'), chipsMin,
+      h('div',{class:'stack tight'}, ['historia','mix'].map(k => h('button',{class:'opt ep-tipo',type:'button',onclick:() => criarEpisodio(k, escolhaMin.v, k === 'historia' ? sorteia(['trabalho','viagem','cidade','um encontro inesperado','um problema para resolver']) : a.tema)},
+        h('span',{class:'ep-emoji'}, TIPOS_EP[k].emoji), h('div',{class:'grow'}, h('b',null, TIPOS_EP[k].nome), h('div',{class:'small muted'}, TIPOS_EP[k].desc)))))),
+    eps.length ? h('section',{class:'stack tight'}, h('h3',null,'Seus episódios'), h('p',{class:'small muted'},'Ficam salvos no celular: dá para ouvir sem internet.'),
+      eps.map(ep => h('div',{class:'card ep-item'}, h('button',{class:'ep-play',type:'button','aria-label':'Ouvir ' + ep.titulo,onclick:() => abrirEp(ep)}, '▶'),
+        h('div',{class:'grow'}, h('b',null, ep.titulo), h('div',{class:'small muted'}, TIPOS_EP[ep.tipo].emoji + ' ' + TIPOS_EP[ep.tipo].nome + ' · ' + Math.round(ep.dur / 60) + ' min' + (ep.ouvido ? ' · ✓ ouvido' : ''))),
+        h('button',{class:'btn link',type:'button','aria-label':'Apagar',onclick:() => { apagarEp(ep.id); telaOuvir(); }}, '🗑')))) : null,
+    h('section',{class:'stack tight'}, h('h3',null,'Aulas do nível ' + S.level),
+      h('div',{class:'card list'}, a.lista.map((tema, i) => h('div',{class:'aula-linha'}, h('span',{class:'aula-n' + (feitas[S.level + ':' + tema] ? ' ok' : '')}, feitas[S.level + ':' + tema] ? '✓' : String(i + 1)), h('span',{class:'grow'}, tema),
+        h('button',{class:'btn link',type:'button',onclick:() => criarEpisodio('aula', 8, tema)}, 'Ouvir'))))));
+}
+function criarEpisodio(tipo, min, tema){
+  const box = h('div',{class:'stack'}), barra = h('i',{style:'width:0%'}), info = h('p',{class:'small muted',role:'status'}, 'Escrevendo o roteiro...');
+  show('chat', h('div',{class:'row between'}, h('h2',null, TIPOS_EP[tipo].emoji + ' ' + TIPOS_EP[tipo].nome), h('button',{class:'btn link',type:'button',onclick:() => telaOuvir()},'Cancelar')),
+    h('div',{class:'ep-prep'}, h('div',{class:'ep-onda'}, Array.from({length:9}, () => h('i'))), h('b',null, 'Preparando o seu episódio'), info, h('div',{class:'bar good'}, barra),
+      h('p',{class:'small muted'}, 'Leva cerca de 1 minuto. Depois ele fica salvo no celular para ouvir até sem internet.')), box);
+  const vivo = () => ui.screen === 'chat' && barra.isConnected;
+  ai(promptEpisodio(tipo, min, tema)).then(async rot => {
+    if (!rot || !Array.isArray(rot.segmentos) || rot.segmentos.length < 4) throw {code:'invalid_json'};
+    info.textContent = 'Gravando as vozes...';
+    const m = await montarEpisodio(rot, (f, n) => { barra.style.width = Math.round(f / Math.max(1, n) * 100) + '%'; info.textContent = 'Gravando as vozes (' + f + ' de ' + n + ')...'; });
+    const ep = {id:Date.now().toString(36), tipo, tema, titulo:str(rot.titulo) || TIPOS_EP[tipo].nome, resumo:str(rot.resumo), dur:m.dur, capitulos:m.capitulos, legendas:m.legendas, palavras:(rot.palavras || []).slice(0, 8), criado:today()};
+    await salvarEp(ep, m.blob);
+    if (vivo()) abrirEp(ep, m.blob);
+  }).catch(e => { if (!vivo()) return; box.replaceChildren(h('div',{class:'note soft stack'}, h('p',null, e && e.code === 'invalid_json' ? 'O roteiro veio incompleto.' : aiMsg(e)), h('button',{class:'btn sec',type:'button',onclick:() => criarEpisodio(tipo, min, tema)},'Tentar de novo'))); });
+}
+// --- tocador: continua tocando ao trocar de tela e com a tela bloqueada ---
+let EP = null; // {ep, audio, url}
+try { Object.defineProperty(window, 'EP_', {get:() => EP}); } catch(e){}
+function tocandoAgora(){
+  if (!EP || !EP.audio) return null;
+  return h('button',{class:'mini-player',type:'button',onclick:() => abrirEp(EP.ep)}, h('span',null, EP.audio.paused ? '⏸' : '🔊'), h('span',{class:'grow'}, h('b',null, EP.ep.titulo), h('small',null, EP.audio.paused ? 'pausado' : 'tocando agora')), h('span',null,'→'));
+}
+async function abrirEp(ep, blobNovo){
+  if (!EP || EP.ep.id !== ep.id){
+    const blob = blobNovo || await lerEp(ep.id);
+    if (!blob){ show('chat', h('div',{class:'note soft stack'}, h('p',null,'O áudio deste episódio não está mais no celular.'), h('button',{class:'btn',type:'button',onclick:() => { apagarEp(ep.id); telaOuvir(); }},'Remover da lista'))); return; }
+    if (EP){ EP.audio.pause(); URL.revokeObjectURL(EP.url); }
+    const audio = new Audio(), url = URL.createObjectURL(blob);
+    audio.src = url; audio.preload = 'auto'; audio.setAttribute('playsinline', '');
+    EP = {ep, audio, url, ouvido:0, ultimo:0};
+    // conta o tempo ouvido como estudo
+    audio.addEventListener('timeupdate', () => {
+      const t = audio.currentTime, d = t - EP.ultimo; EP.ultimo = t;
+      if (!audio.paused && d > 0 && d < 2){ EP.ouvido += d; const tt = T0(), dia = today(); tt.d[dia] = (tt.d[dia] || 0) + d; tt.total += d; tt.nivel.seg += d; }
+      if (EP.aoTempo) EP.aoTempo(t);
+    });
+    audio.addEventListener('ended', () => terminouEp());
+    audio.addEventListener('pause', () => { writeLocal(); if (EP.aoEstado) EP.aoEstado(); });
+    audio.addEventListener('play', () => { if (EP.aoEstado) EP.aoEstado(); });
+    sessaoDeMidia();
+  }
+  telaPlayer();
+}
+function capAtual(t){ const c = EP.ep.capitulos; let i = 0; c.forEach((x, k) => { if (t >= x.t - .05) i = k; }); return i; }
+function pularCap(dir){ const a = EP.audio, c = EP.ep.capitulos, i = capAtual(a.currentTime); const alvo = dir < 0 ? (a.currentTime - c[i].t > 3 ? i : Math.max(0, i - 1)) : Math.min(c.length - 1, i + 1); a.currentTime = c[alvo].t + .01; }
+function sessaoDeMidia(){
+  if (!('mediaSession' in navigator) || !EP) return;
+  const t = tutorDe(S.profile.target);
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({title:EP.ep.titulo, artist:t.nome + ' · Idioma IA', album:TIPOS_EP[EP.ep.tipo].nome, artwork:[{src:'icons/icon-512.png', sizes:'512x512', type:'image/png'}]});
+    const a = EP.audio, set = (k, f) => { try { navigator.mediaSession.setActionHandler(k, f); } catch(e){} };
+    set('play', () => a.play()); set('pause', () => a.pause());
+    set('seekbackward', d => { a.currentTime = Math.max(0, a.currentTime - ((d && d.seekOffset) || 15)); });
+    set('seekforward', d => { a.currentTime = Math.min(a.duration || 0, a.currentTime + ((d && d.seekOffset) || 15)); });
+    set('previoustrack', () => pularCap(-1)); set('nexttrack', () => pularCap(1));
+    set('seekto', d => { if (d && d.seekTime != null) a.currentTime = d.seekTime; });
+  } catch(e){}
+}
+function terminouEp(){
+  const ep = EP.ep; if (ep.ouvido) return;
+  ep.ouvido = true; const l = listaEps(); const x = l.find(z => z.id === ep.id); if (x) x.ouvido = true; guardarEps(l);
+  if (!S.ouvir) S.ouvir = {aulas:{}, eps:0}; S.ouvir.eps = (S.ouvir.eps || 0) + 1;
+  if (ep.tipo === 'aula' && ep.tema) S.ouvir.aulas[S.level + ':' + ep.tema] = today();
+  (ep.palavras || []).forEach(w => addWord({w:str(w.w), t:str(w.t)}));
+  addXP(Math.min(60, 10 + Math.round(ep.dur / 60) * 4)); skill('conversa', 70); const bonus = touchDay(); if (bonus) addXP(bonus); save();
+  if (EP.aoFim) EP.aoFim();
+}
+function telaPlayer(){
+  const {ep, audio} = EP, t = tutorDe(S.profile.target);
+  const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  const barra = h('input',{type:'range',class:'ep-barra',min:0,max:Math.round(ep.dur),step:1,value:0,'aria-label':'Posição do episódio'});
+  const tAtual = h('span',null,'0:00'), tTotal = h('span',null, fmt(ep.dur));
+  const play = h('button',{class:'ep-btn-play',type:'button','aria-label':'Tocar'}, '▶');
+  const cap = h('b',{class:'ep-cap'}), leg = h('p',{class:'ep-leg alvo'}), trad = h('p',{class:'ep-trad'});
+  let mostrarTexto = true;
+  const caps = h('div',{class:'ep-caps'}, ep.capitulos.map((c, i) => h('button',{class:'chip',type:'button',onclick:() => { audio.currentTime = c.t + .01; audio.play(); }}, (i + 1) + '. ' + c.nome)));
+  const pintar = tt => {
+    if (!barra.matches(':active')) barra.value = Math.round(tt); tAtual.textContent = fmt(tt);
+    const i = capAtual(tt); cap.textContent = ep.capitulos[i].nome; caps.querySelectorAll('.chip').forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+    const lg = ep.legendas.filter(x => x.t <= tt + .1).pop();
+    if (lg){ leg.textContent = mostrarTexto ? lg.texto : '•••'; trad.textContent = mostrarTexto && lg.trad ? lg.trad : ''; leg.className = 'ep-leg ' + (lg.voz === 'prof' ? 'prof' : 'alvo'); }
+  };
+  const estado = () => { play.textContent = audio.paused ? '▶' : '❚❚'; play.setAttribute('aria-label', audio.paused ? 'Tocar' : 'Pausar'); };
+  play.onclick = () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); };
+  barra.oninput = () => { audio.currentTime = Number(barra.value); };
+  EP.aoTempo = pintar; EP.aoEstado = estado;
+  const fimBox = h('div');
+  EP.aoFim = () => { estado(); fimBox.replaceChildren(h('div',{class:'note'}, h('b',null,'Episódio concluído! '), 'As expressões foram para as suas revisões.' + (ep.tipo === 'aula' ? ' Que tal praticar esta aula ao vivo?' : '')),
+    ep.tipo === 'aula' ? h('button',{class:'btn',type:'button',onclick:() => telaAoVivo({modo:'aula', foco:ep.tema})}, '🎙️ Praticar ao vivo com ' + t.nome) : null); };
+  const vel = chipSet([[.8,'0,8×'],[1,'1×'],[1.2,'1,2×']], audio.playbackRate || 1, false, v => { audio.playbackRate = v; });
+  show('chat',
+    h('div',{class:'row between'}, h('button',{class:'btn link',type:'button',onclick:() => telaOuvir()},'← Ouvir'), h('span',{class:'small muted'}, TIPOS_EP[ep.tipo].nome)),
+    h('div',{class:'ep-capa'}, h('span',{class:'ep-capa-emoji'}, TIPOS_EP[ep.tipo].emoji), h('b',null, ep.titulo), h('small',null, t.nome + ' · ' + nomeIdioma(S.profile.target) + ' · ' + S.level)),
+    cap,
+    h('div',{class:'ep-legenda'}, leg, trad),
+    h('div',{class:'ep-tempo'}, tAtual, barra, tTotal),
+    h('div',{class:'ep-controles'},
+      h('button',{class:'ep-btn',type:'button','aria-label':'Capítulo anterior',onclick:() => pularCap(-1)},'⏮'),
+      h('button',{class:'ep-btn',type:'button','aria-label':'Voltar 15 segundos',onclick:() => { audio.currentTime = Math.max(0, audio.currentTime - 15); }},'↺15'),
+      play,
+      h('button',{class:'ep-btn',type:'button','aria-label':'Avançar 15 segundos',onclick:() => { audio.currentTime = Math.min(ep.dur, audio.currentTime + 15); }},'15↻'),
+      h('button',{class:'ep-btn',type:'button','aria-label':'Próximo capítulo',onclick:() => pularCap(1)},'⏭')),
+    h('div',{class:'row between'}, vel, h('button',{class:'btn link',type:'button',onclick:ev => { mostrarTexto = !mostrarTexto; ev.currentTarget.textContent = mostrarTexto ? 'Esconder texto' : 'Mostrar texto'; pintar(audio.currentTime); }}, 'Esconder texto')),
+    fimBox,
+    h('section',{class:'stack tight'}, h('span',{class:'eyebrow'},'Capítulos'), caps),
+    ep.palavras && ep.palavras.length ? h('section',{class:'stack tight'}, h('span',{class:'eyebrow'},'Expressões do episódio'), h('div',{class:'card list'}, ep.palavras.map(w => h('div',null, h('b',{class:'alvo'}, str(w.w)), h('span',{class:'muted'}, ' ' + str(w.t)))))) : null,
+    h('p',{class:'small muted'}, '🔒 Pode bloquear a tela: o áudio continua. No fone e no carro, os botões de avançar e voltar pulam de capítulo.'));
+  pintar(audio.currentTime); estado();
+  if (audio.paused && !audio.ended) audio.play().catch(() => {});
 }
 
 /* ============================== progresso ============================== */
@@ -2433,6 +2745,11 @@ function telaDiario(){
     h('button',{class:'btn',type:'button',onclick:() => telaMundo()}, 'Voltar ao mundo'),
     atual ? null : h('div',{class:'note'},'Você venceu todas as regiões. Lenda! Troque de tema para uma nova jornada.'),
     h('section',{class:'mapa'}, regioes),
+    (() => { const caps = tm.regioes.map((_, r) => ({r, h:packDe(r).historia})).filter(x => x.h);
+      if (!caps.length) return null;
+      return h('section',{class:'stack tight'}, h('h3',null,'📜 A história até aqui'), caps.map(({r, h:hs}) => h('details',{class:'card historia'}, h('summary',null, h('b',null, 'Capítulo ' + (r + 1) + ': ' + hs.titulo), hs.resumo ? h('div',{class:'small muted'}, hs.resumo) : null),
+        GATILHOS.filter(([g]) => vistas()[chaveCena(r, g)] && (hs.cenas[g] || []).length).map(([g]) => h('div',{class:'stack tight hist-cena'}, (hs.cenas[g] || []).map(f => h('div',{class:'hist-fala'}, h('b',null, nomePersonagem(r, f.quem) + ': '), h('span',{class:f.quem === 'narrador' ? 'muted' : 'alvo'}, str(f.texto)), str(f.texto_t) ? h('small',{class:'muted'}, ' (' + str(f.texto_t) + ')') : null)))))));
+    })(),
     h('div',{class:'row'}, h('button',{class:'btn sec',type:'button',onclick:telaLoja}, icon('coin'), 'Loja'), h('button',{class:'btn sec',type:'button',onclick:telaTemas}, icon('map'), 'Trocar tema')),
     h('button',{class:'btn link',type:'button',onclick:() => { S.profile.modo = 'normal'; save(); drawTabs(); goTab('inicio'); }},'Voltar ao modo normal'));
 }
@@ -3029,6 +3346,106 @@ function telaRefino(it){
   show('jogo', topoJogo('Refino'), h('h1',null,'Máquina de refino'), h('p',{class:'muted'}, 'Use joias para deixar o item mais forte. A partir de +7 ele brilha no seu herói.'),
     h('section',{class:'mu-painel refino'}, alvo, h('b',{class:'mu-nome',style:'color:' + RARIDADES[it.rar].cor + ';text-align:center'}, nomeItem(it)), out),
     h('div',{class:'stack tight'}, opcoes), h('button',{class:'btn sec',type:'button',onclick:() => telaHeroi()},'Voltar ao herói'));
+}
+
+
+/* ============================== história do RPG: cenas faladas ============================== */
+// Cada região tem um capítulo da história. Nos momentos-chave aparece uma cena com os personagens falando
+// (cada um com a sua voz): falas em idioma estudado com tradução, e o narrador em português.
+const GATILHOS = [
+  ['chegada', 'ao chegar na região, apresentando o lugar, o problema e quem precisa de ajuda'],
+  ['missao1', 'depois que o herói ajuda npc1 (o problema dele foi resolvido; aparece a ameaça do inimigo na ponte)'],
+  ['ponte', 'depois que o herói vence o inimigo da ponte (o caminho abre; npc2 do outro lado pede ajuda)'],
+  ['missao2', 'depois de ajudar npc2 (o guardião do portão aparece; só passa quem fala em voz alta)'],
+  ['portao', 'quando o portão se abre (o chefe da região se revela)'],
+  ['chefe', 'logo antes da luta contra o chefe (provocação e tensão)'],
+  ['vitoria', 'depois de vencer o chefe (alívio, recompensa e gancho para a próxima região)']
+];
+function promptHistoria(tm, r, pack){
+  const L = nomeIdioma(S.profile.target), N = S.profile.native, nomes = 'npc1 = ' + pack.npc1.nome + ' (' + str(pack.npc1.papel) + '), npc2 = ' + pack.npc2.nome + ' (' + str(pack.npc2.papel) + '), guardiao = ' + pack.guardiao.nome + ', inimigo = ' + (str(pack.inimigo) || tm.inimigo) + ', chefe = o chefe da região';
+  const anterior = r > 0 ? (MW().capitulos || {})[(r - 1) + '|' + J().tema] : '';
+  return 'TAREFA: aventura_historia\n' + baseAventura(tm, r) + '\n\nEscreva o capítulo ' + (r + 1) + ' da história desta jornada, como num RPG: personagens com personalidade, mistério e motivo para continuar. Personagens: ' + nomes + ', heroi = o aluno (' + S.profile.name + ').' +
+    (anterior ? ' No capítulo anterior: ' + anterior + '.' : '') +
+    '\nCrie uma cena curta para cada momento: ' + GATILHOS.map(g => '"' + g[0] + '" (' + g[1] + ')').join(', ') + '.' +
+    '\nResponda SOMENTE com um objeto JSON: {"titulo": nome do capítulo em ' + N + ', "resumo": 1 frase em ' + N + ', "cenas": {' + GATILHOS.map(g => '"' + g[0] + '": lista de 2 a 4 falas').join(', ') + '}} onde cada fala é {"quem": "narrador" | "heroi" | "npc1" | "npc2" | "guardiao" | "inimigo" | "chefe", "texto": fala curta (máximo 160 caracteres), "texto_t": tradução em ' + N + '}.' +
+    '\nO narrador fala em ' + N + ' (sem texto_t) e descreve o clima da cena. Todos os outros falam em ' + L + ', no nível ' + S.level + ', com frases naturais e úteis. Sem markdown.';
+}
+const carregandoHist = {};
+function carregarHistoria(r){
+  const pack = packDe(r); if (pack.padrao) return Promise.resolve(null);
+  if (pack.historia) return Promise.resolve(pack.historia);
+  const k = r + '|' + J().tema; if (carregandoHist[k]) return carregandoHist[k];
+  carregandoHist[k] = ai(promptHistoria(TEMAS[J().tema], r, pack)).then(d => {
+    if (!d || !d.cenas || typeof d.cenas !== 'object') throw {code:'invalid_json'};
+    const cenas = {}; GATILHOS.forEach(([g]) => { cenas[g] = (Array.isArray(d.cenas[g]) ? d.cenas[g] : []).filter(f => f && str(f.texto)).slice(0, 5); });
+    pack.historia = {titulo:str(d.titulo) || 'Capítulo ' + (r + 1), resumo:str(d.resumo), cenas};
+    const w = MW(); if (!w.capitulos) w.capitulos = {}; w.capitulos[r + '|' + J().tema] = pack.historia.resumo || pack.historia.titulo;
+    save(); delete carregandoHist[k]; return pack.historia;
+  }, e => { delete carregandoHist[k]; throw e; });
+  return carregandoHist[k];
+}
+const vistas = () => { const w = MW(); if (!w.vistas) w.vistas = {}; return w.vistas; };
+const chaveCena = (r, g) => r + ':' + J().tema + ':' + g;
+// qual cena da história ainda não foi vista, pelo progresso atual
+function cenaPendente(r){
+  const v = vistas(), ok = {chegada:true, missao1:noFeito(r, 0), ponte:noFeito(r, 1), missao2:noFeito(r, 2), portao:vozFeita(r), vitoria:noFeito(r, 3)};
+  const ordem = ['chegada','missao1','ponte','missao2','portao','vitoria'];
+  // mostra só a mais recente que ainda não foi vista (e marca as anteriores como vistas)
+  let ultima = null; ordem.forEach(g => { if (ok[g] && !v[chaveCena(r, g)]) ultima = g; });
+  if (ultima) ordem.slice(0, ordem.indexOf(ultima)).forEach(g => { if (ok[g]) v[chaveCena(r, g)] = 1; });
+  return ultima;
+}
+// vozes dos personagens: cada um com uma voz própria e estável
+const VOZES_PERS = ['Puck','Aoede','Orus','Leda','Iapetus','Zephyr','Achird','Kore'];
+function vozPersonagem(quem, nome){
+  if (quem === 'narrador') return VOZES_EP.narrador;
+  if (quem === 'heroi') return prefVoz().gemini;
+  if (quem === 'chefe' || quem === 'inimigo') return 'Orus';
+  let x = 0; const s = String(nome || quem); for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0;
+  return VOZES_PERS[x % VOZES_PERS.length];
+}
+function retratoPersonagem(r, quem){
+  const j = J(), sp = (svg, cls) => { const s = h('span',{class:'avatar ' + (cls || ''),style:'width:72px;height:72px;background:#1E1B2E'}); s.innerHTML = svg; return s; };
+  if (quem === 'narrador'){ const t = tutorEl(S.profile.target, 'neutral', 72); return t; }
+  if (quem === 'heroi') return avatarEl(meuAvatar(), 72);
+  if (quem === 'inimigo') return sp(inimigoSVG(j.tema, false));
+  if (quem === 'chefe') return sp(inimigoSVG(j.tema, true));
+  const k = {npc1:'1', npc2:'2', guardiao:'V', mercador:'$'}[quem] || '1';
+  return avatarEl(avatarEnt(r, k), 72);
+}
+function nomePersonagem(r, quem){
+  const p = packDe(r);
+  return {narrador:'Narrador', heroi:S.profile.name, npc1:p.npc1.nome, npc2:p.npc2.nome, guardiao:p.guardiao.nome, mercador:p.mercador.nome, inimigo:str(p.inimigo) || TEMAS[J().tema].inimigo, chefe:'Chefe da região'}[quem] || quem;
+}
+// toca uma cena por cima do mapa; chama "depois" ao terminar
+function tocarCena(r, gatilho, raiz, depois){
+  const hist = packDe(r).historia, falas = hist && hist.cenas && hist.cenas[gatilho];
+  vistas()[chaveCena(r, gatilho)] = 1; save();
+  if (!falas || !falas.length){ if (depois) depois(); return; }
+  falas.forEach(f => { if (f.quem !== 'narrador' || S.profile.native) prepararAudio(str(f.texto), {gemini:vozPersonagem(f.quem, nomePersonagem(r, f.quem))}); });
+  let i = 0, auto = true, timer = 0;
+  const caixa = h('div',{class:'cutscene',role:'dialog','aria-label':'Cena da história'});
+  const fechar = () => { clearTimeout(timer); pararAudio(); caixa.classList.add('sai'); setTimeout(() => { caixa.remove(); raiz.classList.remove('em-cena'); if (depois) depois(); }, 350); };
+  const proxima = () => { clearTimeout(timer); i++; if (i >= falas.length) return fechar(); mostrar(); };
+  const mostrar = () => {
+    const f = falas[i], nome = nomePersonagem(r, f.quem), narr = f.quem === 'narrador', voz = vozPersonagem(f.quem, nome);
+    const texto = h('p',{class:'cs-texto' + (narr ? ' narr' : ' alvo')}), trad = h('p',{class:'cs-trad',hidden:true}, str(f.texto_t));
+    let k = 0; const digita = () => { if (!texto.isConnected && k) return; texto.textContent = str(f.texto).slice(0, k); if (k++ < str(f.texto).length) setTimeout(digita, 22); }; digita();
+    caixa.replaceChildren(
+      i === 0 ? h('div',{class:'cs-titulo'}, h('small',null, 'Capítulo ' + (r + 1)), h('b',null, hist.titulo)) : null,
+      h('div',{class:'cs-painel'},
+        h('div',{class:'cs-quem'}, retratoPersonagem(r, f.quem), h('b',null, nome)),
+        texto, trad,
+        h('div',{class:'cs-acoes'},
+          narr ? null : h('button',{class:'cs-btn',type:'button',onclick:() => { trad.hidden = !trad.hidden; auto = false; clearTimeout(timer); }},'Traduzir'),
+          h('button',{class:'cs-btn',type:'button',onclick:() => { pararAudio(); falar(str(f.texto), {gemini:voz}); }},'🔊'),
+          h('span',{class:'grow'}),
+          h('button',{class:'cs-btn',type:'button',onclick:fechar},'Pular'),
+          h('button',{class:'cs-btn forte',type:'button',onclick:() => { auto = false; proxima(); }}, i + 1 < falas.length ? 'Continuar ▸' : 'Fechar'))));
+    pararAudio();
+    falar(str(f.texto), {gemini:voz}).then(() => { if (auto && caixa.isConnected && falas[i] === f) timer = setTimeout(proxima, 900); });
+  };
+  raiz.classList.add('em-cena'); raiz.append(caixa); mostrar();
 }
 
 /* ============================== mundo aberto do Modo Aventura ============================== */
@@ -3755,7 +4172,7 @@ function telaMundo(rForcada){
   const falaEl = (txt, trad) => {
     const p = h('p',{class:'alvo dlg-fala'}), tr = h('p',{class:'small muted',hidden:true}, trad || '');
     let i = 0; const digita = () => { if (!p.isConnected && i) return; p.textContent = txt.slice(0, i); if (i++ < txt.length) setTimeout(digita, 18); }; digita();
-    return h('div',{class:'stack tight'}, p, h('div',{class:'row'}, ouvirBtn(txt), trad ? h('button',{class:'btn link',type:'button',onclick:() => { tr.hidden = !tr.hidden; }},'Traduzir') : null), tr);
+    return h('div',{class:'stack tight'}, p, h('div',{class:'row'}, ouvirBtn(txt, {voz:W.vozFala}), trad ? h('button',{class:'btn link',type:'button',onclick:() => { tr.hidden = !tr.hidden; }},'Traduzir') : null), tr);
   };
   const narra = t => h('p',{class:'dlg-narra'}, t);
   const btn = (t, f, sec) => h('button',{class:'btn' + (sec ? ' sec' : ''),type:'button',onclick:f}, t);
@@ -3763,7 +4180,7 @@ function telaMundo(rForcada){
   const recompensa = (hx, moedas, msg) => { ganharHXP(hx); if (moedas) j.moedas += moedas; addXP(Math.round(hx / 2)); save(); pintarHUD(); toastMundo(msg + ' +' + hx + ' XP' + (moedas ? ' · +' + moedas + ' ' + tm.moeda : '')); };
 
   function interagir(a){
-    W.alvoPerto = null; acao.hidden = true;
+    W.alvoPerto = null; acao.hidden = true; W.vozFala = null;
     if (a.ent) return falarCom(a.ent);
     if (a.local) return entrarLocal(a.local);
     const c = a.tile;
@@ -3812,6 +4229,9 @@ function telaMundo(rForcada){
 
   function falarCom(e){
     const k = e.k, p = packDe(r), quem = ent(k);
+    W.vozFala = {gemini:vozPersonagem(k === 'E' ? 'inimigo' : k === 'C' ? 'chefe' : 'npc', nomeEnt(r, k))};
+    // antes do chefe, a cena da história
+    if (k === 'C' && packDe(r).historia && !vistas()[chaveCena(r, 'chefe')]){ tocarCena(r, 'chefe', raiz, () => falarCom(e)); return; }
     if (p.padrao) carregarPack(r).then(() => pintarHUD(), () => {});
     e.dir = W.heroi.x > e.x ? 'e' : W.heroi.x < e.x ? 'w' : W.heroi.y > e.y ? 's' : 'n';
     if (k === '1' || k === '2'){
@@ -4096,7 +4516,11 @@ function telaMundo(rForcada){
   requestAnimationFrame(quadro);
 
   // conteúdo da região e avisos de chegada
-  carregarPack(r).then(() => { if (MUNDO === W) pintarHUD(); }, () => {});
+  carregarPack(r).then(() => { if (MUNDO === W) pintarHUD(); return carregarHistoria(r); }).then(() => {
+    const tentar = () => { if (MUNDO !== W || !raiz.isConnected) return; if (W.ocupado || !dlg.hidden || raiz.querySelector('.nivel-up,.menu-mundo')) return setTimeout(tentar, 1200);
+      const g = cenaPendente(r); if (g){ W.ocupado = true; tocarCena(r, g, raiz, () => { W.ocupado = false; pintarHUD(); }); } };
+    setTimeout(tentar, 2500);
+  }, () => {});
   setTimeout(() => titulo.classList.add('some'), 2200);
   if (j.subiu){ const n = j.subiu; j.subiu = 0; save(); setTimeout(() => subiuDeNivel(n), 500); }
   if (w.anim === 'portao' && r === w.animR){ w.anim = null; save(); const g = m.objs.find(o => o.c === 'G'); if (g) setTimeout(() => { faiscas(g.x, g.y, '#A5F3FC'); faiscas(g.x + 1, g.y, '#FDE68A'); toastMundo('O portão se abriu! O chefe espera do outro lado.'); }, 700); }
@@ -5005,7 +5429,7 @@ function telaCena(k, missao, dados){
     const p = h('p',{class:'alvo dlg-fala'}), tr = h('p',{class:'small muted',hidden:true}, trad || '');
     if (oculta){ p.textContent = '🔊 Ouça com atenção...'; p.classList.add('oculta'); }
     else { let i = 0; const digita = () => { if (!p.isConnected && i) return; p.textContent = txt.slice(0, i); if (i++ < txt.length) setTimeout(digita, 16); }; digita(); }
-    return h('div',{class:'stack tight'}, p, h('div',{class:'row'}, ouvirBtn(txt),
+    return h('div',{class:'stack tight'}, p, h('div',{class:'row'}, ouvirBtn(txt, {voz:C.vozFala}),
       oculta ? h('button',{class:'btn link',type:'button',onclick:ev => { C.dicas++; p.textContent = txt; p.classList.remove('oculta'); ev.currentTarget.remove(); }},'Ver texto') : null,
       trad ? h('button',{class:'btn link',type:'button',onclick:() => { tr.hidden = !tr.hidden; if (!tr.hidden) C.dicas += .5; }},'Traduzir') : null), tr);
   };
@@ -5014,7 +5438,7 @@ function telaCena(k, missao, dados){
   const nomeNpc = papel => { const d = C.d || {}; const n = {garcom:d.garcom, cliente:d.cliente && d.cliente.nome, caixa:d.caixa, funcionario:d.funcionario, bilheteiro:d.bilheteiro, fiscal:d.fiscal, recepcionista:d.recepcionista, seguranca:d.agente ? 'Segurança' : null,
     atendente:d.atendente, agente:d.agente, passante:d.passante, farmaceutico:d.farmaceutico, entrevistador:d.entrevistador, medico:d.medico, recepcao:'Recepção'}[papel]; return str(n) || ({garcom:'Garçom', cliente:'Cliente', caixa:'Caixa', funcionario:'Funcionário', bilheteiro:'Bilheteria', fiscal:'Fiscal', recepcionista:'Recepção', seguranca:'Segurança', atendente:'Atendente', agente:'Agente', passante:'Passante', farmaceutico:'Farmacêutico', entrevistador:'Entrevistador', medico:'Médico', recepcao:'Recepção'}[papel] || 'Pessoa'); };
   const PAPEIS = {garcom:'garçom', cliente:'cliente', caixa:'caixa', funcionario:'funcionário', bilheteiro:'bilheteria', fiscal:'fiscal da plataforma', recepcionista:'recepção', seguranca:'segurança', atendente:'check-in', agente:'portão de embarque', passante:'pessoa na rua', farmaceutico:'farmácia', entrevistador:'entrevista', medico:'consultório', recepcao:'telefone do quarto'};
-  const quemNpc = npc => { const papel = npc.startsWith('v:') ? npc.slice(2) : (ents[npc] && ents[npc].papel) || npc; return {nome:nomeNpc(papel), papel:PAPEIS[papel], av:avatarDeSemente(k + papel + nomeNpc(papel))}; };
+  const quemNpc = npc => { const papel = npc.startsWith('v:') ? npc.slice(2) : (ents[npc] && ents[npc].papel) || npc; C.vozFala = {gemini:vozPersonagem('npc', nomeNpc(papel) + papel)}; return {nome:nomeNpc(papel), papel:PAPEIS[papel], av:avatarDeSemente(k + papel + nomeNpc(papel))}; };
 
   // ----- erros, acertos e fim -----
   const errou = (msg) => {
