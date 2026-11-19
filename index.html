@@ -1205,7 +1205,10 @@ function drawTabs(){
   tabs.replaceChildren(...lista.map(([k,label,ic]) => h('button',{type:'button','aria-current': ui.tab === k ? 'page' : null, onclick:() => goTab(k)}, icon(ic), label)));
 }
 function goTab(k){ ui.tab = k; drawTabs(); ({inicio:() => modoAventura() ? telaAventura() : telaInicio(), aprender:telaAprender, conversar:telaConversar, progresso:telaProgresso, perfil:telaPerfil})[k](); }
-function boot(){ if (!TOKEN || !USER) return telaBoasVindas(); if (S.profile && S.level) goTab(ui.tab); else if (S.profile) telaExperiencia(); else { if (!draft.name) draft.name = USER.name || ''; telaCadastro(0); } }
+// atalhos do ícone do app (segurar o ícone): ?tela=ouvir | aovivo
+const TELA_INICIAL = (() => { try { const t = new URLSearchParams(location.search).get('tela'); if (t) history.replaceState(null, '', location.pathname); return t; } catch(e){ return null; } })();
+let telaInicialFeita = false;
+function boot(){ if (!TOKEN || !USER) return telaBoasVindas(); if (S.profile && S.level){ goTab(ui.tab); if (TELA_INICIAL && !telaInicialFeita){ telaInicialFeita = true; if (TELA_INICIAL === 'ouvir') telaOuvir(); else if (TELA_INICIAL === 'aovivo') telaAoVivo({}); } } else if (S.profile) telaExperiencia(); else { if (!draft.name) draft.name = USER.name || ''; telaCadastro(0); } }
 
 /* ============================== boas-vindas e cadastro ============================== */
 function telaBoasVindas(){
@@ -1246,6 +1249,7 @@ function telaConta(modo, aviso){
       S = Object.assign(fresh(), readLocal() || {}); draft.name = USER.name || '';
       try { await sincronizar(); } catch(e){}
       boot();
+      setTimeout(() => sincronizarEps(true), 2000);
     } catch(e){
       go.disabled = false; go.textContent = criar ? 'Criar conta' : 'Entrar';
       msg.textContent = e && e.code === 'offline' ? 'Sem conexão. Confira a internet e tente de novo.'
@@ -2288,20 +2292,115 @@ function lerComVozDoCelular(rot, tipo){
     if (!parar){ atual.textContent = 'Fim do episódio. 👏'; trad.textContent = ''; }
   })();
 }
-// --- episódios guardados no aparelho ---
+// --- episódios: no aparelho e na nuvem (pasta no Google Drive do servidor) ---
+// A lista guarda todos (até 80). "local" = o áudio está no celular; "nuvem" = já está guardado no Drive.
+// No celular ficam só os 10 mais recentes que já estão na nuvem (e todos os que ainda não subiram).
 const chaveEps = () => 'idioma-ia:eps:' + (USER ? USER.id : 'x');
-function listaEps(){ try { return JSON.parse(lsGet(chaveEps()) || '[]'); } catch(e){ return []; } }
-function guardarEps(l){ lsSet(chaveEps(), JSON.stringify(l.slice(0, 8))); }
+const MAX_LOCAIS = 10;
+const numId = id => parseInt(id, 36) || 0;
+function listaEps(){ try { const l = JSON.parse(lsGet(chaveEps()) || '[]'); l.forEach(x => { if (x.local == null) x.local = x.salvo !== false; }); return l; } catch(e){ return []; } }
+function guardarEps(l){ l.sort((a, b) => numId(b.id) - numId(a.id)); lsSet(chaveEps(), JSON.stringify(l.slice(0, 80))); }
 const urlEp = id => location.origin + '/__ep/' + id;
+async function guardarAudioEp(id, blob){ if (!window.caches) return false; await (await caches.open('idioma-eps-v1')).put(urlEp(id), new Response(blob, {headers:{'Content-Type':blob.type || 'audio/wav'}})); return true; }
+function apagarAudioEp(id){ try { caches.open('idioma-eps-v1').then(c => c.delete(urlEp(id))); } catch(e){} }
 async function salvarEp(ep, blob){
-  try { if (window.caches) await (await caches.open('idioma-eps-v1')).put(urlEp(ep.id), new Response(blob, {headers:{'Content-Type':'audio/wav'}})); ep.salvo = true; } catch(e){ ep.salvo = false; }
-  const l = listaEps().filter(x => x.id !== ep.id); l.unshift(ep);
-  // mantém no máximo 8 episódios; apaga o áudio dos mais antigos
-  l.slice(8).forEach(x => { try { caches.open('idioma-eps-v1').then(c => c.delete(urlEp(x.id))); } catch(e){} });
-  guardarEps(l);
+  try { ep.local = await guardarAudioEp(ep.id, blob); } catch(e){ ep.local = false; }
+  ep.nuvem = false;
+  const l = listaEps().filter(x => x.id !== ep.id); l.unshift(ep); guardarEps(l); limparLocais();
+  setTimeout(() => sincronizarEps(true), 1500); // sobe para a nuvem em segundo plano
+}
+// libera espaço no celular: o que já está na nuvem e é mais antigo sai do aparelho (baixa de novo se precisar)
+function limparLocais(){
+  const l = listaEps(); let n = 0, mudou = false;
+  l.forEach(x => { if (!x.local) return; n++; if (n > MAX_LOCAIS && x.nuvem && !(EP && EP.ep.id === x.id)){ apagarAudioEp(x.id); x.local = false; mudou = true; } });
+  if (mudou) guardarEps(l);
 }
 async function lerEp(id){ try { if (!window.caches) return null; const r = await (await caches.open('idioma-eps-v1')).match(urlEp(id)); return r ? await r.blob() : null; } catch(e){ return null; } }
-function apagarEp(id){ guardarEps(listaEps().filter(x => x.id !== id)); try { caches.open('idioma-eps-v1').then(c => c.delete(urlEp(id))); } catch(e){} }
+const chaveApagar = () => 'idioma-ia:eps-apagar:' + (USER ? USER.id : 'x');
+function apagarEp(id){
+  const ep = listaEps().find(x => x.id === id);
+  guardarEps(listaEps().filter(x => x.id !== id)); apagarAudioEp(id);
+  if (ep && ep.nuvem){ // apaga também da nuvem (se estiver sem internet, apaga depois)
+    api('ep_apagar', {id}).catch(() => { let q = []; try { q = JSON.parse(lsGet(chaveApagar()) || '[]'); } catch(e){} q.push(id); lsSet(chaveApagar(), JSON.stringify(q)); });
+  }
+}
+// MP3: o episódio fica ~8x menor (10 min ≈ 4 MB), cabe fácil na nuvem e no celular
+let lameP = null;
+function carregarLame(){
+  if (window.lamejs) return Promise.resolve();
+  if (!lameP) lameP = new Promise((ok, falha) => { const sc = document.createElement('script'); sc.src = 'vendor/lame.min.js'; sc.onload = () => ok(); sc.onerror = () => { lameP = null; falha({code:'offline'}); }; document.head.append(sc); });
+  return lameP;
+}
+async function paraMp3(blob){
+  if (!blob || blob.type === 'audio/mpeg') return blob;
+  await carregarLame();
+  const buf = await blob.arrayBuffer(), dv = new DataView(buf);
+  let rate = 24000, ini = 44, fim = buf.byteLength;
+  if (dv.getUint32(0, false) === 0x52494646){ rate = dv.getUint32(24, true); let o = 12; while (o + 8 <= buf.byteLength){ const id = String.fromCharCode(dv.getUint8(o), dv.getUint8(o+1), dv.getUint8(o+2), dv.getUint8(o+3)), tam = dv.getUint32(o + 4, true); if (id === 'data'){ ini = o + 8; fim = Math.min(buf.byteLength, ini + tam); break; } o += 8 + tam + (tam & 1); } }
+  const pcm = new Int16Array(buf.slice(ini, fim - ((fim - ini) & 1)));
+  const enc = new lamejs.Mp3Encoder(1, rate, 48), partes = [], passo = 1152 * 20;
+  for (let i = 0; i < pcm.length; i += passo){
+    const o = enc.encodeBuffer(pcm.subarray(i, i + passo)); if (o.length) partes.push(new Uint8Array(o));
+    if ((i / passo) % 25 === 24) await new Promise(r => setTimeout(r, 0)); // não trava a tela
+  }
+  const f = enc.flush(); if (f.length) partes.push(new Uint8Array(f));
+  return new Blob(partes, {type:'audio/mpeg'});
+}
+const blobParaB64 = blob => new Promise((ok, falha) => { const fr = new FileReader(); fr.onload = () => ok(String(fr.result).split(',')[1] || ''); fr.onerror = falha; fr.readAsDataURL(blob); });
+function b64ParaBlob(b64, mime){ const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], {type:mime || 'audio/mpeg'}); }
+const metaEp = ep => { const o = Object.assign({}, ep); delete o.local; delete o.nuvem; delete o.salvo; delete o.baixando; return o; };
+function marcarEp(id, campos){ const l = listaEps(), x = l.find(z => z.id === id); if (x){ Object.assign(x, campos); guardarEps(l); } return x; }
+async function enviarEp(ep){
+  const blob = await lerEp(ep.id); if (!blob) return false;
+  const mp3 = await paraMp3(blob);
+  if (mp3 !== blob && !(EP && EP.ep.id === ep.id)) try { await guardarAudioEp(ep.id, mp3); } catch(e){} // ocupa menos espaço no celular também
+  await api('ep_salvar', {ep:metaEp(ep), audio:await blobParaB64(mp3), mime:mp3.type || 'audio/mpeg'});
+  marcarEp(ep.id, {nuvem:true}); return true;
+}
+const baixando = {};
+function baixarEp(id){
+  if (baixando[id]) return baixando[id];
+  baixando[id] = api('ep_baixar', {id}).then(async d => {
+    const blob = b64ParaBlob(d.audio, d.mime); await guardarAudioEp(id, blob);
+    const x = marcarEp(id, Object.assign(metaEp(d.ep || {}), {local:true, nuvem:true}));
+    delete baixando[id]; return {ep:x, blob};
+  }, e => { delete baixando[id]; throw e; });
+  return baixando[id];
+}
+// status da nuvem para mostrar na tela
+const NUVEM = {estado:'', ultima:0, rodando:false};
+async function sincronizarEps(forcar){
+  if (!TOKEN || !USER) return;
+  if (NUVEM.rodando){ if (forcar) NUVEM.denovo = true; return; }
+  if (!forcar && Date.now() - NUVEM.ultima < 20000) return;
+  if (NUVEM.estado === 'sem' && lsGet('idioma-ia:nuvem-sem') === today() && !forcar) return;
+  NUVEM.rodando = true; NUVEM.ultima = Date.now();
+  const atualizar = () => { const el = document.querySelector('.ouvir-eps'); if (el) el.replaceWith(secaoEps()); };
+  try {
+    // 1) apagados sem internet
+    let q = []; try { q = JSON.parse(lsGet(chaveApagar()) || '[]'); } catch(e){}
+    for (const id of q.slice()){ await api('ep_apagar', {id}); q = q.filter(x => x !== id); lsSet(chaveApagar(), JSON.stringify(q)); }
+    // 2) junta a lista da nuvem com a do celular
+    const nuvem = (await api('ep_listar')).eps || [], ids = new Set(nuvem.map(x => x.id));
+    let l = listaEps();
+    l = l.filter(x => { if (x.nuvem && !ids.has(x.id)){ apagarAudioEp(x.id); return false; } return true; }); // apagado em outro celular
+    nuvem.forEach(n => { const x = l.find(z => z.id === n.id); if (x){ x.nuvem = true; if (n.ouvido) x.ouvido = true; } else if (!q.includes(n.id)) l.push(Object.assign({}, n, {local:false, nuvem:true})); });
+    guardarEps(l); NUVEM.estado = 'ok'; atualizar();
+    // 3) sobe o que ainda não está na nuvem
+    for (const ep of listaEps().filter(x => x.local && !x.nuvem)){ NUVEM.estado = 'enviando'; atualizar(); await enviarEp(ep); }
+    NUVEM.estado = 'ok';
+    // 4) baixa sozinho os mais recentes que ainda não estão no celular
+    const economia = navigator.connection && navigator.connection.saveData;
+    if (!economia) for (const ep of listaEps().slice(0, 5).filter(x => !x.local && x.nuvem)){ NUVEM.estado = 'baixando'; atualizar(); await baixarEp(ep.id); }
+    NUVEM.estado = 'ok'; limparLocais();
+  } catch(e){
+    if (e && e.code === 'bad_request' && /desconhecida/i.test(e.message || '')){ NUVEM.estado = 'sem'; lsSet('idioma-ia:nuvem-sem', today()); }
+    else NUVEM.estado = e && e.code === 'offline' ? 'offline' : 'erro';
+  }
+  NUVEM.rodando = false; atualizar();
+  if (NUVEM.denovo){ NUVEM.denovo = false; setTimeout(() => sincronizarEps(true), 500); }
+}
+try { window.__idioma = {telaOuvir:() => telaOuvir(), listaEps, guardarEps, apagarAudioEp, sincronizarEps}; } catch(e){}
 
 /* ---------- tela: ouvir ---------- */
 function cartaoOuvir(){
@@ -2310,7 +2409,8 @@ function cartaoOuvir(){
     h('div',{class:'grow'}, h('b',null,'Ouvir no caminho'), h('span',null, 'Aula de hoje: ' + a.tema + '. Para ouvir de fone ou no carro, até com a tela bloqueada.')), h('span',{class:'aovivo-seta'}, '→'));
 }
 function telaOuvir(){
-  const a = aulaAtual(), eps = listaEps(), feitas = (S.ouvir && S.ouvir.aulas) || {}, t = tutorDe(S.profile.target);
+  sincronizarEps();
+  const a = aulaAtual(), feitas = (S.ouvir && S.ouvir.aulas) || {}, t = tutorDe(S.profile.target);
   const min = [5, 10, 15], escolhaMin = {v:10};
   const chipsMin = chipSet(min.map(m => [m, m + ' min']), 10, false, v => { escolhaMin.v = v; });
   const pend = epPendente();
@@ -2328,14 +2428,26 @@ function telaOuvir(){
       h('span',{class:'small muted'},'Duração:'), chipsMin,
       h('div',{class:'stack tight'}, ['historia','mix'].map(k => h('button',{class:'opt ep-tipo',type:'button',onclick:() => criarEpisodio(k, escolhaMin.v, k === 'historia' ? sorteia(['trabalho','viagem','cidade','um encontro inesperado','um problema para resolver']) : a.tema)},
         h('span',{class:'ep-emoji'}, TIPOS_EP[k].emoji), h('div',{class:'grow'}, h('b',null, TIPOS_EP[k].nome), h('div',{class:'small muted'}, TIPOS_EP[k].desc)))))),
-    eps.length ? h('section',{class:'stack tight'}, h('h3',null,'Seus episódios'), h('p',{class:'small muted'},'Ficam salvos no celular: dá para ouvir sem internet.'),
-      eps.map(ep => h('div',{class:'card ep-item'}, h('button',{class:'ep-play',type:'button','aria-label':'Ouvir ' + ep.titulo,onclick:() => abrirEp(ep)}, '▶'),
-        h('div',{class:'grow'}, h('b',null, ep.titulo), h('div',{class:'small muted'}, TIPOS_EP[ep.tipo].emoji + ' ' + TIPOS_EP[ep.tipo].nome + ' · ' + Math.round(ep.dur / 60) + ' min' + (ep.ouvido ? ' · ✓ ouvido' : ''))),
-        h('button',{class:'btn link',type:'button','aria-label':'Apagar',onclick:() => { apagarEp(ep.id); telaOuvir(); }}, '🗑')))) : null,
+    secaoEps(),
     h('section',{class:'stack tight'}, h('h3',null,'Aulas do nível ' + S.level),
       h('div',{class:'card list'}, a.lista.map((tema, i) => h('div',{class:'aula-linha'}, h('span',{class:'aula-n' + (feitas[S.level + ':' + tema] ? ' ok' : '')}, feitas[S.level + ':' + tema] ? '✓' : String(i + 1)), h('span',{class:'grow'}, tema),
         h('button',{class:'btn link',type:'button',onclick:() => criarEpisodio('aula', 8, tema)}, 'Ouvir'))))));
 }
+function secaoEps(){
+  const eps = listaEps(), st = NUVEM.estado;
+  const aviso = st === 'sem' ? 'Ficam salvos só neste celular. Para guardar na nuvem e baixar em qualquer aparelho, atualize o servidor (Code.gs novo).'
+    : st === 'enviando' ? '⏫ Guardando na nuvem...' : st === 'baixando' ? '⬇️ Baixando da nuvem...' : st === 'offline' ? 'Sem internet: dá para ouvir os que estão no celular.'
+    : st === 'erro' ? 'Não consegui falar com a nuvem agora. Tento de novo depois.' : '☁️ Guardados na nuvem: aparecem e baixam sozinhos em qualquer celular em que você entrar.';
+  if (!eps.length) return h('section',{class:'ouvir-eps',hidden:true});
+  const sit = ep => ep.baixando ? '⬇️ baixando...' : ep.local ? (ep.nuvem ? '☁️✓ no celular e na nuvem' : st === 'sem' ? '📱 no celular' : '⏫ ainda não subiu') : '☁️ na nuvem · toque para baixar';
+  return h('section',{class:'stack tight ouvir-eps'}, h('h3',null,'Seus episódios'), h('p',{class:'small muted'}, aviso),
+    eps.map(ep => h('div',{class:'card ep-item'}, h('button',{class:'ep-play',type:'button','aria-label':'Ouvir ' + ep.titulo,onclick:() => abrirEp(ep)}, ep.local ? '▶' : '⬇'),
+      h('div',{class:'grow'}, h('b',null, ep.titulo), h('div',{class:'small muted'}, (TIPOS_EP[ep.tipo] || TIPOS_EP.aula).emoji + ' ' + Math.round((ep.dur || 0) / 60) + ' min' + (ep.ouvido ? ' · ✓ ouvido' : '') + ' · ' + sit(ep))),
+      h('button',{class:'btn link',type:'button','aria-label':'Apagar',onclick:() => { if (!ep.nuvem || confirmarApagar(ep)) { apagarEp(ep.id); const el = document.querySelector('.ouvir-eps'); if (el) el.replaceWith(secaoEps()); } }}, '🗑'))));
+}
+// o confirm do navegador trava alguns aparelhos; aqui só confirma com dois toques
+const _apagar = {id:'', t:0};
+function confirmarApagar(ep){ if (_apagar.id === ep.id && Date.now() - _apagar.t < 4000) return true; _apagar.id = ep.id; _apagar.t = Date.now(); toastHeroi('Toque de novo na lixeira para apagar do celular e da nuvem'); return false; }
 const chavePend = () => 'idioma-ia:ep-pend:' + (USER ? USER.id : 'x');
 function epPendente(){ try { const p = JSON.parse(lsGet(chavePend()) || 'null'); return p && Date.now() - p.quando < 3 * 864e5 ? p : null; } catch(e){ return null; } }
 function criarEpisodio(tipo, min, tema, rotPronto){
@@ -2370,7 +2482,13 @@ function tocandoAgora(){
 }
 async function abrirEp(ep, blobNovo){
   if (!EP || EP.ep.id !== ep.id){
-    const blob = blobNovo || await lerEp(ep.id);
+    let blob = blobNovo || await lerEp(ep.id);
+    if (!blob && ep.nuvem){
+      show('chat', h('div',{class:'ep-prep'}, h('div',{class:'ep-onda'}, Array.from({length:9}, () => h('i'))), h('b',null,'Baixando da nuvem...'), h('p',{class:'small muted'}, ep.titulo)));
+      try { const r = await baixarEp(ep.id); blob = r.blob; ep = r.ep || ep; }
+      catch(e){ show('chat', h('div',{class:'note soft stack'}, h('p',null, e && e.code === 'offline' ? 'Sem internet para baixar este episódio agora.' : (e && e.message) || 'Não consegui baixar agora.'), h('button',{class:'btn',type:'button',onclick:() => telaOuvir()},'Voltar'))); return; }
+      if (ui.screen !== 'chat') return;
+    }
     if (!blob){ show('chat', h('div',{class:'note soft stack'}, h('p',null,'O áudio deste episódio não está mais no celular.'), h('button',{class:'btn',type:'button',onclick:() => { apagarEp(ep.id); telaOuvir(); }},'Remover da lista'))); return; }
     if (EP){ EP.audio.pause(); URL.revokeObjectURL(EP.url); }
     const audio = new Audio(), url = URL.createObjectURL(blob);
@@ -2407,6 +2525,7 @@ function sessaoDeMidia(){
 function terminouEp(){
   const ep = EP.ep; if (ep.ouvido) return;
   ep.ouvido = true; const l = listaEps(); const x = l.find(z => z.id === ep.id); if (x) x.ouvido = true; guardarEps(l);
+  if (x && x.nuvem) api('ep_meta', {id:ep.id, ouvido:true}).catch(() => {});
   if (!S.ouvir) S.ouvir = {aulas:{}, eps:0}; S.ouvir.eps = (S.ouvir.eps || 0) + 1;
   if (ep.tipo === 'aula' && ep.tema) S.ouvir.aulas[S.level + ':' + ep.tema] = today();
   (ep.palavras || []).forEach(w => addWord({w:str(w.w), t:str(w.t)}));
@@ -5862,6 +5981,7 @@ window.addEventListener('beforeinstallprompt', ev => { ev.preventDefault(); inst
 if (TOKEN && USER){ const local = readLocal(); if (local) S = Object.assign(fresh(), local); }
 drawTabs(); boot();
 if (TOKEN && USER) sincronizar().then(mudou => { if (mudou && ui.screen !== 'mission' && ui.screen !== 'chat' && ui.screen !== 'test') boot(); }, () => {});
+if (TOKEN && USER) setTimeout(() => sincronizarEps(), 4000);
 window.addEventListener('online', flush);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost') && !/\/novo\//.test(location.pathname)) navigator.serviceWorker.register('sw.js').catch(() => {});

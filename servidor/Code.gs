@@ -9,6 +9,8 @@
  *   - guarda o progresso de cada pessoa na planilha;
  *   - ouve a voz do aluno nos desafios de fala e avalia a pronúncia;
  *   - abre a aula ao vivo por voz (token temporário do Gemini Live);
+ *   - guarda os episódios de áudio (aulas e histórias) numa pasta do seu Google Drive,
+ *     para cada pessoa baixar automaticamente em qualquer celular;
  *   - chama o Gemini com a chave guardada em Propriedades do script (GEMINI_API_KEY),
  *     que nunca vai para o celular de ninguém.
  */
@@ -45,10 +47,101 @@ function instalar() {
   if (!cfg.max_pessoas) sh.appendRow(['max_pessoas', PADRAO.max_pessoas, 'Quantas contas podem existir.']);
   if (!cfg.modelo_voz) sh.appendRow(['modelo_voz', PADRAO.modelo_voz, 'Modelo do Gemini que lê as frases em voz alta.']);
   if (!cfg.modelo_live) sh.appendRow(['modelo_live', PADRAO.modelo_live, 'Modelos do Gemini Live para a aula ao vivo (o primeiro que funcionar é usado).']);
+  pastaEps_(null); // cria a pasta dos episódios no Drive (e pede a permissão do Drive na primeira vez)
   const temChave = !!prop_('GEMINI_API_KEY');
+  Logger.log('Pasta dos episódios no Drive: ' + pastaEps_(null).getUrl());
   Logger.log('Abas prontas. Código de convite: ' + config_().convite);
   Logger.log(temChave ? 'Chave do Gemini encontrada.' : 'FALTA a chave: Configurações do projeto > Propriedades do script > GEMINI_API_KEY.');
   return { convite: config_().convite, chave: temChave };
+}
+
+/* ============================== episódios na nuvem (Google Drive) ============================== */
+// Pasta "Idioma IA — episódios" no seu Drive, com uma subpasta por pessoa.
+// Em cada subpasta: <id>.mp3 (o áudio), <id>.json (legendas e capítulos) e indice.json (a lista).
+const MAX_EP_BASE64 = 30 * 1024 * 1024; // ~22 MB de MP3: bem mais que um episódio de 20 min
+const MAX_EPS_NUVEM = 80;
+function pastaEps_(user) {
+  const props = PropertiesService.getScriptProperties();
+  let raiz = null;
+  const id = props.getProperty('PASTA_EPISODIOS');
+  if (id) { try { raiz = DriveApp.getFolderById(id); if (raiz.isTrashed()) raiz = null; } catch (e) { raiz = null; } }
+  if (!raiz) { raiz = DriveApp.createFolder('Idioma IA — episódios'); props.setProperty('PASTA_EPISODIOS', raiz.getId()); }
+  if (!user) return raiz;
+  const nome = 'pessoa-' + user.id, it = raiz.getFoldersByName(nome);
+  return it.hasNext() ? it.next() : raiz.createFolder(nome);
+}
+function arquivo_(pasta, nome) { const it = pasta.getFilesByName(nome); return it.hasNext() ? it.next() : null; }
+function gravarArquivo_(pasta, nome, blob) {
+  const velho = arquivo_(pasta, nome);
+  if (velho) velho.setTrashed(true);
+  return pasta.createFile(blob.setName(nome));
+}
+function idEp_(v) { const id = String(v || ''); if (!/^[a-z0-9]{4,20}$/i.test(id)) throw erro_('bad_request', 'Episódio inválido.'); return id; }
+function lerIndice_(pasta) {
+  const f = arquivo_(pasta, 'indice.json');
+  if (!f) return [];
+  try { const l = JSON.parse(f.getBlob().getDataAsString('UTF-8')); return Array.isArray(l) ? l : []; } catch (e) { return []; }
+}
+function gravarIndice_(pasta, lista) { gravarArquivo_(pasta, 'indice.json', Utilities.newBlob(JSON.stringify(lista), 'application/json')); }
+function comTrava_(fn) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) throw erro_('busy', 'O servidor está ocupado. Tente de novo.');
+  try { return fn(); } finally { lock.releaseLock(); }
+}
+// o que vai para a lista: só o resumo (legendas e capítulos ficam no <id>.json)
+function resumoEp_(ep, bytes) {
+  return { id: ep.id, tipo: String(ep.tipo || 'aula'), tema: String(ep.tema || ''), titulo: String(ep.titulo || '').slice(0, 160), resumo: String(ep.resumo || '').slice(0, 400),
+    dur: Number(ep.dur) || 0, criado: String(ep.criado || ''), ouvido: !!ep.ouvido, bytes: bytes || 0, enviado: Date.now() };
+}
+function epSalvar_(user, req) {
+  const ep = req.ep || {}, id = idEp_(ep.id), audio = String(req.audio || '');
+  if (!audio) throw erro_('bad_request', 'Faltou o áudio.');
+  if (audio.length > MAX_EP_BASE64) throw erro_('bad_request', 'Episódio grande demais para a nuvem.');
+  const mime = /^audio\/(mpeg|wav|mp4|webm|ogg)$/.test(String(req.mime)) ? String(req.mime) : 'audio/mpeg';
+  const ext = { 'audio/mpeg': 'mp3', 'audio/wav': 'wav', 'audio/mp4': 'm4a', 'audio/webm': 'webm', 'audio/ogg': 'ogg' }[mime];
+  const bytes = Utilities.base64Decode(audio);
+  const pasta = pastaEps_(user);
+  gravarArquivo_(pasta, id + '.' + ext, Utilities.newBlob(bytes, mime));
+  const meta = JSON.stringify({ ep: ep, mime: mime, ext: ext });
+  if (meta.length > 400000) throw erro_('bad_request', 'Legendas grandes demais.');
+  gravarArquivo_(pasta, id + '.json', Utilities.newBlob(meta, 'application/json'));
+  return comTrava_(function () {
+    const lista = lerIndice_(pasta).filter(function (x) { return x.id !== id; });
+    lista.unshift(resumoEp_(ep, bytes.length));
+    // guarda no máximo MAX_EPS_NUVEM; os mais antigos vão para a lixeira do Drive
+    lista.slice(MAX_EPS_NUVEM).forEach(function (x) { apagarArquivosEp_(pasta, x.id); });
+    gravarIndice_(pasta, lista.slice(0, MAX_EPS_NUVEM));
+    return { id: id, total: Math.min(lista.length, MAX_EPS_NUVEM) };
+  });
+}
+function epListar_(user) { return { eps: lerIndice_(pastaEps_(user)) }; }
+function epBaixar_(user, req) {
+  const id = idEp_(req.id), pasta = pastaEps_(user), j = arquivo_(pasta, id + '.json');
+  if (!j) throw erro_('not_found', 'Este episódio não está mais na nuvem.');
+  const meta = JSON.parse(j.getBlob().getDataAsString('UTF-8')), f = arquivo_(pasta, id + '.' + meta.ext);
+  if (!f) throw erro_('not_found', 'O áudio deste episódio não está mais na nuvem.');
+  return { ep: meta.ep, mime: meta.mime, audio: Utilities.base64Encode(f.getBlob().getBytes()) };
+}
+function epMeta_(user, req) {
+  const id = idEp_(req.id), pasta = pastaEps_(user);
+  return comTrava_(function () {
+    const lista = lerIndice_(pasta), x = lista.filter(function (e) { return e.id === id; })[0];
+    if (!x) return { ok: false };
+    if (req.ouvido != null) x.ouvido = !!req.ouvido;
+    gravarIndice_(pasta, lista);
+    return { ok: true };
+  });
+}
+function apagarArquivosEp_(pasta, id) {
+  ['mp3', 'wav', 'm4a', 'webm', 'ogg', 'json'].forEach(function (ext) { const f = arquivo_(pasta, id + '.' + ext); if (f) f.setTrashed(true); });
+}
+function epApagar_(user, req) {
+  const id = idEp_(req.id), pasta = pastaEps_(user);
+  return comTrava_(function () {
+    apagarArquivosEp_(pasta, id);
+    gravarIndice_(pasta, lerIndice_(pasta).filter(function (x) { return x.id !== id; }));
+    return { ok: true };
+  });
 }
 /** Rode pelo editor para conferir se a chave do Gemini funciona. */
 function testarGemini() {
@@ -83,6 +176,11 @@ function doPost(e) {
     if (a === 'tts') return saida_(ok_(voz_(user, req)));
     if (a === 'ouvir') return saida_(ok_(ouvir_(user, req)));
     if (a === 'live_token') return saida_(ok_(tokenAoVivo_(user, req)));
+    if (a === 'ep_salvar') return saida_(ok_(epSalvar_(user, req)));
+    if (a === 'ep_listar') return saida_(ok_(epListar_(user)));
+    if (a === 'ep_baixar') return saida_(ok_(epBaixar_(user, req)));
+    if (a === 'ep_meta') return saida_(ok_(epMeta_(user, req)));
+    if (a === 'ep_apagar') return saida_(ok_(epApagar_(user, req)));
     return saida_(falha_('bad_request', 'Ação desconhecida.'));
   } catch (err) {
     if (err && err.code) return saida_(falha_(err.code, err.message));
